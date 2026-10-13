@@ -31,6 +31,25 @@ class ExtractionTests(unittest.TestCase):
             self.assertFalse(record["train_authorized"])
             self.assertEqual(record["raw_messages"][0]["content"], "partial reply")
 
+    def test_development_task_preserves_actor_and_feedback_without_training(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            root.mkdir()
+            (root / 'task.json').write_text(json.dumps({
+                'interaction_origin': 'researcher-task', 'actor': 'student', 'prompt_actor': 'researcher',
+                'teacher_assisted': False, 'split': 'D', 'train_authorized': False,
+                'source_cluster_id': 'cli-encoding', 'program_family': 'cli-file-encoding'}))
+            (root / 'transcript.json').write_text(json.dumps({'system': 'test-fixture', 'tools': [],
+                'messages': [{'role': 'assistant', 'content': 'Completion claim'}]}))
+            (root / 'verdict.json').write_text(json.dumps({'passed': False, 'feedback_origin': 'external-executable-checks'}))
+            result = extract(root, Path(tmp) / 'output', origin='user-interaction')
+            record = json.loads((Path(tmp) / 'output/interactions.jsonl').read_text())
+            self.assertEqual(record['interaction_origin'], 'researcher-task')
+            self.assertEqual(record['prompt_actor'], 'researcher')
+            self.assertEqual(record['feedback_origin'], 'external-executable-checks')
+            self.assertFalse(record['teacher_assisted'])
+            self.assertEqual(result['verified_candidate_count'], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

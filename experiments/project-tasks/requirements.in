@@ -1,0 +1,9 @@
+# Isolated candidate qualification environment; not the CoEvo GPU environment.
+pytest
+PyYAML
+pathspec>=1.0.0
+toml
+pyaml
+python-slugify
+Pygments
+objprint
