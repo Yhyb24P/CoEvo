@@ -33,7 +33,7 @@ class Server:
                 except Exception:
                     time.sleep(1)
             raise TimeoutError("Inference initialization exceeded 15 minutes")
-        except Exception:
+        except BaseException:
             self.stop()
             raise
 
@@ -105,13 +105,16 @@ def run(config, out, cycles=3):
             else:
                 candidate = str(root / f"cycle-{cycle}/adapter")
                 if not (Path(candidate) / "coevo_training.json").is_file():
-                    state.save_cycle(cycle, "training", record)
-                    command = [sys.executable, "-m", "coevo.train", "--config", config,
-                               "--dataset", record["collection"]["dataset"], "--adapter-out", candidate]
-                    if adapter:
-                        command.extend(["--previous-adapter", adapter])
-                    with (root / f"cycle-{cycle}-train.log").open("w") as log:
-                        subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=True, timeout=7200)
+                    record["training_control"] = "user initiated only"
+                    record["candidate_adapter"] = candidate
+                    state.save_cycle(cycle, "awaiting_user_training", record)
+                    pending = {"status": "awaiting_user_training", "cycle": cycle,
+                               "dataset": record["collection"]["dataset"], "adapter_out": candidate,
+                               "previous_adapter": adapter, "config": config,
+                               "training_executed": False}
+                    write_json(root / "training-request.json", pending)
+                    print(json.dumps(pending), flush=True)
+                    return pending
                 record["candidate_adapter"] = candidate
                 state.save_cycle(cycle, "trained", record)
                 # vLLM reloads the saved candidate; evaluation cannot reuse a trainer's in-memory model.

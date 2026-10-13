@@ -1,0 +1,64 @@
+{
+  "status": "paused_by_user",
+  "scope": "synthetic engineering pilot, not real-user self-evolution or formal mechanism study",
+  "qualification_run": "A-qualification-20261013T152742-743846",
+  "qualification": {
+    "actual_prompt_tokens": 131072,
+    "local_template_tokens": 131072,
+    "prefill_and_generation_seconds": 50.28610204701545,
+    "native_tool_executed": true,
+    "positions_correct": true,
+    "multi_turn_correct": true,
+    "diagnostic_only": false,
+    "qualification_passed": true
+  },
+  "training_run": "B-train-20261013T153003-392310",
+  "training": {
+    "optimizer_steps": 6,
+    "actual_supervised_tokens": 327,
+    "actual_context_tokens": 5022,
+    "actual_sequences": 6,
+    "unique_source_clusters": 6,
+    "initial_and_final_parameter_check_ref": {
+      "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+      "after": "86e107b621ea315d1489bbb0d8f7839582312b2c7868ab2b0b7d1e03d7127b63"
+    },
+    "gradient_nonzero": true,
+    "training_loss": [
+      0.024810560047626495,
+      0.14889606833457947,
+      0.14935898780822754,
+      0.060659587383270264,
+      0.01782611571252346,
+      0.01786695420742035
+    ],
+    "peak_gpu_allocated": 12097607168,
+    "gpu_wall_hours": 0.0021668600297238706,
+    "training_seeds": [
+      17
+    ]
+  },
+  "evaluation": {
+    "old-before": {
+      "passed": 3,
+      "total": 3,
+      "model": "coevo-qwen3.5-4b"
+    },
+    "new-before": {
+      "passed": 3,
+      "total": 3,
+      "model": "coevo-qwen3.5-4b"
+    },
+    "old-after": {
+      "passed": 0,
+      "total": 3,
+      "model": "coevo-current"
+    },
+    "new-after": {
+      "status": "interrupted; no complete panel"
+    }
+  },
+  "accepted_model": "original W0; candidate not promoted",
+  "three_cycles_completed": false,
+  "notebook_stage_D_executed": false
+}

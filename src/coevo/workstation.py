@@ -23,10 +23,10 @@ def main():
             raise RuntimeError('128K model qualification did not pass; inspect actual results')
     finally:
         server.stop()
-    print('STAGES B/C: real local learning and three consecutive cycles',flush=True)
+    print('STAGES B/C: prepare data; training is initiated by the user',flush=True)
     cycles_result=run_cycles(args.config,str(root),c['rsi_cycles'])
     write_json(root/'ABC-result.json',{'qualification':result,'cycles':cycles_result})
-    print('A–C pilot completed; D is deferred',flush=True)
+    print('Cycle status: '+str(cycles_result.get('status', 'evaluated'))+'; D is deferred',flush=True)
 
 
 if __name__=='__main__':

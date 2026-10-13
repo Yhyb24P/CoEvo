@@ -1,5 +1,5 @@
 diff --git a/packages/opencode/bin/momo b/packages/opencode/bin/momo
-index 0961085..9c5edcc 100644
+index 0961085..96c76dc 100644
 --- a/packages/opencode/bin/momo
 +++ b/packages/opencode/bin/momo
 @@ -147,6 +147,20 @@ function showVersion() {
@@ -9,7 +9,7 @@ index 0961085..9c5edcc 100644
 +// CoEvo routes its authorized task request to a real SDK session; no simulated REPL fallback.
 +if (process.env.COEVO_CONTROL_REQUEST) {
 +  const action = process.argv[2];
-+  if (!["train", "evaluate", "status"].includes(action)) throw new Error("Use momo train|evaluate|status with COEVO_CONTROL_REQUEST");
++  if (!["prepare-training", "evaluate", "status"].includes(action)) throw new Error("Use momo prepare-training|evaluate|status with COEVO_CONTROL_REQUEST");
 +  if (!process.env.COEVO_PROJECT_ROOT || !process.env.COEVO_PYTHON) throw new Error("Specify CoEvo project and local environment");
 +  const child = spawn(process.env.COEVO_PYTHON, ["-m", "coevo.bridge", action, "--request", process.env.COEVO_CONTROL_REQUEST],
 +    { cwd: process.env.COEVO_PROJECT_ROOT, stdio: "inherit", env: process.env });

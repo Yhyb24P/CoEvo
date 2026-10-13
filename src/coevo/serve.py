@@ -3,6 +3,7 @@ import argparse
 import os
 import subprocess
 from pathlib import Path
+from urllib.parse import urlsplit
 from .runtime import read_config
 
 
@@ -13,11 +14,12 @@ def main():
     parser.add_argument("--adapter-name", default="coevo-current")
     args = parser.parse_args()
     c = read_config(args.config)
+    endpoint = urlsplit(c["endpoint"])
     env = os.environ.copy()
-    env["HF_HOME"] = str(Path(c["cold_root"]) / "cache/huggingface")
+    env["HF_XET_CACHE"] = str(Path(c["cold_root"]) / "cache/huggingface/xet")
     env["VLLM_CACHE_ROOT"] = str(Path(c["cold_root"]) / "cache/vllm")
     command = [str(Path(".venv/bin/vllm").resolve()), "serve", str(Path(c["model_path"]).resolve()),
-               "--host", "127.0.0.1", "--port", "8000", "--served-model-name", c["served_model"],
+               "--host", endpoint.hostname, "--port", str(endpoint.port), "--served-model-name", c["served_model"],
                "--dtype", c["dtype"], "--max-model-len", str(c["max_model_len"]),
                "--gpu-memory-utilization", str(c["gpu_memory_utilization"]),
                "--max-num-seqs", str(c["max_num_seqs"]),
