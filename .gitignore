@@ -1,0 +1,45 @@
+# 本地凭据与环境
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# 本地数据、权重及运行产物；可追溯清单放在 experiments/ 中
+/data/
+/artifacts/
+/runs/
+*.gguf
+*.safetensors
+*.pt
+*.pth
+
+# 临时文件
+.DS_Store
+*.swp
+*.tmp
+
+# E-drive linked upstream source and original weights
+/upstream
+/models
+
+# Active local checkout and build outputs
+/.worktrees/
+node_modules/
+dist/
+*.egg-info/
+
+/.state/
+
+# Ignore E-drive symlinks as well as directories
+/data
+/artifacts
+/runs
+
+/.cache/
