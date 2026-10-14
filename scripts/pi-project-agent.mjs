@@ -1,5 +1,6 @@
 // Thin task adapter over the same pinned Pi SDK used by the historical pilot.
-import { readFileSync, writeFileSync, mkdirSync, realpathSync, appendFileSync, existsSync, lstatSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, realpathSync, appendFileSync, existsSync, lstatSync, readdirSync, readlinkSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { resolve, dirname, relative, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
@@ -61,22 +62,63 @@ const bash = createBashToolDefinition(cwd, { exposeSessionEnvironment: false, op
     });
   },
 }});
-let calls = 0, aborted = false, currentSession;
+let calls = 0, aborted = false, currentSession, resourceStop;
+let lastFailedCommand, repeatedFailures = 0;
+function mutableWorkspaceHash() {
+  const hash = createHash('sha256');
+  const visit = dir => {
+    for (const name of readdirSync(dir).sort()) {
+      const path = resolve(dir, name), rel = relative(cwd, path);
+      if ((request.readonly_paths ?? []).some(p => rel === p || rel.startsWith(p + sep))) continue;
+      const stat = lstatSync(path);
+      hash.update(JSON.stringify([rel, stat.isDirectory() ? 'dir' : stat.isSymbolicLink() ? 'link' : 'file']));
+      if (stat.isDirectory()) visit(path);
+      else if (stat.isSymbolicLink()) hash.update(readlinkSync(path));
+      else if (stat.isFile()) hash.update(readFileSync(path));
+    }
+  };
+  visit(cwd);
+  return hash.digest('hex');
+}
 const tools = [read, write, bash];
 if (request.learning_candidates) tools.push(makeLearningSelectionTool(request.learning_candidates,
   request.training_selection_token_budget, resolve(runDir, 'learning-selection.jsonl'), request.training_selection_max_items ?? 2));
 for (const tool of tools) {
   const original = tool.execute;
   tool.execute = async (...args) => {
+    if (resourceStop) throw new Error('COEVO_REPEAT_FAILURE_STOP: resource protection');
     if (++calls > request.max_tool_calls) { aborted = true; void currentSession?.abort(); throw new Error('Task tool budget exhausted'); }
     const outputs = () => Object.fromEntries((request.allowed_write_paths ?? []).map(path => {
       try { return [path, readFileSync(allowed(path), 'utf8')]; } catch { return [path, null]; }
     }));
     const before = outputs();
-    try { return await original.apply(tool, args); }
+    const beforeState = request.repeat_failure_limit ? mutableWorkspaceHash() : undefined;
+    let failed = false;
+    try {
+      const result = await original.apply(tool, args);
+      failed = Boolean(result?.isError);
+      return result;
+    }
+    catch (error) { failed = true; throw error; }
     finally {
       if (request.allowed_write_paths !== undefined) appendFileSync(resolve(runDir, 'tool-states.jsonl'),
         JSON.stringify({ tool_call_id: args[0], tool_name: tool.name, before_outputs: before, after_outputs: outputs() }) + '\n');
+      if (request.repeat_failure_limit) {
+        const afterState = mutableWorkspaceHash();
+        const key = JSON.stringify([args[1]?.command, afterState]);
+        if (tool.name === 'bash' && failed && beforeState === afterState) {
+          repeatedFailures = key === lastFailedCommand ? repeatedFailures + 1 : 1;
+          lastFailedCommand = key;
+        } else { lastFailedCommand = undefined; repeatedFailures = 0; }
+        appendFileSync(resolve(runDir, 'failure-guard.jsonl'), JSON.stringify({ tool_call_id: args[0], tool_name: tool.name,
+          failed, before_state: beforeState, after_state: afterState, repeated_failures: repeatedFailures }) + '\n');
+        if (repeatedFailures >= request.repeat_failure_limit) {
+          aborted = true;
+          resourceStop = { reason: 'repeated_failed_command', consecutive: repeatedFailures, state_hash: afterState,
+            command_sha256: createHash('sha256').update(args[1].command).digest('hex') };
+          writeFileSync(resolve(runDir, 'resource-stop.json'), JSON.stringify(resourceStop, null, 2) + '\n');
+        }
+      }
     }
   };
 }
@@ -104,15 +146,35 @@ const loader = {
   getAppendSystemPrompt: () => [], getAppendSystemPromptSources: () => [], extendResources: () => {}, reload: async () => {},
 };
 const manager = request.resume_file ? SessionManager.forkFrom(request.resume_file, cwd, resolve(runDir, 'sessions')) : SessionManager.create(cwd, resolve(runDir, 'sessions'));
+let checkpointProvenance;
+if (request.resume_entry_id) {
+  if (!request.resume_file) throw new Error('Checkpoint selection requires a real parent session');
+  const sourceHash = createHash('sha256').update(readFileSync(request.resume_file)).digest('hex');
+  const retained = manager.getBranch(request.resume_entry_id);
+  if (!retained.length) throw new Error('Unknown checkpoint');
+  manager.createBranchedSession(request.resume_entry_id);
+  if (JSON.stringify(manager.getBranch()) !== JSON.stringify(retained)) throw new Error('Native checkpoint path changed');
+  checkpointProvenance = { source_session: request.resume_file, checkpoint_entry_id: request.resume_entry_id,
+    source_sha256: sourceHash, retained_entries: retained.length,
+    retained_path_sha256: createHash('sha256').update(JSON.stringify(retained)).digest('hex'),
+    retained_messages: retained.filter(e => e.type === 'message').map(e => e.message) };
+}
 const { session } = await createAgentSession({ cwd: request.model_cwd ?? cwd, agentDir, modelRuntime: runtime,
   model: runtime.getModel('coevo-local', request.model), thinkingLevel: 'off', resourceLoader: loader,
   noTools: 'builtin', customTools: tools, sessionManager: manager,
   settingsManager: SettingsManager.inMemory({ compaction: { enabled: false }, retry: { enabled: false } }),
 });
 currentSession = session;
-if (request.sampling || request.capture_payload || request.preview_only) {
+if (checkpointProvenance) {
+  checkpointProvenance.native_prefix_equal = JSON.stringify(session.messages) === JSON.stringify(checkpointProvenance.retained_messages);
+  checkpointProvenance.source_unchanged = createHash('sha256').update(readFileSync(request.resume_file)).digest('hex') === checkpointProvenance.source_sha256;
+  writeFileSync(resolve(runDir, 'checkpoint-provenance.json'), JSON.stringify(checkpointProvenance, null, 2) + '\n');
+  if (!checkpointProvenance.native_prefix_equal || !checkpointProvenance.source_unchanged) throw new Error('Native checkpoint provenance mismatch');
+}
+if (request.sampling || request.capture_payload || request.preview_only || request.repeat_failure_limit) {
   const previousPayloadHook = session.agent.onPayload;
   session.agent.onPayload = async (payload, model) => {
+    if (resourceStop) throw new Error('COEVO_REPEAT_FAILURE_STOP: four unchanged failing commands; no further inference');
     const prepared = previousPayloadHook ? (await previousPayloadHook(payload, model)) ?? payload : payload;
     const controlled = request.sampling ? { ...prepared, temperature: request.sampling.temperature, seed: request.sampling.seed } : prepared;
     if (request.sampling) appendFileSync(resolve(runDir, 'sampling.jsonl'), JSON.stringify({ temperature: controlled.temperature, seed: controlled.seed }) + '\n');
@@ -132,7 +194,7 @@ try {
   clearTimeout(timer);
   writeFileSync(resolve(runDir, 'transcript.json'), JSON.stringify({ system: session.systemPrompt, messages: session.messages,
     tools: tools.map(t => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters } })),
-    session_file: session.sessionFile, tool_calls: calls, aborted, continuation_start_message_index: continuationStart,
+    session_file: session.sessionFile, tool_calls: calls, aborted, resource_stop: resourceStop, continuation_start_message_index: continuationStart,
     final_text: session.getLastAssistantText() }, null, 2) + '\n');
   session.dispose();
 }

@@ -55,6 +55,10 @@ association and identifiable evidence. Actually run and inspect your outputs.
 Finish with a truthful account of completed deliverables and remaining gaps.
 """
 
+RECOVERY_FEEDBACK = """外部执行检查发现：你读取项目数据时发生了解码异常，随后某项数据汇总命令连续报 `KeyError: 'Year'`，而且相同命令被反复执行，没有产生有效工作成果。
+
+请重新检查各输入文件实际读取到的列名、编码和数据类型，判断此前处理方法是否适用。不要原样重复已经失败且没有状态变化的命令。自行决定修正方案，实际运行并保存可复核的源码与中间结果，然后继续完成原来的数学建模任务。如有无法解决的问题，如实说明。"""
+
 
 def hashes(root):
     return {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -89,20 +93,40 @@ def termination(transcript):
             'final_response_present': bool(transcript.get('final_text'))}
 
 
-def run(prepared, environment, config, out, pi_entry):
+def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=None, repeat_failure_limit=0):
     prepared, environment, out = map(lambda p: Path(p).resolve(), (prepared, environment, out))
     if out.exists():
         raise ValueError('Use a new run directory')
     c = read_config(config)
+    if bool(parent) != bool(checkpoint):
+        raise ValueError('Native recovery requires both parent and checkpoint')
+    parent = Path(parent).resolve() if parent else None
     task_source = prepared / 'full-task'
     data_manifest = json.loads((prepared / 'manifest.json').read_text())
     for record in data_manifest['files']:
         if hashlib.sha256((task_source / 'data' / record['name']).read_bytes()).hexdigest() != record['sha256']:
             raise ValueError('Prepared official input hash differs from manifest')
-    shutil.copytree(task_source, out / 'workspace')
+    if parent:
+        # This run produced no writes, so its final workspace is also its early state.
+        # Do not generalize this shortcut to trajectories with changed files.
+        initial = json.loads((parent / 'input-hashes.json').read_text())
+        if hashes(parent / 'workspace') != initial:
+            raise ValueError('Parent workspace changed; early state needs a real checkpoint snapshot')
+        if c != json.loads((parent / 'config.json').read_text()):
+            raise ValueError('Recovery must keep the original model, sampling and budgets')
+        source_session = json.loads((parent / 'transcript.json').read_text())['session_file']
+        entries = [json.loads(l) for l in Path(source_session).read_text().splitlines()]
+        selected = next(e for e in entries if e.get('id') == checkpoint)
+        msg = selected.get('message', {})
+        if msg.get('role') != 'toolResult' or not msg.get('isError') or 'KeyError' not in str(msg.get('content')) or 'Year' not in str(msg.get('content')):
+            raise ValueError('Recovery checkpoint must include the real Year error observation')
+        shutil.copytree(parent / 'workspace', out / 'workspace')
+    else:
+        shutil.copytree(task_source, out / 'workspace')
     ws = out / 'workspace'
-    (ws / '2025_MCM_Problem_C.pdf').rename(ws / 'problem.pdf')
-    subprocess.run(['pdftotext', str(ws / 'problem.pdf'), str(ws / 'problem.txt')], check=True)
+    if not parent:
+        (ws / '2025_MCM_Problem_C.pdf').rename(ws / 'problem.pdf')
+        subprocess.run(['pdftotext', str(ws / 'problem.pdf'), str(ws / 'problem.txt')], check=True)
     before = hashes(ws)
     request = {'workspace': str(ws), 'run_dir': str(out), 'endpoint': c['endpoint'],
                'model': c['served_model'], 'context_tokens': c['max_model_len'],
@@ -114,16 +138,27 @@ def run(prepared, environment, config, out, pi_entry):
                'readonly_paths': ['data', 'problem.pdf', 'problem.txt'],
                'sandbox_prefix': command(ws, environment, [], readonly_paths=['data', 'problem.pdf', 'problem.txt']),
                'capture_payload': True, 'sampling': c['inference_sampling']}
+    if parent:
+        old_request = json.loads((parent / 'agent_request.json').read_text())
+        request.update(resume_file=source_session, resume_entry_id=checkpoint,
+                       prompts=[RECOVERY_FEEDBACK], system_prompt=old_request['system_prompt'])
+    if repeat_failure_limit:
+        request['repeat_failure_limit'] = repeat_failure_limit
     write_json(out / 'agent_request.json', request)
     lock = Path('experiments/mcm-2025-c/requirements.txt')
     packages = subprocess.check_output([str(environment / 'bin/python'), '-m', 'pip', 'freeze'], text=True) if (environment / 'bin/pip').exists() else subprocess.check_output(['uv', 'pip', 'freeze', '--python', str(environment / 'bin/python')], text=True)
+    if parent and packages != (parent / 'environment.txt').read_text():
+        raise ValueError('Task environment differs from the parent run')
     (out / 'environment.txt').write_text(packages)
     (out / 'config.json').write_text(json.dumps(c, indent=2) + '\n')
     shutil.copy2(lock, out / 'requirements.txt')
     write_json(out / 'input-hashes.json', before)
     manifest = {'status': 'running', 'source_cluster_id': 'comap-2025-mcm-c', 'split': 'D',
                 'model': 'Qwen3.5-4B W0', 'training_executed': False, 'promotion_allowed': False,
-                'feedback_assisted': False, 'H': False, 'budget': c['task_budget'],
+                'feedback_assisted': bool(parent), 'H': False, 'budget': c['task_budget'],
+                'training_authorized': False, 'repeat_failure_limit': repeat_failure_limit,
+                'parent_run': str(parent) if parent else None, 'checkpoint_entry_id': checkpoint,
+                'feedback_origin': 'researcher-external-execution-check' if parent else None,
                 'config': c, 'source_snapshot': source_snapshot(),
                 'code_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
                 'pi_adapter_sha256': hashlib.sha256(Path('scripts/pi-project-agent.mjs').read_bytes()).hexdigest(),
@@ -146,10 +181,12 @@ def run(prepared, environment, config, out, pi_entry):
             code = child.wait(timeout=c['task_budget']['wall_seconds'] + 60)
         transcript = json.loads((out / 'transcript.json').read_text())
         after = hashes(ws)
-        usage = {k: sum(m.get('usage', {}).get(k, 0) for m in transcript['messages'] if m['role'] == 'assistant')
+        new_messages = transcript['messages'][transcript['continuation_start_message_index']:]
+        usage = {k: sum(m.get('usage', {}).get(k, 0) for m in new_messages if m['role'] == 'assistant')
                  for k in ('input', 'output', 'cacheRead', 'cacheWrite')}
         result = {'agent_exit_code': code, 'aborted': transcript['aborted'],
                   'termination': termination(transcript),
+                  'resource_stop': transcript.get('resource_stop'), 'feedback_assisted': bool(parent),
                   'tool_calls': transcript['tool_calls'], 'usage': usage,
                   'agent_wall_seconds': time.time() - manifest['agent_started_at'],
                   'input_changes': [p for p, h in before.items() if after.get(p) != h],
@@ -185,8 +222,11 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ('prepared', 'environment', 'config', 'out', 'pi-entry'):
         p.add_argument('--' + name, required=True)
+    p.add_argument('--parent')
+    p.add_argument('--checkpoint')
+    p.add_argument('--repeat-failure-limit', type=int, default=0)
     a = p.parse_args()
-    result = run(a.prepared, a.environment, a.config, a.out, a.pi_entry)
+    result = run(a.prepared, a.environment, a.config, a.out, a.pi_entry, a.parent, a.checkpoint, a.repeat_failure_limit)
     print(json.dumps({k: v for k, v in result.items() if k != 'artifacts'}), flush=True)
 
 
