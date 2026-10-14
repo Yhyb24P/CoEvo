@@ -1,0 +1,135 @@
+{
+  "learning_sources": [
+    "L-decision-20261014-conditional_rows",
+    "L-decision-20261014-digest_check"
+  ],
+  "replay_sources": [
+    "L-self-replay-W0-20261014-sort",
+    "L-self-replay-W0-20261014-sum",
+    "L-self-replay-W0-20261014-unique"
+  ],
+  "previews": {
+    "output-only": [
+      {
+        "id": "L-decision-20261014-digest_check-sequence-output-only",
+        "source": "L-decision-20261014-digest_check",
+        "context_tokens": 1318,
+        "supervised_tokens": 229,
+        "targets": 1
+      },
+      {
+        "id": "L-decision-20261014-conditional_rows-sequence-output-only",
+        "source": "L-decision-20261014-conditional_rows",
+        "context_tokens": 1277,
+        "supervised_tokens": 44,
+        "targets": 1
+      }
+    ],
+    "full": [
+      {
+        "id": "L-decision-20261014-digest_check-sequence-full",
+        "source": "L-decision-20261014-digest_check",
+        "context_tokens": 1318,
+        "supervised_tokens": 284,
+        "targets": 4
+      },
+      {
+        "id": "L-decision-20261014-conditional_rows-sequence-full",
+        "source": "L-decision-20261014-conditional_rows",
+        "context_tokens": 1277,
+        "supervised_tokens": 73,
+        "targets": 3
+      }
+    ]
+  },
+  "replay_preview": [
+    {
+      "id": "L-self-replay-W0-20261014-sort-sequence-full",
+      "source": "L-self-replay-W0-20261014-sort",
+      "context_tokens": 988,
+      "supervised_tokens": 87,
+      "targets": 3
+    },
+    {
+      "id": "L-self-replay-W0-20261014-sum-sequence-full",
+      "source": "L-self-replay-W0-20261014-sum",
+      "context_tokens": 978,
+      "supervised_tokens": 77,
+      "targets": 3
+    },
+    {
+      "id": "L-self-replay-W0-20261014-unique-sequence-full",
+      "source": "L-self-replay-W0-20261014-unique",
+      "context_tokens": 990,
+      "supervised_tokens": 84,
+      "targets": 3
+    }
+  ],
+  "matched_schedules": {
+    "output-only": {
+      "main_passes": 4,
+      "replay_passes": 0,
+      "optimizer_steps": 8,
+      "supervised_tokens": 1092,
+      "schedule": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ]
+    },
+    "full": {
+      "main_passes": 3,
+      "replay_passes": 0,
+      "optimizer_steps": 6,
+      "supervised_tokens": 1071,
+      "schedule": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ]
+    },
+    "full-replay": {
+      "main_passes": 1,
+      "replay_passes": 3,
+      "optimizer_steps": 11,
+      "supervised_tokens": 1101,
+      "schedule": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        2,
+        3,
+        4,
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  "budget": 1101,
+  "tolerance": 0.03,
+  "scope": "same-source mask comparison plus token-matched allocation; repetition/steps/context costs differ and must be reported",
+  "training_executed": false,
+  "H_used": false,
+  "arms": {
+    "output-only": {
+      "sha256": "40cee82806a0f90fe7249b71a52eb53e7c17815d1da2b94d2c2bf15cec109b62"
+    },
+    "full": {
+      "sha256": "038ed1ebb0f34603eaae7f879e1970457123bc44bbee9c4db6895df8f696ea05"
+    },
+    "full-replay": {
+      "sha256": "c8d459bee41f3569a7ff5f0eed5a6a254413736327348a009f000c7c2246617f"
+    }
+  }
+}

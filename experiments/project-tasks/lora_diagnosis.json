@@ -1,0 +1,175 @@
+{
+  "scope": "frozen synthetic pilot CPU audit; no inference or training",
+  "dataset_sha256": "6665a4f394dd9a5121d26835739188087bced1af8fb32fb3ee1173965904660d",
+  "candidate_count": 6,
+  "supervised_tokens": 327,
+  "all_targets_write_only": true,
+  "candidates": [
+    {
+      "candidate_id": "L-c1-n0-0",
+      "prefix_aligned": true,
+      "context_tokens": 784,
+      "supervised_tokens": 59,
+      "target_tools": [
+        "write"
+      ],
+      "has_text_target": false
+    },
+    {
+      "candidate_id": "L-c1-n1-0",
+      "prefix_aligned": true,
+      "context_tokens": 839,
+      "supervised_tokens": 45,
+      "target_tools": [
+        "write"
+      ],
+      "has_text_target": false
+    },
+    {
+      "candidate_id": "L-c1-n2-0",
+      "prefix_aligned": true,
+      "context_tokens": 847,
+      "supervised_tokens": 59,
+      "target_tools": [
+        "write"
+      ],
+      "has_text_target": false
+    },
+    {
+      "candidate_id": "L-c1-n3-0",
+      "prefix_aligned": true,
+      "context_tokens": 855,
+      "supervised_tokens": 59,
+      "target_tools": [
+        "write"
+      ],
+      "has_text_target": false
+    },
+    {
+      "candidate_id": "L-c1-n4-0",
+      "prefix_aligned": true,
+      "context_tokens": 845,
+      "supervised_tokens": 49,
+      "target_tools": [
+        "write"
+      ],
+      "has_text_target": false
+    },
+    {
+      "candidate_id": "L-c1-n5-0",
+      "prefix_aligned": true,
+      "context_tokens": 852,
+      "supervised_tokens": 56,
+      "target_tools": [
+        "write"
+      ],
+      "has_text_target": false
+    }
+  ],
+  "behavior_panels": {
+    "old-before": [
+      {
+        "task": "task-0",
+        "tool_sequence": [
+          "read",
+          "write"
+        ],
+        "tool_error_results": 0,
+        "has_normal_stop": true,
+        "aborted": false,
+        "trace_sha256": "dfd99b3d053e2e49fbf9532535687bbf7beee66d3506443ed0e2aeed6264548b"
+      },
+      {
+        "task": "task-1",
+        "tool_sequence": [
+          "read",
+          "write"
+        ],
+        "tool_error_results": 0,
+        "has_normal_stop": true,
+        "aborted": false,
+        "trace_sha256": "84e40d332a79acd3215b0f8b6840ddca1df32699b0fe9c5ebfef2b354f35529a"
+      },
+      {
+        "task": "task-2",
+        "tool_sequence": [
+          "read",
+          "write"
+        ],
+        "tool_error_results": 0,
+        "has_normal_stop": true,
+        "aborted": false,
+        "trace_sha256": "10a8d4f74beb4db47f725dfb454866c6b367c1bc5fe55e1a483a6d274e28a45c"
+      }
+    ],
+    "old-after": [
+      {
+        "task": "task-0",
+        "tool_sequence": [
+          "write",
+          "tool_calling",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "tool_calling",
+          "write"
+        ],
+        "tool_error_results": 3,
+        "has_normal_stop": false,
+        "aborted": true,
+        "trace_sha256": "c2fa8b51b899ae87bb3b2404d9625c0f45b77df2893681d0d758e1e3ccc9f440"
+      },
+      {
+        "task": "task-1",
+        "tool_sequence": [
+          "read",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write",
+          "write"
+        ],
+        "tool_error_results": 2,
+        "has_normal_stop": false,
+        "aborted": true,
+        "trace_sha256": "1d66d421a9a7efc063125e367c38b395027f3dfd1eae09072f9eb28282116d5a"
+      },
+      {
+        "task": "task-2",
+        "tool_sequence": [
+          "read",
+          "write",
+          "read",
+          "read",
+          "read",
+          "read",
+          "read",
+          "read",
+          "read",
+          "read",
+          "read",
+          "read",
+          "read"
+        ],
+        "tool_error_results": 11,
+        "has_normal_stop": false,
+        "aborted": true,
+        "trace_sha256": "bbfea668f4e78c3f63b4b551e037f23d472b3fb3c5502a237dd434a344e2143d"
+      }
+    ]
+  },
+  "interpretation": "Mask prefixes align; supervision omits read/recovery/normal-stop targets. Post-update traces include repeated and invalid tools. These observations support a data/behavior hypothesis but do not identify the causal failure; optimization and independent Adapter loading still require controls."
+}

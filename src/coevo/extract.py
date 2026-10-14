@@ -60,10 +60,18 @@ def extract(root, out, origin="unspecified"):
                     messages.append(event["message"])
         refs = {name: {"path": str(folder / name),
                       "sha256": hashlib.sha256((folder / name).read_bytes()).hexdigest()}
-                for name in ["transcript.json", "events.jsonl", "agent_request.json", "verdict.json"]
+                for name in ["task.json", "transcript.json", "events.jsonl", "agent_request.json", "verdict.json"]
                 if (folder / name).is_file()}
-        record = {"record_id": str(folder.relative_to(root)), "interaction_origin": origin,
+        record = {"record_id": str(folder.relative_to(root)),
+                  "interaction_origin": task.get("interaction_origin", origin),
                   "source_cluster_id": task.get("source_cluster_id"), "split": task.get("split"),
+                  "program_family": task.get("program_family"),
+                  "source_repository": task.get("source_repository"), "source_revision": task.get("source_revision"),
+                  "actor": task.get("actor", "unspecified"), "prompt_actor": task.get("prompt_actor", "unspecified"),
+                  "teacher_assisted": task.get("teacher_assisted"),
+                  "feedback_assisted": task.get("feedback_assisted", False), "parent_run_ref": task.get("parent_run_ref"),
+                  "continuation_start_message_index": transcript.get("continuation_start_message_index", 0) if transcript else None,
+                  "feedback_origin": verdict.get("feedback_origin") if verdict else None,
                   "train_authorized": task.get("train_authorized", False),
                   "model": request.get("model"), "request_prompts": request.get("prompts", []),
                   "system_prompt": transcript.get("system") if transcript else None,
@@ -91,7 +99,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--input", required=True)
     p.add_argument("--out", required=True)
-    p.add_argument("--origin", choices=["unspecified", "synthetic-pilot", "user-interaction"], default="unspecified")
+    p.add_argument("--origin", choices=["unspecified", "synthetic-pilot", "user-interaction", "researcher-task"], default="unspecified")
     args = p.parse_args()
     print(json.dumps(extract(args.input, args.out, args.origin), ensure_ascii=False), flush=True)
 

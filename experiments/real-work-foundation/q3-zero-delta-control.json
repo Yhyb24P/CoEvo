@@ -1,0 +1,141 @@
+{
+  "scope": "post-hoc zero-delta loader diagnosis on exposed D202/G; no preregistered primary inference or H claim",
+  "D_passed": 6,
+  "D_total": 16,
+  "G_passed": 3,
+  "G_total": 3,
+  "zero_B_projections": 128,
+  "optimizer_steps": 0,
+  "training_executed": false,
+  "H_used": false,
+  "promotion": false,
+  "source_sha256": {
+    "adapter_config.json": "ea9ef53105674a9a3abb46b04a489557284a24e552e88a72c3ac1d45ca516d5e",
+    "adapter_model.safetensors": "e65ba2b58169ba60aac5e9afbef1b0baf5bc316aa9b9688c49863de53554a1eb"
+  },
+  "control_sha256": "232c30dc906ce08c5c5133304e3d7f103427e791ed42b2355517708cd9f0a292",
+  "wall_seconds": 385.90374374599196,
+  "same_pass_vector_as_W0": true,
+  "family_passed": {
+    "csv": 0,
+    "hash": 2,
+    "filter": 0,
+    "merge": 4
+  },
+  "paired_rows": [
+    {
+      "name": "D-csv-0",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-hash-0",
+      "passed": false,
+      "normal_stop": false,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-filter-0",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-merge-0",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "D-csv-1",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-hash-1",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "D-filter-1",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-merge-1",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "D-csv-2",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-hash-2",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "D-filter-2",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-merge-2",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "D-csv-3",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-hash-3",
+      "passed": false,
+      "normal_stop": false,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-filter-3",
+      "passed": false,
+      "normal_stop": true,
+      "artifact_correct": false
+    },
+    {
+      "name": "D-merge-3",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "G-0",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "G-1",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    },
+    {
+      "name": "G-2",
+      "passed": true,
+      "normal_stop": true,
+      "artifact_correct": true
+    }
+  ]
+}

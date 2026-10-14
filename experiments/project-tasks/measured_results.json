@@ -1,0 +1,174 @@
+{
+  "scope": "one D source cluster; two fresh executions and one feedback continuation; no parameter learning or formal comparison",
+  "runs": [
+    {
+      "run_id": "marko-cli-encoding-baseline-20261013",
+      "split": "D",
+      "source_cluster_id": "marko-cli-encoding-v1",
+      "train_authorized": false,
+      "prompt_actor": "researcher",
+      "feedback_assisted": false,
+      "tool_call_attempts": 25,
+      "budget": {
+        "max_tool_calls": 24,
+        "timeout_ms": 300000,
+        "max_output_tokens": 4096
+      },
+      "aborted": true,
+      "usage": {
+        "input": 130139,
+        "output": 2890,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 133029
+      },
+      "wall_seconds": 98.93402576446533,
+      "verdict": {
+        "upstream_regression": {
+          "exit_code": 0,
+          "timed_out": false,
+          "wall_seconds": 1.4668782750086393,
+          "log": "/home/yhshy/git_files/CoEvo/.worktrees/project-runs/marko-cli-encoding-baseline-20261013/upstream-regression.log",
+          "network": "isolated",
+          "workspace_readonly": true
+        },
+        "requested_behavior": {
+          "exit_code": 0,
+          "timed_out": false,
+          "wall_seconds": 0.41474871401442215,
+          "log": "/home/yhshy/git_files/CoEvo/.worktrees/project-runs/marko-cli-encoding-baseline-20261013/requested-behavior.log",
+          "network": "isolated",
+          "workspace_readonly": true
+        },
+        "changed_files": [
+          "marko/cli.py",
+          "test_input.txt",
+          "test_input_utf8.txt"
+        ],
+        "passed": false,
+        "feedback_origin": "external-executable-checks",
+        "training_executed": false,
+        "agent_exit_code": 1
+      },
+      "artifact_root": "/mnt/e/CoEvo/artifacts/project-tasks/marko-cli-encoding-baseline-20261013",
+      "manifest_sha256": "5e2935dc06db42420d2f4a4ed30343d400438dbc0802c74a6ed9617ba5ee4a54"
+    },
+    {
+      "run_id": "marko-cli-encoding-pathfix-20261013",
+      "split": "D",
+      "source_cluster_id": "marko-cli-encoding-v1",
+      "train_authorized": false,
+      "prompt_actor": "researcher",
+      "feedback_assisted": false,
+      "tool_call_attempts": 25,
+      "budget": {
+        "max_tool_calls": 24,
+        "timeout_ms": 300000,
+        "max_output_tokens": 4096
+      },
+      "aborted": true,
+      "usage": {
+        "input": 140406,
+        "output": 2491,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 142897
+      },
+      "wall_seconds": 86.92928862571716,
+      "verdict": {
+        "upstream_regression": {
+          "exit_code": 0,
+          "timed_out": false,
+          "wall_seconds": 1.417403622996062,
+          "log": "/home/yhshy/git_files/CoEvo/.worktrees/project-runs/marko-cli-encoding-pathfix-20261013/upstream-regression.log",
+          "network": "isolated",
+          "workspace_readonly": true
+        },
+        "requested_behavior": {
+          "exit_code": 0,
+          "timed_out": false,
+          "wall_seconds": 0.4148234229942318,
+          "log": "/home/yhshy/git_files/CoEvo/.worktrees/project-runs/marko-cli-encoding-pathfix-20261013/requested-behavior.log",
+          "network": "isolated",
+          "workspace_readonly": true
+        },
+        "changed_files": [
+          "marko/cli.py"
+        ],
+        "submitted_test_files": [],
+        "submitted_tests": null,
+        "passed": false,
+        "feedback_origin": "external-executable-checks",
+        "training_executed": false,
+        "agent_exit_code": 1
+      },
+      "artifact_root": "/mnt/e/CoEvo/artifacts/project-tasks/marko-cli-encoding-pathfix-20261013",
+      "manifest_sha256": "332e961d7fd035fd3fdd39ad95466634c9f5b97241ab39ff05f85d63eb36c9ec"
+    },
+    {
+      "run_id": "marko-cli-encoding-feedback-20261013",
+      "split": "D",
+      "source_cluster_id": "marko-cli-encoding-v1",
+      "train_authorized": false,
+      "prompt_actor": "external-checker",
+      "feedback_assisted": true,
+      "tool_call_attempts": 13,
+      "budget": {
+        "max_tool_calls": 12,
+        "timeout_ms": 180000,
+        "max_output_tokens": 4096
+      },
+      "aborted": true,
+      "usage": {
+        "input": 213046,
+        "output": 8361,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 221407
+      },
+      "wall_seconds": 210.44590306282043,
+      "verdict": {
+        "upstream_regression": {
+          "exit_code": 0,
+          "timed_out": false,
+          "wall_seconds": 1.4667752989917062,
+          "log": "/home/yhshy/git_files/CoEvo/.worktrees/project-runs/marko-cli-encoding-feedback-20261013/upstream-regression.log",
+          "network": "isolated",
+          "workspace_readonly": true
+        },
+        "requested_behavior": {
+          "exit_code": 0,
+          "timed_out": false,
+          "wall_seconds": 0.3646110410045367,
+          "log": "/home/yhshy/git_files/CoEvo/.worktrees/project-runs/marko-cli-encoding-feedback-20261013/requested-behavior.log",
+          "network": "isolated",
+          "workspace_readonly": true
+        },
+        "changed_files": [
+          "tests/test_cli_encoding.py"
+        ],
+        "submitted_test_files": [
+          "tests/test_cli_encoding.py"
+        ],
+        "submitted_tests": {
+          "exit_code": 1,
+          "timed_out": false,
+          "wall_seconds": 0.4149157679930795,
+          "log": "/home/yhshy/git_files/CoEvo/.worktrees/project-runs/marko-cli-encoding-feedback-20261013/submitted-tests.log",
+          "network": "isolated",
+          "workspace_readonly": true
+        },
+        "passed": false,
+        "feedback_origin": "external-executable-checks",
+        "training_executed": false,
+        "agent_exit_code": 1
+      },
+      "artifact_root": "/mnt/e/CoEvo/artifacts/project-tasks/marko-cli-encoding-feedback-20261013",
+      "manifest_sha256": "fa732fb0932410eede94580de018b97ed2b9145cd27c8bb8c91bddcdce2d027b"
+    }
+  ],
+  "training_executed": false,
+  "H_used": false,
+  "accepted_model": "original W0",
+  "rsi_cycles_completed": 0
+}

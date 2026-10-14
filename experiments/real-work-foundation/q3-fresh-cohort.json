@@ -1,0 +1,96 @@
+{
+  "scope": "fresh controlled L cohort for selector cross-retraining; no independent H",
+  "episodes": 12,
+  "family_source_clusters": 4,
+  "initial_passed": 4,
+  "first_correction_passed": 6,
+  "additional_reference_assisted_passed": 6,
+  "additional_reference_assisted_attempted": 6,
+  "supervised_tokens_in_complete_pool": 2544,
+  "max_context_tokens": 7758,
+  "sequence_costs": [
+    {
+      "family": "csv",
+      "supervised_tokens": 339,
+      "context_tokens": 1493,
+      "teacher_reference_supplied": false
+    },
+    {
+      "family": "hash",
+      "supervised_tokens": 312,
+      "context_tokens": 1381,
+      "teacher_reference_supplied": false
+    },
+    {
+      "family": "filter",
+      "supervised_tokens": 175,
+      "context_tokens": 1669,
+      "teacher_reference_supplied": true
+    },
+    {
+      "family": "merge",
+      "supervised_tokens": 146,
+      "context_tokens": 1086,
+      "teacher_reference_supplied": false
+    },
+    {
+      "family": "csv",
+      "supervised_tokens": 352,
+      "context_tokens": 1506,
+      "teacher_reference_supplied": false
+    },
+    {
+      "family": "hash",
+      "supervised_tokens": 190,
+      "context_tokens": 7758,
+      "teacher_reference_supplied": true
+    },
+    {
+      "family": "filter",
+      "supervised_tokens": 178,
+      "context_tokens": 1689,
+      "teacher_reference_supplied": true
+    },
+    {
+      "family": "merge",
+      "supervised_tokens": 146,
+      "context_tokens": 1086,
+      "teacher_reference_supplied": false
+    },
+    {
+      "family": "csv",
+      "supervised_tokens": 195,
+      "context_tokens": 3855,
+      "teacher_reference_supplied": true
+    },
+    {
+      "family": "hash",
+      "supervised_tokens": 190,
+      "context_tokens": 6249,
+      "teacher_reference_supplied": true
+    },
+    {
+      "family": "filter",
+      "supervised_tokens": 175,
+      "context_tokens": 1613,
+      "teacher_reference_supplied": true
+    },
+    {
+      "family": "merge",
+      "supervised_tokens": 146,
+      "context_tokens": 1085,
+      "teacher_reference_supplied": false
+    }
+  ],
+  "candidate_generation_seed": 47,
+  "future_panel_seed": 202,
+  "training_seed": 17,
+  "updated_selector_accepted": false,
+  "selector_roles": {
+    "SF": "W0",
+    "SU-proxy": "unaccepted full same-exposure candidate",
+    "SR": "uniform feasible family-stratified random"
+  },
+  "H_used": false,
+  "promotion": false
+}

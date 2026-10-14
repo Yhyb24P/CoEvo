@@ -1,0 +1,53 @@
+{
+  "results": [
+    {
+      "name": "quoted_csv",
+      "passed": true,
+      "split": "L",
+      "train_authorized": true,
+      "source_cluster_id": "L-decision-20261014-quoted_csv",
+      "post_state_hash": "16536822a40c9178ad312733983872bc9f9f1d1ba0d160933525c47994dd3840",
+      "outputs": {
+        "output.csv": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 1.7294603420014028,
+      "target_kinds": [
+        "readback",
+        "stop"
+      ]
+    },
+    {
+      "name": "conditional_rows",
+      "passed": true,
+      "split": "L",
+      "train_authorized": true,
+      "source_cluster_id": "L-decision-20261014-conditional_rows",
+      "post_state_hash": "7c5ce2ebd6f1eb123a151fab5d3085b074345a614fb5014c71da24727c7f197f",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.7353773890063167,
+      "target_kinds": [
+        "write",
+        "readback",
+        "stop"
+      ]
+    }
+  ],
+  "targets": 5,
+  "scope": "same-source actual correction continuations; preceding failures remain context"
+}

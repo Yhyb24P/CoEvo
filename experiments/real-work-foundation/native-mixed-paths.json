@@ -1,0 +1,60 @@
+{
+  "results": [
+    {
+      "mode": "native-context",
+      "passed": true,
+      "split": "L",
+      "train_authorized": true,
+      "source_cluster_id": "L-agent-feedback-20261014-hash",
+      "post_state_hash": "cc61820e9b120312b2470aaee05f6ad0350de5ed88e987fef5352e8607a66ff9",
+      "outputs": {
+        "mixed-output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 7.285577356989961,
+      "certified_target_kinds": [
+        "read",
+        "bash",
+        "readback",
+        "stop"
+      ],
+      "native_prefix_preserved": true
+    },
+    {
+      "mode": "fresh-context",
+      "passed": true,
+      "split": "L",
+      "train_authorized": true,
+      "source_cluster_id": "L-agent-feedback-20261014-hash",
+      "post_state_hash": "cc61820e9b120312b2470aaee05f6ad0350de5ed88e987fef5352e8607a66ff9",
+      "outputs": {
+        "mixed-output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 10.999645267991582,
+      "certified_target_kinds": [
+        "read",
+        "bash",
+        "bash",
+        "readback",
+        "stop"
+      ],
+      "native_prefix_preserved": null
+    }
+  ],
+  "training_executed": false,
+  "candidate_promoted": false,
+  "scope": "actual task chosen from Agent suggestion; same-input native context versus fresh context; single L case, context budgets differ"
+}

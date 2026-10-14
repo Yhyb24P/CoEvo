@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-14",
+  "scope": "local user-authorized multi-workspace teacher-source export; not validated training or student evidence",
+  "log_snapshots": 155,
+  "unique_session_ids": 133,
+  "workspaces": 84,
+  "unique_export_files": 155,
+  "conservative_isolation_groups": 8,
+  "environment_counts": {
+    "persistent": 75,
+    "temporary_or_probe": 80
+  },
+  "visible_records": {
+    "message": 4747,
+    "tool_call": 23725,
+    "tool_result": 23728
+  },
+  "excluded": {
+    "non_response_record": 105236,
+    "instruction_role": 546,
+    "injected_scaffolding": 136,
+    "non_visible_item": 25732,
+    "sensitive_or_embedded_instructions": 71
+  },
+  "duplicate_record_groups": 143,
+  "unpaired_calls": 17,
+  "unpaired_results": 20,
+  "adaptation": {
+    "visible_sessions": 155,
+    "shell_proposals": 2390,
+    "training_candidates": 0,
+    "counts": {
+      "requires_other_tool_adapter": 21162,
+      "not_completed_successfully": 167,
+      "missing_result": 6
+    },
+    "commands_executed": 0,
+    "qualification": "exit status supports execution only, not semantic correctness"
+  },
+  "training_executed": false,
+  "training_candidates": 0,
+  "historical_evaluation_exposure": "unreviewed; no claim all sources are H-free",
+  "raw_data_committed": false
+}

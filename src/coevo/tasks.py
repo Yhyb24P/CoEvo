@@ -81,6 +81,9 @@ def to_openai(message):
 
 def candidate_from_run(task, runpath):
     """Only a verified write action is supervised, never arbitrary successful-episode text."""
+    if task.get('candidate_format') == 'verified_behavior_v1':
+        from .behavior import candidates_from_run
+        return candidates_from_run(task, runpath)
     runpath = Path(runpath)
     verdict = json.loads((runpath / "verdict.json").read_text())
     if task["split"] != "L" or not task["train_authorized"] or not verdict["passed"]:

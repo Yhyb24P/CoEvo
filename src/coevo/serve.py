@@ -1,7 +1,6 @@
 """Serve the pinned original model with a real 128K+ capacity."""
 import argparse
 import os
-import subprocess
 from pathlib import Path
 from urllib.parse import urlsplit
 from .runtime import read_config
@@ -32,7 +31,9 @@ def main():
     if args.adapter:
         command.extend(["--enable-lora", "--max-lora-rank", "16", "--lora-modules", f"{args.adapter_name}={Path(args.adapter).resolve()}"])
     print("Starting", " ".join(command), flush=True)
-    subprocess.run(command, env=env, check=True)
+    # Keep the supervised PID as the actual API process. A disposable wrapper
+    # can otherwise exit before its HTTP child finishes graceful shutdown.
+    os.execvpe(command[0], command, env)
 
 
 if __name__ == "__main__":

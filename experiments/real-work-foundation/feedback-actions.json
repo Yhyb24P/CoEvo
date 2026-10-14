@@ -1,0 +1,72 @@
+{
+  "results": [
+    {
+      "mode": "native-context",
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-feedback-action-20261014",
+      "post_state_hash": "d7bcb1844e953b970b906cffb61bfb59e2b344ca8f74a9f5ed71f19e963ded03",
+      "outputs": {
+        "audit-output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 26.84939272599877,
+      "native_prefix_preserved": true,
+      "continuation_start_message_index": 30,
+      "tool_call_count": 4,
+      "tool_names": [
+        "read",
+        "bash",
+        "read",
+        "write"
+      ],
+      "learning_notes": "# Learning Notes - File Hash Verification Tasks\n\n## Effective Experiences (值得保留的经验)\n1. **路径完整性优先**：读取清单后，直接检查路径字符串是否已包含完整目录信息（如 `./` 或 `/`）。若已完整，直接使用；若仅为文件名，再考虑拼接。避免盲目添加 `docs/` 等前缀。\n2. **Python 标准库哈希计算**：使用 `hashlib.sha256()` 和 `open(..., 'rb')` 计算文件哈希，比调用外部命令更灵活、可控，且不易触达工具调用限制。\n3. **输出回读机制**：每次写入输出文件后，必须执行 `read` 操作核对内容，确保 JSON 结构（键名、数组顺序）和实际数据正确。\n4. **分类处理逻辑**：明确区分三种状态：\n   - `matching`：文件存在且哈希一致\n   - `different`：文件存在但哈希不一致\n   - `missing`：文件不存在\n5. **保留原路径字符串**：输出时严格保留输入路径的原始格式（如 `./keep.txt`），不做任何修改。\n\n## Old Assumptions to Withdraw (需要撤回的旧假设)\n1. **所有路径都需要前缀**：旧经验中假设所有路径都需要 `docs/` 前缀，这已被证伪。应动态判断路径格式。\n2. **输出只需 matching 和 different**：旧任务只要求两个数组，但新任务需要 `missing` 分类。需根据任务要求动态调整输出结构。\n3. **工具调用无限制**：旧经验中曾尝试多次调用 `sha256sum`，导致达到调用上限。应优先使用内置库。\n\n## Parameter Learning Value (是否值得继续参数学习)\n- **值得继续**：当前任务成功验证了“路径动态解析 + 输出回读 + 分类处理”这一策略的有效性。小样本（4 个文件）下，该策略表现稳定，建议继续通过更多边界案例（如深层嵌套、特殊字符、大文件）强化。\n- **暂缓更新**：若外部反馈显示当前策略泛化性不足，可暂缓参数更新，先通过更多样化的测试用例（如混合路径格式、缺失文件、权限错误）积累更多经验。\n\n## Next Steps (下一步行动)\n1. **测试深层嵌套路径**：使用类似 `a/b/c/d/e.txt` 的路径，验证脚本是否能正确处理多层目录。\n2. **测试特殊字符路径**：尝试包含空格、中文、特殊符号的路径，确保脚本鲁棒性。\n3. **测试大文件**：选择一个 >1MB 的文件，验证 `hashlib` 是否能高效处理。\n4. **测试权限错误**：创建一个文件后删除权限，观察脚本是否能捕获 `PermissionError` 并正确处理。\n5. **扩展任务复杂度**：尝试包含子任务（如先读取文件内容再计算哈希），或需要跨文件比对的任务。\n",
+      "notes_written": true
+    },
+    {
+      "mode": "fresh-context",
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-feedback-action-20261014",
+      "post_state_hash": "cd2e48e8c551aef7d066e94d1b8e698dfd951bb5d10dbd2c51c37ff687ab6f68",
+      "outputs": {
+        "audit-output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 22.176786010997603,
+      "native_prefix_preserved": null,
+      "continuation_start_message_index": 0,
+      "tool_call_count": 8,
+      "tool_names": [
+        "read",
+        "bash",
+        "bash",
+        "bash",
+        "bash",
+        "write",
+        "read",
+        "write"
+      ],
+      "learning_notes": "# Path Boundary Audit - Learning Notes\n\n## 有效经验\n- 使用 `sha256sum` 命令可以准确计算文件字节哈希\n- 需要处理相对路径前缀 `./` 的保留问题\n- 文件不存在时 `sha256sum` 会报错，需捕获错误\n- 空文件 `empty.bin` 的 SHA256 为 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`\n\n## 需要撤回的旧假设\n- 之前假设 `./keep.txt` 存在，实际哈希不匹配（audit.json 中为 `45ad2d3c95167d439e50f424d0fd67d805951412a9f710fc8f1c073fa77f40bc`，实际为 `441d4beeafd26069fef3a9e3a77afc413233f8970895cc49f673944fff8f7636`）\n- 之前假设 `gone.txt` 存在，实际文件不存在\n\n## 是否值得继续参数学习\n- 当前审计任务已完成，无需继续参数学习\n\n## 下一步行动\n- 审计输出文件 `audit-output.json` 已生成\n- 核对完成，所有文件状态已分类\n",
+      "notes_written": true
+    }
+  ],
+  "training_executed": false,
+  "candidate_promoted": false,
+  "scope": "actual work plus optional Agent-authored learning state; notes are proposals not automatically verified truth; single paired exploratory task",
+  "interpretation": "Both arms passed. Native Agent recorded actual learning state and used fewer calls in this single case; not established statistical benefit. Notes remain unverified proposals."
+}

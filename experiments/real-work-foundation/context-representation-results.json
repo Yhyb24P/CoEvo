@@ -1,0 +1,640 @@
+{
+  "scope": "development representation/condensation comparison; native/full same source facts, initial tokens matched; roles/format differ intentionally; note information not assumed equal",
+  "source_clusters": 4,
+  "future_cases": 12,
+  "runs": 48,
+  "initial_tokens_min": 1676,
+  "initial_tokens_max": 2675,
+  "initial_budget_match_tolerance": 2,
+  "actual_plan_delta_max": 0,
+  "reported_initial_token_delta_max": 0,
+  "neutral_padding_used": true,
+  "total_compute_not_matched": true,
+  "W": "W0 fixed",
+  "H_used": false,
+  "training_executed": false,
+  "promotion": false,
+  "panel_sha256": "06629bafd859fece9f53f9f213b2493af40162a156fb2bb4b81dd0cabf544192",
+  "plans_sha256": "b216ea06e3677f80348f1fd5ccbf2ef9e741954e58e695c4b2a761bcbe15543a",
+  "modes": {
+    "none": {
+      "passed": 7,
+      "total": 12,
+      "by_case_kind": {
+        "transfer": 1,
+        "condition-change": 3,
+        "withdrawal": 3
+      },
+      "gains_vs_none": [],
+      "losses_vs_none": [],
+      "literal_completion_on_failed": 4,
+      "wall_seconds": 81.83848227490671,
+      "cost": {
+        "reported_input_tokens": 194740,
+        "reported_output_tokens": 3107,
+        "reported_cached_tokens": 0,
+        "tool_calls": 73
+      },
+      "rows": [
+        {
+          "name": "merge-transfer",
+          "family": "merge",
+          "case_kind": "transfer",
+          "passed": false,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "csv-transfer",
+          "family": "csv",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 2293,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-transfer",
+          "family": "filter",
+          "case_kind": "transfer",
+          "passed": false,
+          "initial_input_tokens": 2667,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "merge-condition-change",
+          "family": "merge",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 1684,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-withdrawal",
+          "family": "merge",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-withdrawal",
+          "family": "hash",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1968,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-withdrawal",
+          "family": "filter",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 2675,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-transfer",
+          "family": "hash",
+          "case_kind": "transfer",
+          "passed": false,
+          "initial_input_tokens": 1952,
+          "native_prefix_preserved": null,
+          "normal_stop": false,
+          "artifact_correct": false
+        },
+        {
+          "name": "hash-condition-change",
+          "family": "hash",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 1950,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-withdrawal",
+          "family": "csv",
+          "case_kind": "withdrawal",
+          "passed": false,
+          "initial_input_tokens": 2311,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "csv-condition-change",
+          "family": "csv",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 2293,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-condition-change",
+          "family": "filter",
+          "case_kind": "condition-change",
+          "passed": false,
+          "initial_input_tokens": 2667,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        }
+      ]
+    },
+    "native": {
+      "passed": 11,
+      "total": 12,
+      "by_case_kind": {
+        "transfer": 4,
+        "condition-change": 3,
+        "withdrawal": 4
+      },
+      "gains_vs_none": [
+        "hash-transfer",
+        "merge-transfer",
+        "filter-transfer",
+        "filter-condition-change",
+        "csv-withdrawal"
+      ],
+      "losses_vs_none": [
+        "merge-condition-change"
+      ],
+      "literal_completion_on_failed": 1,
+      "wall_seconds": 78.55227892508265,
+      "cost": {
+        "reported_input_tokens": 113497,
+        "reported_output_tokens": 3014,
+        "reported_cached_tokens": 0,
+        "tool_calls": 42
+      },
+      "rows": [
+        {
+          "name": "filter-withdrawal",
+          "family": "filter",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 2674,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-transfer",
+          "family": "hash",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 1953,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-transfer",
+          "family": "merge",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-withdrawal",
+          "family": "hash",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1969,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-transfer",
+          "family": "filter",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 2666,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-withdrawal",
+          "family": "merge",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-condition-change",
+          "family": "hash",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 1951,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-condition-change",
+          "family": "merge",
+          "case_kind": "condition-change",
+          "passed": false,
+          "initial_input_tokens": 1684,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "filter-condition-change",
+          "family": "filter",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 2666,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-transfer",
+          "family": "csv",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 2292,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-condition-change",
+          "family": "csv",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 2292,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-withdrawal",
+          "family": "csv",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 2310,
+          "native_prefix_preserved": true,
+          "normal_stop": true,
+          "artifact_correct": true
+        }
+      ]
+    },
+    "full-record": {
+      "passed": 11,
+      "total": 12,
+      "by_case_kind": {
+        "transfer": 4,
+        "condition-change": 3,
+        "withdrawal": 4
+      },
+      "gains_vs_none": [
+        "merge-transfer",
+        "filter-transfer",
+        "hash-transfer",
+        "csv-withdrawal",
+        "filter-condition-change"
+      ],
+      "losses_vs_none": [
+        "merge-condition-change"
+      ],
+      "literal_completion_on_failed": 1,
+      "wall_seconds": 64.12885127891786,
+      "cost": {
+        "reported_input_tokens": 112253,
+        "reported_output_tokens": 2436,
+        "reported_cached_tokens": 0,
+        "tool_calls": 42
+      },
+      "rows": [
+        {
+          "name": "filter-withdrawal",
+          "family": "filter",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 2674,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-transfer",
+          "family": "merge",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-transfer",
+          "family": "csv",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 2292,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-transfer",
+          "family": "filter",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 2666,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-condition-change",
+          "family": "hash",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 1950,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-transfer",
+          "family": "hash",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 1952,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-condition-change",
+          "family": "merge",
+          "case_kind": "condition-change",
+          "passed": false,
+          "initial_input_tokens": 1684,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "hash-withdrawal",
+          "family": "hash",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1968,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-withdrawal",
+          "family": "merge",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-withdrawal",
+          "family": "csv",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 2310,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-condition-change",
+          "family": "csv",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 2292,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-condition-change",
+          "family": "filter",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 2666,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        }
+      ]
+    },
+    "agent-note": {
+      "passed": 7,
+      "total": 12,
+      "by_case_kind": {
+        "transfer": 2,
+        "condition-change": 3,
+        "withdrawal": 2
+      },
+      "gains_vs_none": [
+        "filter-condition-change",
+        "merge-transfer",
+        "hash-transfer"
+      ],
+      "losses_vs_none": [
+        "filter-withdrawal",
+        "csv-transfer",
+        "csv-condition-change"
+      ],
+      "literal_completion_on_failed": 5,
+      "wall_seconds": 65.12725829298142,
+      "cost": {
+        "reported_input_tokens": 117927,
+        "reported_output_tokens": 2440,
+        "reported_cached_tokens": 0,
+        "tool_calls": 44
+      },
+      "rows": [
+        {
+          "name": "filter-withdrawal",
+          "family": "filter",
+          "case_kind": "withdrawal",
+          "passed": false,
+          "initial_input_tokens": 2675,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "hash-withdrawal",
+          "family": "hash",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1968,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-transfer",
+          "family": "csv",
+          "case_kind": "transfer",
+          "passed": false,
+          "initial_input_tokens": 2292,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "merge-withdrawal",
+          "family": "merge",
+          "case_kind": "withdrawal",
+          "passed": true,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-condition-change",
+          "family": "filter",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 2667,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "merge-condition-change",
+          "family": "merge",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 1684,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-withdrawal",
+          "family": "csv",
+          "case_kind": "withdrawal",
+          "passed": false,
+          "initial_input_tokens": 2310,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "merge-transfer",
+          "family": "merge",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 1676,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "hash-transfer",
+          "family": "hash",
+          "case_kind": "transfer",
+          "passed": true,
+          "initial_input_tokens": 1952,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "filter-transfer",
+          "family": "filter",
+          "case_kind": "transfer",
+          "passed": false,
+          "initial_input_tokens": 2667,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        },
+        {
+          "name": "hash-condition-change",
+          "family": "hash",
+          "case_kind": "condition-change",
+          "passed": true,
+          "initial_input_tokens": 1950,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": true
+        },
+        {
+          "name": "csv-condition-change",
+          "family": "csv",
+          "case_kind": "condition-change",
+          "passed": false,
+          "initial_input_tokens": 2292,
+          "native_prefix_preserved": null,
+          "normal_stop": true,
+          "artifact_correct": false
+        }
+      ]
+    }
+  },
+  "note_generation": {
+    "csv": {
+      "available": true,
+      "native_prefix_preserved": true,
+      "teacher_reference_in_source": false,
+      "note_sha256": "eeb6449dd3e673d279b87edb7ce16d1f0de56eb01cf05d9e7c0d3a18013382ed",
+      "semantic_correctness": "proposal; judged through future tasks, not automatically certified"
+    },
+    "filter": {
+      "available": true,
+      "native_prefix_preserved": true,
+      "teacher_reference_in_source": true,
+      "note_sha256": "50006eba45f1b1df09dba844a88eeb9c7f77567d94b1036de2ca32cfb57a16fd",
+      "semantic_correctness": "proposal; judged through future tasks, not automatically certified"
+    },
+    "hash": {
+      "available": true,
+      "native_prefix_preserved": true,
+      "teacher_reference_in_source": false,
+      "note_sha256": "f02ed06a3a436677ac6ba53cbd2215a02fc50ec7cd70cb5b0f63a453df9f8adc",
+      "semantic_correctness": "proposal; judged through future tasks, not automatically certified"
+    },
+    "merge": {
+      "available": true,
+      "native_prefix_preserved": true,
+      "teacher_reference_in_source": false,
+      "note_sha256": "8302bfba00484972d8c014937c540346cf9c61790a14369101d9e93ac9693db4",
+      "semantic_correctness": "proposal; judged through future tasks, not automatically certified"
+    }
+  },
+  "native_full_same_pass_vector": true
+}

@@ -1,0 +1,1283 @@
+{
+  "scope": "single-seed development mask/replay control; four shared families, 16 instances, no independent H or Q3 claim",
+  "H_used": false,
+  "promotion": false,
+  "panel_sha256": "4eae8ee988c8a380e1eaf7c985bfe2eab43e96f4266f9abc4b97affb646e29f8",
+  "training_source_snapshot_sha256": "2b10cf2eb7a9f6a02f62bcc4be8b2b4a7b86ab2f6e43f9a03571099800c1bddf",
+  "sampling": {
+    "temperature": 0,
+    "seed": 17
+  },
+  "seeds": [
+    17
+  ],
+  "D_instances": 16,
+  "G_instances": 3,
+  "family_clusters": 4,
+  "models": {
+    "W0": {
+      "D_passed": 6,
+      "G_passed": 3,
+      "family_passed": {
+        "csv": 0,
+        "hash": 2,
+        "filter": 0,
+        "merge": 4
+      },
+      "D_gains_vs_W0": [],
+      "D_losses_vs_W0": [],
+      "artifact_correct_D": 6,
+      "literal_completion_on_failed_D": 9,
+      "unauthorized_change_episodes": 0,
+      "wall_seconds": 199.00168166699586,
+      "cost": {
+        "reported_input_tokens": 105648,
+        "reported_output_tokens": 6968,
+        "tool_call_attempts": 72,
+        "missing_transcripts": 0,
+        "assistant_messages_without_usage": 0
+      },
+      "cost_scope": "reported SDK usage; failed or interrupted requests may be missing, not a complete billing measurement",
+      "paired_rows": [
+        {
+          "name": "D-csv-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": false,
+          "response_check": false,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        }
+      ]
+    },
+    "full-replay-same-exposure": {
+      "D_passed": 8,
+      "G_passed": 3,
+      "family_passed": {
+        "csv": 0,
+        "hash": 4,
+        "filter": 0,
+        "merge": 4
+      },
+      "D_gains_vs_W0": [
+        "D-hash-0",
+        "D-hash-3"
+      ],
+      "D_losses_vs_W0": [],
+      "artifact_correct_D": 8,
+      "literal_completion_on_failed_D": 8,
+      "unauthorized_change_episodes": 0,
+      "wall_seconds": 162.98442885800614,
+      "cost": {
+        "reported_input_tokens": 70997,
+        "reported_output_tokens": 2976,
+        "tool_call_attempts": 62,
+        "missing_transcripts": 0,
+        "assistant_messages_without_usage": 0
+      },
+      "cost_scope": "reported SDK usage; failed or interrupted requests may be missing, not a complete billing measurement",
+      "paired_rows": [
+        {
+          "name": "D-csv-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        }
+      ]
+    },
+    "full-replay-token-matched": {
+      "D_passed": 7,
+      "G_passed": 3,
+      "family_passed": {
+        "csv": 0,
+        "hash": 3,
+        "filter": 0,
+        "merge": 4
+      },
+      "D_gains_vs_W0": [
+        "D-hash-3"
+      ],
+      "D_losses_vs_W0": [],
+      "artifact_correct_D": 7,
+      "literal_completion_on_failed_D": 9,
+      "unauthorized_change_episodes": 0,
+      "wall_seconds": 209.9900332899997,
+      "cost": {
+        "reported_input_tokens": 78437,
+        "reported_output_tokens": 3915,
+        "tool_call_attempts": 66,
+        "missing_transcripts": 0,
+        "assistant_messages_without_usage": 0
+      },
+      "cost_scope": "reported SDK usage; failed or interrupted requests may be missing, not a complete billing measurement",
+      "paired_rows": [
+        {
+          "name": "D-csv-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        }
+      ]
+    },
+    "full-same-exposure": {
+      "D_passed": 8,
+      "G_passed": 3,
+      "family_passed": {
+        "csv": 0,
+        "hash": 4,
+        "filter": 0,
+        "merge": 4
+      },
+      "D_gains_vs_W0": [
+        "D-hash-0",
+        "D-hash-3"
+      ],
+      "D_losses_vs_W0": [],
+      "artifact_correct_D": 8,
+      "literal_completion_on_failed_D": 8,
+      "unauthorized_change_episodes": 0,
+      "wall_seconds": 169.44967979297508,
+      "cost": {
+        "reported_input_tokens": 70961,
+        "reported_output_tokens": 2958,
+        "tool_call_attempts": 62,
+        "missing_transcripts": 0,
+        "assistant_messages_without_usage": 0
+      },
+      "cost_scope": "reported SDK usage; failed or interrupted requests may be missing, not a complete billing measurement",
+      "paired_rows": [
+        {
+          "name": "D-csv-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        }
+      ]
+    },
+    "full-token-matched": {
+      "D_passed": 8,
+      "G_passed": 3,
+      "family_passed": {
+        "csv": 0,
+        "hash": 4,
+        "filter": 0,
+        "merge": 4
+      },
+      "D_gains_vs_W0": [
+        "D-hash-0",
+        "D-hash-3"
+      ],
+      "D_losses_vs_W0": [],
+      "artifact_correct_D": 8,
+      "literal_completion_on_failed_D": 8,
+      "unauthorized_change_episodes": 0,
+      "wall_seconds": 168.60018145400682,
+      "cost": {
+        "reported_input_tokens": 70577,
+        "reported_output_tokens": 2918,
+        "tool_call_attempts": 62,
+        "missing_transcripts": 0,
+        "assistant_messages_without_usage": 0
+      },
+      "cost_scope": "reported SDK usage; failed or interrupted requests may be missing, not a complete billing measurement",
+      "paired_rows": [
+        {
+          "name": "D-csv-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        }
+      ]
+    },
+    "output-only-same-exposure": {
+      "D_passed": 8,
+      "G_passed": 3,
+      "family_passed": {
+        "csv": 0,
+        "hash": 4,
+        "filter": 0,
+        "merge": 4
+      },
+      "D_gains_vs_W0": [
+        "D-hash-0",
+        "D-hash-3"
+      ],
+      "D_losses_vs_W0": [],
+      "artifact_correct_D": 8,
+      "literal_completion_on_failed_D": 8,
+      "unauthorized_change_episodes": 0,
+      "wall_seconds": 175.98397269501584,
+      "cost": {
+        "reported_input_tokens": 71297,
+        "reported_output_tokens": 3126,
+        "tool_call_attempts": 62,
+        "missing_transcripts": 0,
+        "assistant_messages_without_usage": 0
+      },
+      "cost_scope": "reported SDK usage; failed or interrupted requests may be missing, not a complete billing measurement",
+      "paired_rows": [
+        {
+          "name": "D-csv-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        }
+      ]
+    },
+    "output-only-token-matched": {
+      "D_passed": 6,
+      "G_passed": 3,
+      "family_passed": {
+        "csv": 0,
+        "hash": 2,
+        "filter": 0,
+        "merge": 4
+      },
+      "D_gains_vs_W0": [
+        "D-hash-0"
+      ],
+      "D_losses_vs_W0": [
+        "D-hash-2"
+      ],
+      "artifact_correct_D": 6,
+      "literal_completion_on_failed_D": 10,
+      "unauthorized_change_episodes": 0,
+      "wall_seconds": 237.4708475030202,
+      "cost": {
+        "reported_input_tokens": 88376,
+        "reported_output_tokens": 4399,
+        "tool_call_attempts": 70,
+        "missing_transcripts": 0,
+        "assistant_messages_without_usage": 0
+      },
+      "cost_scope": "reported SDK usage; failed or interrupted requests may be missing, not a complete billing measurement",
+      "paired_rows": [
+        {
+          "name": "D-csv-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-0",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-1",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-2",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-csv-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-hash-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-filter-3",
+          "passed": false,
+          "artifact_correct": false,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "D-merge-3",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-0",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-1",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        },
+        {
+          "name": "G-2",
+          "passed": true,
+          "artifact_correct": true,
+          "normal_stop": true,
+          "response_check": true,
+          "runtime_failure": null
+        }
+      ]
+    }
+  }
+}

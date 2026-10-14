@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-13",
+  "scope": "repository and offline engineering qualification; not student ability",
+  "candidates": [
+    {
+      "repository": "adrienverge/yamllint",
+      "url": "https://github.com/adrienverge/yamllint",
+      "revision": "96246fb0d5fba8c8cba48747342de3351ea64bea",
+      "license_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "license": "GPL-3.0-or-later",
+      "baseline": {
+        "exit_code": 0,
+        "timed_out": false,
+        "wall_seconds": 2.5200600609823596,
+        "log": "/mnt/e/CoEvo/artifacts/task-selection-20261013/adrienverge--yamllint.log",
+        "network": "isolated",
+        "workspace_readonly": true,
+        "repository": "adrienverge--yamllint",
+        "command": [
+          "python",
+          "-m",
+          "unittest",
+          "discover"
+        ]
+      },
+      "source_python_files": 69,
+      "selected": false
+    },
+    {
+      "repository": "eyeseast/python-frontmatter",
+      "url": "https://github.com/eyeseast/python-frontmatter",
+      "revision": "dc7c0af5466b104e0ba01ae3c5b2cd77edc27292",
+      "license_sha256": "2e6885df8cdba51ba3aefe34598e68856f1b2468d1e58c719614004b86fb43d5",
+      "license": "MIT",
+      "baseline": {
+        "exit_code": 0,
+        "timed_out": false,
+        "wall_seconds": 0.41553625802043825,
+        "log": "/mnt/e/CoEvo/artifacts/task-selection-20261013/eyeseast--python-frontmatter.log",
+        "network": "isolated",
+        "workspace_readonly": true,
+        "repository": "eyeseast--python-frontmatter",
+        "command": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "tests"
+        ]
+      },
+      "source_python_files": 13,
+      "selected": false
+    },
+    {
+      "repository": "frostming/marko",
+      "url": "https://github.com/frostming/marko",
+      "revision": "1cc1583dd38bc41fecc113e56df4ce9d2d693efa",
+      "license_sha256": "1da058ed0440fea5df1765b19a1418800439b18fd6f1c13c7d429cb81e9c6d47",
+      "license": "MIT",
+      "baseline": {
+        "exit_code": 0,
+        "timed_out": false,
+        "wall_seconds": 1.8687053970061243,
+        "log": "/mnt/e/CoEvo/artifacts/task-selection-20261013/frostming--marko.log",
+        "network": "isolated",
+        "workspace_readonly": true,
+        "repository": "frostming--marko",
+        "command": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "tests"
+        ]
+      },
+      "source_python_files": 38,
+      "selected": true
+    }
+  ],
+  "selection": "frostming/marko",
+  "task_split": "D",
+  "H_used": false,
+  "task_environment_lock_sha256": "5505a2ddde8281cbf9a595a69d61b689b44fcb0b9190b64df6ffe25a6effc62d"
+}

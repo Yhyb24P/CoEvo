@@ -1,0 +1,30 @@
+{
+  "optimizer_steps": 25,
+  "actual_supervised_tokens": 1463,
+  "actual_context_tokens": 38653,
+  "actual_sequences": 25,
+  "unique_source_clusters": 18,
+  "initial_and_final_parameter_check_ref": {
+    "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+    "after": "4a47a65e224387483adbf7c91fae714bad84d2b2e403fa64f50eccc1b9a1b3ee"
+  },
+  "gradient_nonzero": true,
+  "peak_gpu_allocated": 22226794496,
+  "gpu_wall_hours": 0.00853297982111043,
+  "training_seeds": [
+    17
+  ],
+  "learning_rate": 1e-05,
+  "behavior_target_counts": {
+    "bash": 1,
+    "read-output-stop-replay": 3,
+    "readback": 1,
+    "readonly-tool-query": 17,
+    "visible-read-plan": 3
+  },
+  "selection_ref": "/mnt/e/CoEvo/runs/agent-learning-followup/20261014-schema-repair/selected.jsonl",
+  "selection_before_training": true,
+  "selection_protocol": "earlier structured proposal plus one repair; separate from later native free discussion",
+  "candidate_promoted": false,
+  "H_used": false
+}

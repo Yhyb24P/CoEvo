@@ -1,0 +1,187 @@
+{
+  "date": "2026-10-14",
+  "scope": "D descriptive pilot; one input per family",
+  "sampling": {
+    "temperature": 0,
+    "seed": 17
+  },
+  "W0": [
+    {
+      "arm": "W0",
+      "case": "nested_merge",
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-nested_merge",
+      "post_state_hash": "22674c90cc45e7f53690444d7255087bf9368739c50f537fd35872ca3df9ca71",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 3.889657518011518
+    },
+    {
+      "arm": "W0",
+      "case": "dialect",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-dialect",
+      "post_state_hash": "2331d6a10ef9152cf7ad27e4123112db64299d67a0e0b8f771c585f3f96ec310",
+      "outputs": {
+        "output.csv": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.2389632380218245
+    },
+    {
+      "arm": "W0",
+      "case": "markdown_links",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-markdown_links",
+      "post_state_hash": "aaab525fd7b06a0c822665877967966e49cba97cb28cecbd21bd00798c69b231",
+      "outputs": {
+        "output.md": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 3.143073902989272
+    },
+    {
+      "arm": "W0",
+      "case": "manifest",
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-manifest",
+      "post_state_hash": "249f57f6cb4164d6f799d062e8be3f1a52c302de946513800b586a78bb69b70a",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 4.452451624994865
+    }
+  ],
+  "teacher_replay": [
+    {
+      "arm": "teacher-replay",
+      "case": "nested_merge",
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-nested_merge",
+      "post_state_hash": "22674c90cc45e7f53690444d7255087bf9368739c50f537fd35872ca3df9ca71",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 6.745251617976464
+    },
+    {
+      "arm": "teacher-replay",
+      "case": "dialect",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-dialect",
+      "post_state_hash": "2331d6a10ef9152cf7ad27e4123112db64299d67a0e0b8f771c585f3f96ec310",
+      "outputs": {
+        "output.csv": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 13.104671907989541
+    },
+    {
+      "arm": "teacher-replay",
+      "case": "markdown_links",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-markdown_links",
+      "post_state_hash": "aaab525fd7b06a0c822665877967966e49cba97cb28cecbd21bd00798c69b231",
+      "outputs": {
+        "output.md": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 5.5923751310037915
+    },
+    {
+      "arm": "teacher-replay",
+      "case": "manifest",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-independent-20261014-manifest",
+      "post_state_hash": "8578b3e3798f5ad7d9e5ff2b655f246ceab98a6756cf0e5b49b84218c8ba1a37",
+      "outputs": {
+        "output.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 14.2204434890009
+    }
+  ],
+  "counts": {
+    "W0": [
+      2,
+      4
+    ],
+    "teacher_replay": [
+      1,
+      4
+    ]
+  },
+  "initial_candidate_failure": "All four connection errors before tool calls; excluded from capability comparison, original run retained",
+  "repair": "serve exec owns API process; refuse occupied endpoint; require intended model ID",
+  "candidate_promoted": false,
+  "H_used": false,
+  "interpretation": "No observed transfer benefit; insufficient sample for statistical decline."
+}

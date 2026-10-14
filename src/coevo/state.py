@@ -1,5 +1,6 @@
 """One transactional source for pilot progress, accepted adapters and experiences."""
 import json
+import re
 import sqlite3
 import time
 from pathlib import Path
@@ -7,6 +8,7 @@ from pathlib import Path
 
 class State:
     def __init__(self, path=".state/rsi.sqlite"):
+        self.path = str(Path(path).resolve())
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         self.db = sqlite3.connect(path)
         self.db.executescript('''
@@ -16,6 +18,43 @@ class State:
             CREATE TABLE IF NOT EXISTS experiences (id TEXT PRIMARY KEY, source TEXT NOT NULL, conditions TEXT NOT NULL, evidence TEXT NOT NULL, status TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp REAL NOT NULL, kind TEXT NOT NULL, payload TEXT NOT NULL);
         ''')
+
+    @classmethod
+    def for_experiment(cls, config):
+        """Bind one explicit database to one study/stream/arm; never adopt old state."""
+        namespace = {key: config.get(key) for key in ('study_id', 'stream_id', 'arm_id')}
+        for key, value in namespace.items():
+            if not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*', value) or '..' in value:
+                raise ValueError(f'Explicit valid {key} is required for experiment state')
+        template = config.get('state_path')
+        if not isinstance(template, str) or not template:
+            raise ValueError('Explicit state_path is required for experiment state')
+        state = cls(template.format(**namespace))
+        try:
+            with state.db:
+                # Lock before checking, so competing namespaces cannot both bind.
+                state.db.execute('BEGIN IMMEDIATE')
+                row = state.db.execute("SELECT value FROM settings WHERE key='experiment_namespace'").fetchone()
+                if row:
+                    if json.loads(row[0]) != namespace:
+                        raise ValueError('State database belongs to another experiment namespace')
+                else:
+                    occupied = any(state.db.execute(f'SELECT 1 FROM {table} LIMIT 1').fetchone()
+                                   for table in ('cycles', 'versions', 'settings', 'experiences', 'events'))
+                    if occupied:
+                        raise ValueError('Existing unscoped state must not be adopted by a new experiment')
+                    state.db.execute("INSERT INTO settings VALUES ('experiment_namespace',?)", (json.dumps(namespace),))
+            state.namespace = namespace
+            return state
+        except BaseException:
+            state.db.close()
+            raise
+
+    def manifest(self):
+        return {'state_path': self.path, 'namespace': self.namespace}
+
+    def close(self):
+        self.db.close()
 
     def cycle(self, number):
         row = self.db.execute("SELECT phase, record FROM cycles WHERE id=?", (number,)).fetchone()

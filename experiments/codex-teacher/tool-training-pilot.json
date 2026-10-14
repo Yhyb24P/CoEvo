@@ -1,0 +1,55 @@
+{
+  "optimizer_steps": 23,
+  "actual_supervised_tokens": 1174,
+  "actual_context_tokens": 39284,
+  "actual_sequences": 23,
+  "unique_source_clusters": 14,
+  "gradient_nonzero": true,
+  "peak_gpu_allocated": 22226794496,
+  "gpu_wall_hours": 0.009158024152776407,
+  "learning_rate": 1e-05,
+  "behavior_target_counts": {
+    "readonly-tool-query": 20,
+    "visible-read-plan": 3
+  },
+  "scope": "actual archived teacher tool interactions and visible plans; development pilot",
+  "candidate_promoted": false,
+  "H_used": false,
+  "regression_status": "completed",
+  "dataset_sha256": "8d189bc8e98ecf05460f7fe580ae7127504c13acf6b3a1e1aa9aa3737a139214",
+  "old_G": {
+    "before": {
+      "passed": 3,
+      "total": 3
+    },
+    "after": {
+      "passed": 2,
+      "total": 3
+    }
+  },
+  "table_development": {
+    "before": {
+      "passed": 3,
+      "total": 5
+    },
+    "after": {
+      "passed": 3,
+      "total": 5
+    }
+  },
+  "failed_old_behavior": {
+    "task": "deduplicate-and-sort",
+    "expected": [
+      -1,
+      2,
+      5
+    ],
+    "actual": -1,
+    "actual_tools": [
+      "read",
+      "write"
+    ],
+    "tool_errors": 0
+  },
+  "accepted_model": "W0"
+}

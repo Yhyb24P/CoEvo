@@ -1,0 +1,121 @@
+{
+  "scope": "single-seed six-arm same-W0 development training; completed paired evaluation in supervision-trial-results.json",
+  "training": {
+    "full-replay-same-exposure": {
+      "optimizer_steps": 12,
+      "actual_supervised_tokens": 3649,
+      "actual_context_tokens": 42908,
+      "actual_sequences": 15,
+      "unique_source_clusters": 7,
+      "initial_and_final_parameter_check_ref": {
+        "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+        "after": "19878baae1e7aea924005a3884e8e6bf5f2376385feb70724ebfd4052f9d8c89"
+      },
+      "gradient_nonzero": true,
+      "peak_gpu_allocated": 17519121408,
+      "gpu_wall_hours": 0.011676169912777064,
+      "training_seeds": [
+        17
+      ],
+      "learning_rate": 1e-05,
+      "training_loss_mode": "selected-logits"
+    },
+    "full-replay-token-matched": {
+      "optimizer_steps": 36,
+      "actual_supervised_tokens": 10451,
+      "actual_context_tokens": 122812,
+      "actual_sequences": 39,
+      "unique_source_clusters": 7,
+      "initial_and_final_parameter_check_ref": {
+        "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+        "after": "7aa68b8d3cc9b585211d04e7de39c5d2f0f97e1e526bcf34bd39b9a9c43cd8d8"
+      },
+      "gradient_nonzero": true,
+      "peak_gpu_allocated": 17519131648,
+      "gpu_wall_hours": 0.03138858729971818,
+      "training_seeds": [
+        17
+      ],
+      "learning_rate": 1e-05,
+      "training_loss_mode": "selected-logits"
+    },
+    "full-same-exposure": {
+      "optimizer_steps": 12,
+      "actual_supervised_tokens": 3401,
+      "actual_context_tokens": 39952,
+      "actual_sequences": 12,
+      "unique_source_clusters": 4,
+      "initial_and_final_parameter_check_ref": {
+        "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+        "after": "608879e96c9fb88e491de49a05fb8c7e44cccdb71d187b0547bfbd95848634a8"
+      },
+      "gradient_nonzero": true,
+      "peak_gpu_allocated": 17519121408,
+      "gpu_wall_hours": 0.011120072293609458,
+      "training_seeds": [
+        17
+      ],
+      "learning_rate": 1e-05,
+      "training_loss_mode": "selected-logits"
+    },
+    "full-token-matched": {
+      "optimizer_steps": 36,
+      "actual_supervised_tokens": 10203,
+      "actual_context_tokens": 119856,
+      "actual_sequences": 36,
+      "unique_source_clusters": 4,
+      "initial_and_final_parameter_check_ref": {
+        "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+        "after": "d46ece1b0631c3402d03a26dcde78a9a924625384eb4a50492540cdb1391a7ee"
+      },
+      "gradient_nonzero": true,
+      "peak_gpu_allocated": 17519131648,
+      "gpu_wall_hours": 0.030232927225838972,
+      "training_seeds": [
+        17
+      ],
+      "learning_rate": 1e-05,
+      "training_loss_mode": "selected-logits"
+    },
+    "output-only-same-exposure": {
+      "optimizer_steps": 12,
+      "actual_supervised_tokens": 1734,
+      "actual_context_tokens": 39952,
+      "actual_sequences": 12,
+      "unique_source_clusters": 4,
+      "initial_and_final_parameter_check_ref": {
+        "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+        "after": "a2d39b287829639dc1bb19e6b55de47594a264ceeec06487be71531bb5747851"
+      },
+      "gradient_nonzero": true,
+      "peak_gpu_allocated": 17516976128,
+      "gpu_wall_hours": 0.010608216418889545,
+      "training_seeds": [
+        17
+      ],
+      "learning_rate": 1e-05,
+      "training_loss_mode": "selected-logits"
+    },
+    "output-only-token-matched": {
+      "optimizer_steps": 36,
+      "actual_supervised_tokens": 10404,
+      "actual_context_tokens": 239712,
+      "actual_sequences": 72,
+      "unique_source_clusters": 4,
+      "initial_and_final_parameter_check_ref": {
+        "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+        "after": "751e6f048eb8bcac130cfc7ba9308e5ddfda9f5d468f7dd4a5671a3373db78f6"
+      },
+      "gradient_nonzero": true,
+      "peak_gpu_allocated": 17599109120,
+      "gpu_wall_hours": 0.05819514086777215,
+      "training_seeds": [
+        17
+      ],
+      "learning_rate": 1e-05,
+      "training_loss_mode": "selected-logits"
+    }
+  },
+  "evaluation_completed": true,
+  "promotion": false
+}

@@ -1,0 +1,61 @@
+{
+  "initial": {
+    "passed": false,
+    "split": "L",
+    "train_authorized": true,
+    "source_cluster_id": "L-agent-feedback-20261014-hash",
+    "post_state_hash": "a784dd813cdc7dc1adcc72e9c33c8aaef99b85f37bdf1e5553ab858ac834e1a9",
+    "outputs": {
+      "output.json": false
+    },
+    "unauthorized_changes": [],
+    "response_check": true,
+    "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+    "normal_stop": true,
+    "agent_exit_code": 0,
+    "final_response": "已完成",
+    "feedback_origin": "external-executable-checks",
+    "wall_seconds": 8.248938372998964
+  },
+  "correction": {
+    "passed": true,
+    "split": "L",
+    "train_authorized": true,
+    "source_cluster_id": "L-agent-feedback-20261014-hash",
+    "post_state_hash": "fa1ab55aff034aac3a5a76a3d3730196d6dab4df753f981fa96b50da31b5d1f4",
+    "outputs": {
+      "output.json": true
+    },
+    "unauthorized_changes": [],
+    "response_check": true,
+    "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+    "normal_stop": true,
+    "agent_exit_code": 0,
+    "final_response": "已完成",
+    "feedback_origin": "external-executable-checks",
+    "wall_seconds": 9.404202497011283
+  },
+  "certified_targets": 3,
+  "proposal_runtime": {
+    "passed": true,
+    "split": "L",
+    "train_authorized": false,
+    "source_cluster_id": "L-agent-feedback-20261014-hash",
+    "post_state_hash": "04f7a8a2725e33a88c6d92e4c4cf772547174a343764a0b9197722714f28ff3a",
+    "outputs": {},
+    "unauthorized_changes": [],
+    "response_check": true,
+    "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+    "normal_stop": true,
+    "agent_exit_code": 0,
+    "final_response": "已完成",
+    "feedback_origin": "external-executable-checks",
+    "wall_seconds": 16.953926803020295
+  },
+  "proposal_valid": false,
+  "rejection_reason": "Conditions must use observed source context",
+  "training_executed": false,
+  "candidate_promoted": false,
+  "H_used": false,
+  "scope": "fresh L correction and prospective agent selection; new proposed skill not automatically certified"
+}

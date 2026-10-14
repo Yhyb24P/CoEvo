@@ -41,7 +41,8 @@ def new_run(stage, config):
     path = Path("runs") / run_id
     path.mkdir(parents=True)
     write_json(path / "manifest.json", {
-        "run_id": run_id, "study_id": "workstation-rsi", "arm": stage,
+        "run_id": run_id, "study_id": config.get('study_id', "workstation-rsi"), "arm": stage,
+        "stream_id": config.get('stream_id'), "arm_id": config.get('arm_id'),
         "run_status": "running", "start_time": time.time(),
         "protocol_revision": config["protocol_revision"], "effective_config": config,
         "source_snapshot_ref_and_hash": source_snapshot(),

@@ -17,6 +17,13 @@ from .tasks import make_task, execute_task
 class Server:
     def __init__(self, config, output, adapter=None):
         self.config = read_config(config)
+        try:
+            request_json(self.config['endpoint'] + '/models', timeout=1)
+        except Exception:
+            pass
+        else:
+            raise RuntimeError('Inference endpoint is already occupied; do not adopt an existing service')
+        expected_model = 'coevo-current' if adapter else self.config['served_model']
         self.log = open(output, "w")
         command = [sys.executable, "-m", "coevo.serve", "--config", config]
         if adapter:
@@ -28,10 +35,12 @@ class Server:
                 if self.process.poll() is not None:
                     raise RuntimeError(f"Inference server failed: inspect {output}")
                 try:
-                    request_json(self.config["endpoint"] + "/models", timeout=3)
-                    return
+                    models = request_json(self.config["endpoint"] + "/models", timeout=3)
+                    if expected_model in {item.get('id') for item in models.get('data', [])}:
+                        return
                 except Exception:
-                    time.sleep(1)
+                    pass
+                time.sleep(1)
             raise TimeoutError("Inference initialization exceeded 15 minutes")
         except BaseException:
             self.stop()
@@ -70,7 +79,8 @@ def run(config, out, cycles=3):
     c = read_config(config)
     root = Path(out).resolve()
     root.mkdir(parents=True, exist_ok=True)
-    state = State()
+    state = State.for_experiment(c)
+    write_json(root / 'experiment-state.json', state.manifest())
     server = None
     try:
         for cycle in range(1, cycles+1):
@@ -150,6 +160,7 @@ def run(config, out, cycles=3):
     finally:
         if server:
             server.stop()
+        state.close()
 
 
 def main():

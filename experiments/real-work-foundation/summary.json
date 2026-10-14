@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-14",
+  "scope": "N01-N05 foundation work in progress; not formal study completion",
+  "namespace_isolation": {
+    "implemented": true,
+    "entry_points": [
+      "collect",
+      "rsi",
+      "bridge-status"
+    ],
+    "explicit_fields": [
+      "study_id",
+      "stream_id",
+      "arm_id",
+      "state_path"
+    ],
+    "historical_state_adopted": false
+  },
+  "export_revision": "visible-v3",
+  "logs": 155,
+  "unique_sessions": 133,
+  "workspaces": 84,
+  "visible_records": {
+    "message": 4752,
+    "tool_call": 23739,
+    "tool_result": 23739
+  },
+  "filtered_records": {
+    "non_response_record": 105344,
+    "instruction_role": 546,
+    "injected_scaffolding": 136,
+    "non_visible_item": 25752,
+    "sensitive_or_embedded_instructions": 89
+  },
+  "adaptation": {
+    "visible_sessions": 155,
+    "shell_proposals": 2387,
+    "training_candidates": 0,
+    "counts": {
+      "requires_other_tool_adapter": 21176,
+      "not_completed_successfully": 166,
+      "missing_result": 10
+    },
+    "commands_executed": 0,
+    "qualification": "exit status supports execution only, not semantic correctness"
+  },
+  "episode_reconstruction": {
+    "episode_snapshots": 632,
+    "source_clusters": 587,
+    "sessions_with_tasks": 129,
+    "source_workspaces": 83,
+    "with_completed_pairs": 427,
+    "with_visible_final_response": 452,
+    "train_ready": 0,
+    "counts": {
+      "controller_notifications_removed": 4
+    },
+    "execution": "no historical commands executed; no files beyond the exported corpus inspected"
+  },
+  "students_trained_from_codex": true,
+  "new_model_inference": true,
+  "candidate_promoted": false,
+  "goal_status": "active",
+  "validation": {
+    "unit_tests": 28,
+    "result": "passed",
+    "node_syntax_check": "passed",
+    "git_diff_check": "passed"
+  },
+  "teacher_tool_training": {
+    "candidate_count": 23,
+    "source_clusters": 14,
+    "supervised_tokens": 1174,
+    "target_counts": {
+      "readonly-tool-query": 20,
+      "visible-read-plan": 3
+    },
+    "optimizer_steps": 23,
+    "old_G_after": "2/3",
+    "table_development_after": "3/5",
+    "candidate_promoted": false
+  },
+  "near_token_matched_replay": {
+    "optimizer_steps": 23,
+    "supervised_tokens": 1200,
+    "relative_difference_from_teacher": 0.022146507666098807,
+    "teacher_sources": 14,
+    "replay_sources": 3,
+    "old_G_after": "3/3",
+    "table_development_after": "4/5",
+    "candidate_promoted": false
+  },
+  "virtual_root_write_fix": true
+}
