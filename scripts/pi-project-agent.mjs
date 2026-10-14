@@ -109,12 +109,14 @@ const { session } = await createAgentSession({ cwd: request.model_cwd ?? cwd, ag
   settingsManager: SettingsManager.inMemory({ compaction: { enabled: false }, retry: { enabled: false } }),
 });
 currentSession = session;
-if (request.sampling) {
+if (request.sampling || request.capture_payload || request.preview_only) {
   const previousPayloadHook = session.agent.onPayload;
   session.agent.onPayload = async (payload, model) => {
     const prepared = previousPayloadHook ? (await previousPayloadHook(payload, model)) ?? payload : payload;
-    const controlled = { ...prepared, temperature: request.sampling.temperature, seed: request.sampling.seed };
-    appendFileSync(resolve(runDir, 'sampling.jsonl'), JSON.stringify({ temperature: controlled.temperature, seed: controlled.seed }) + '\n');
+    const controlled = request.sampling ? { ...prepared, temperature: request.sampling.temperature, seed: request.sampling.seed } : prepared;
+    if (request.sampling) appendFileSync(resolve(runDir, 'sampling.jsonl'), JSON.stringify({ temperature: controlled.temperature, seed: controlled.seed }) + '\n');
+    if (request.capture_payload || request.preview_only) appendFileSync(resolve(runDir, 'payloads.jsonl'), JSON.stringify(controlled) + '\n');
+    if (request.preview_only) throw new Error('COEVO_PAYLOAD_PREVIEW_ONLY: no inference requested');
     return controlled;
   };
 }
