@@ -1,0 +1,75 @@
+{
+  "run_id": "20261015-W0-v1",
+  "source_cluster_id": "comap-2025-mcm-c",
+  "split": "D",
+  "H": false,
+  "model": "Qwen3.5-4B W0 BF16",
+  "thinking": false,
+  "code_commit": "5ec853b4ad87e320dade6562d2420817dd9efac1",
+  "budget": {
+    "wall_seconds": 2700,
+    "max_tool_calls": 160,
+    "max_output_tokens": 8192,
+    "bash_seconds": 120,
+    "initial_context_capacity": 139264,
+    "compaction": false
+  },
+  "started_at_utc": "2026-10-14T16:26:03.557938+00:00",
+  "agent_wall_seconds": 770.4919898509979,
+  "total_wall_seconds": 805.1941890716553,
+  "agent_exit_code": 0,
+  "raw_manifest_status": "agent-returned",
+  "verified_termination": {
+    "stop_reason": "length",
+    "final_text_present": false,
+    "normal_completion": false,
+    "last_API_input_tokens": 136014,
+    "last_API_output_tokens": 1,
+    "first_request_max_completion_tokens": 8192,
+    "last_request_max_completion_tokens": 1
+  },
+  "tool_calls": 71,
+  "tool_types": {
+    "read": 1,
+    "bash": 70
+  },
+  "tool_errors": 64,
+  "unique_tool_arguments": 10,
+  "most_repeated_identical_tool_arguments": 62,
+  "most_repeated_arguments_sha256": "dfe8ae3a5586535153f88b7e019fa465a8863e64773f07a2903f4201082bb61f",
+  "API_requests": 72,
+  "cumulative_API_usage": {
+    "input": 4827828,
+    "output": 20515,
+    "cacheRead": 0,
+    "cacheWrite": 0
+  },
+  "usage_scope": "Summed API input/output across turns; repeated history is included, not unique data tokens or uncached GPU prefill work",
+  "GPU_total_memory_5s_sample_peak_MiB": 31705.0,
+  "GPU_measurement_scope": "Whole GPU incl. other processes; five-second sampled peak, not exclusive model allocation or exact peak",
+  "input_changes": [],
+  "generated_artifact_count": 0,
+  "forecast_check": {
+    "present": false,
+    "valid": false,
+    "errors": [
+      "missing forecast table"
+    ]
+  },
+  "task_completed": false,
+  "training_executed": false,
+  "promotion_allowed": false,
+  "researcher_feedback_or_reference_code_given": false,
+  "observed_failures": [
+    "Initial UTF-8 decoding of programmes failed",
+    "Latin-1 applied to all CSVs corrupts UTF-8 BOM in hosts Year column; repeated KeyError Year",
+    "Programme nonnumeric cells concatenate when summed as strings; not valid event totals",
+    "Same failing summary command repeated 62 times; no source, forecast, figures or report saved",
+    "Final API output cap reduced to one token and response stopReason length; zero process exit does not mean successful completion"
+  ],
+  "limitations": [
+    "Public task, single attempt/seed, thinking off; not independent H or general judgement of mathematical capability",
+    "Actual final API input 136014 is below server capacity 139264; effective one-token cap proves a constrained request, not by itself hard vLLM context exhaustion",
+    "Failure trajectory can support diagnostics; it is not automatically positive SFT or legal L data"
+  ]
+}

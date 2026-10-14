@@ -6,12 +6,17 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from coevo.mcm_run import forecast_check
+from coevo.mcm_run import forecast_check, termination
 from coevo.sandbox import command
 from tests.test_project_tools import PI_ENTRY
 
 
 class ForecastTests(unittest.TestCase):
+    def test_empty_length_limited_turn_is_not_normal_completion(self):
+        t = {'messages': [{'role': 'assistant', 'stopReason': 'length'}], 'aborted': False, 'final_text': None}
+        self.assertFalse(termination(t)['normal_stop'])
+        self.assertFalse(termination(t)['final_response_present'])
+
     def test_invalid_numeric_forecasts_are_not_accepted(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / 'forecast.csv'

@@ -82,6 +82,13 @@ def forecast_check(path):
             'scope': 'table syntax and numeric constraints only; not accuracy, coverage or calibration'}
 
 
+def termination(transcript):
+    assistants = [m for m in transcript['messages'] if m['role'] == 'assistant']
+    reason = assistants[-1].get('stopReason') if assistants else None
+    return {'stop_reason': reason, 'normal_stop': reason == 'stop' and not transcript['aborted'],
+            'final_response_present': bool(transcript.get('final_text'))}
+
+
 def run(prepared, environment, config, out, pi_entry):
     prepared, environment, out = map(lambda p: Path(p).resolve(), (prepared, environment, out))
     if out.exists():
@@ -142,6 +149,7 @@ def run(prepared, environment, config, out, pi_entry):
         usage = {k: sum(m.get('usage', {}).get(k, 0) for m in transcript['messages'] if m['role'] == 'assistant')
                  for k in ('input', 'output', 'cacheRead', 'cacheWrite')}
         result = {'agent_exit_code': code, 'aborted': transcript['aborted'],
+                  'termination': termination(transcript),
                   'tool_calls': transcript['tool_calls'], 'usage': usage,
                   'agent_wall_seconds': time.time() - manifest['agent_started_at'],
                   'input_changes': [p for p, h in before.items() if after.get(p) != h],
@@ -150,7 +158,8 @@ def run(prepared, environment, config, out, pi_entry):
                   'scope': 'first autonomous development attempt; artifact inventory is not full modelling validation',
                   'training_executed': False, 'promotion_allowed': False}
         write_json(out / 'result.json', result)
-        manifest['status'] = 'agent-returned' if code == 0 else 'agent-stopped-with-error-or-budget'
+        manifest['status'] = ('agent-returned' if code == 0 and result['termination']['normal_stop']
+                              else 'agent-stopped-with-error-or-budget-or-length')
         return result
     except BaseException as e:
         manifest.update(status='failed-or-interrupted', error=f'{type(e).__name__}: {e}')
