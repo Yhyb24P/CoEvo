@@ -1,0 +1,13 @@
+Maintain python-frontmatter in this independent workspace. The public issue #96
+reports that loading a document with a metadata key named 'content' crashes.
+Investigate and fix metadata/constructor-name collisions across supported YAML,
+JSON and TOML loading. Preserve the document body, metadata values, handler
+selection and existing Post constructor usage. Metadata named 'handler' must
+remain ordinary metadata rather than change the serializer. Verify file and
+string APIs and serialization round trips. Add focused regression tests and
+update relevant documentation explaining metadata versus object attributes.
+Run the existing suite and your new tests. Deliver the patch, a short explanation
+of the cause and compatibility choices, and actual test results in WORK_REPORT.md.
+Choose your implementation independently; inspect the project first.
+Use read/write/bash in this workspace only. Python, pytest, PyYAML, toml and pyaml
+are installed. Network and package installation are unavailable.

@@ -1,0 +1,19 @@
+Conduct a reproducible observational study using the supplied Palmer penguin
+raw and simplified data. Question: how do species, sex and island relate to body
+mass and nitrogen/carbon isotope measurements, and how much of apparent pooled
+differences remains after accounting for measured covariates?
+Inspect the raw data and source documentation. Reconcile the two tables without
+assuming row order proves identity; document uncertainty in any linkage. Audit
+missing values, sex labels, sampling years and repeated individual identifiers.
+Choose defensible descriptive and statistical methods. Compare pooled and
+adjusted estimates, report uncertainty and sample counts, and check sensitivity
+to missingness and sampling/grouping decisions. Discuss confounding, island and
+species overlap, identifiability and why observational associations do not prove
+causal effects. Do not manufacture absent observations or claim representative
+population inference unsupported by sampling.
+Deliver analysis.py runnable as `python analysis.py`, generated tables and plots
+under results/, and REPORT.md containing methods, numerical evidence, limitations
+and source attribution. The script must rebuild all reported numerical results
+offline from data/. You choose methods and package usage independently. Available:
+numpy, pandas, scipy, sklearn, statsmodels, matplotlib. Use read/write/bash in
+this workspace; source data are read-only, no network or package installation.
