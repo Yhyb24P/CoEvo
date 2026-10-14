@@ -12,6 +12,43 @@ from tests.test_project_tools import PI_ENTRY
 
 @unittest.skipUnless(PI_ENTRY.exists(),'Pinned Pi required')
 class SamplingTests(unittest.TestCase):
+    def test_qwen_thinking_round_trips_provider_reasoning_and_tool_results(self):
+        captured=[]
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self,*args):pass
+            def do_POST(self):
+                captured.append(json.loads(self.rfile.read(int(self.headers['Content-Length']))))
+                self.send_response(200);self.send_header('Content-Type','text/event-stream');self.end_headers()
+                if len(captured)==1:
+                    chunks=[({'role':'assistant','reasoning':'VISIBLE_PROVIDER_REASONING_FIXTURE'},None),
+                            ({'tool_calls':[{'index':0,'id':'thinking-tool','type':'function','function':{'name':'write','arguments':json.dumps({'path':'copy.txt','content':'fixture'})}}]},None),({},'tool_calls')]
+                else:chunks=[({'role':'assistant','content':'fixture-done'},None),({},'stop')]
+                for delta,stop in chunks:
+                    body={'id':'transport-fixture','object':'chat.completion.chunk','created':0,'model':'fixture','choices':[{'index':0,'delta':delta,'finish_reason':stop}]}
+                    self.wfile.write(('data: '+json.dumps(body)+'\n\n').encode())
+                self.wfile.write(b'data: [DONE]\n\n');self.wfile.flush()
+        server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
+        threading.Thread(target=server.serve_forever,daemon=True).start()
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp);(root/'workspace').mkdir()
+                request={'workspace':str(root/'workspace'),'run_dir':str(root/'run'),'pi_entry':str(PI_ENTRY.resolve()),
+                         'endpoint':f'http://127.0.0.1:{server.server_port}/v1','model':'fixture','context_tokens':4096,
+                         'enable_thinking':True,'prompts':['Transport fixture.'],'system_prompt':'Fixture.',
+                         'timeout_ms':15000,'max_tool_calls':1,'sandbox_prefix':['unused'],
+                         'capture_payload':True,'sampling':{'temperature':0.6,'top_p':0.95,'top_k':20,'seed':17}}
+                p=root/'request.json';p.write_text(json.dumps(request))
+                proc=subprocess.run(['node','scripts/pi-project-agent.mjs'],env={**os.environ,'COEVO_REQUEST_FILE':str(p)},capture_output=True,text=True,timeout=25)
+                self.assertEqual(proc.returncode,0,proc.stderr)
+                self.assertEqual(len(captured),2)
+                self.assertTrue(captured[0]['chat_template_kwargs']['enable_thinking'])
+                self.assertNotIn('reasoning_effort',captured[0])
+                self.assertEqual(captured[0]['top_k'],20)
+                assistant=next(m for m in captured[1]['messages'] if m['role']=='assistant')
+                self.assertEqual(assistant['reasoning'],'VISIBLE_PROVIDER_REASONING_FIXTURE')
+                self.assertEqual((root/'workspace/copy.txt').read_text(),'fixture')
+        finally:server.shutdown();server.server_close()
+
     def test_payload_preview_stops_before_http_and_is_not_a_model_response(self):
         captured=[]
         class Handler(BaseHTTPRequestHandler):

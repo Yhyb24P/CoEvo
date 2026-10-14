@@ -1,0 +1,39 @@
+{
+  "protocol_revision": "workstation-pilot-isolated-20261014",
+  "model_path": ".cache/active-model/Qwen3.5-4B",
+  "served_model": "coevo-qwen3.5-4b",
+  "endpoint": "http://127.0.0.2:18000/v1",
+  "max_model_len": 139264,
+  "qualification_min_input_tokens": 131072,
+  "dtype": "bfloat16",
+  "gpu_memory_utilization": 0.9,
+  "max_num_seqs": 1,
+  "max_num_batched_tokens": 4096,
+  "enable_thinking": true,
+  "tool_call_parser": "qwen3_coder",
+  "reasoning_parser": "qwen3",
+  "cold_root": "/mnt/e/CoEvo",
+  "rsi_cycles": 3,
+  "enforce_eager": true,
+  "study_id": "mcm-2025-c",
+  "stream_id": "autonomous-W0-v1",
+  "arm_id": "W0",
+  "state_path": ".state/{study_id}/{stream_id}/{arm_id}.sqlite",
+  "inference_sampling": {
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "top_k": 20,
+    "min_p": 0.0,
+    "presence_penalty": 0.0,
+    "repetition_penalty": 1.0,
+    "seed": 17
+  },
+  "task_budget": {
+    "wall_seconds": 2700,
+    "max_tool_calls": 160,
+    "max_output_tokens": 32768,
+    "bash_seconds": 120,
+    "initial_context_capacity": 139264,
+    "compaction": false
+  }
+}

@@ -141,3 +141,21 @@ PYTHONPATH=src "$COEVO_PYTHON" -m coevo.mcm_run \
 
 基于这一公开赛题的任何重复和扰动都继续属于 `comap-2025-mcm-c` 开发来源簇。进一步的 EvoTIDE 式进化器策略 SFT/GRPO 只在有跨任务的 Harness 修改记录和可靠客观奖励后再考虑；研究结果与证据标准由[当前研究方案](../../docs/研究方案.md)和[评价设计](../../docs/评估与统计.md)定义。本次更新只调整方向，没有重新运行 W0、启用 thinking、训练模型或变更原运行记录。
 
+
+## Qwen 原生 thinking 接入与恢复开发运行
+
+现有入口现在由配置驱动服务端enable_thinking；Pi明确声明模型reasoning能力，使用锁定SDK的qwen-chat-template格式和medium级启用标记，实际生成chat_template_kwargs.enable_thinking=true。这里medium只作SDK开关，不宣称Qwen具有对应的独立思考强度档位。SDK识别vLLM 0.31返回的reasoning字段，并将可见reasoning与工具结果保留到下一次真实请求。服务端将其映射给原Tokenizer模板，不在客户端伪造思考文字。
+
+先做一次短的真实read/write/bash兼容性运行，确认可见reasoning和工具流确实存在。然后使用configs/mcm-thinking.json，从首轮原节点716446ec保留22条真实消息，加入同一RECOVERY_FEEDBACK，继续完整MCM任务。原题、资料、工具权限、原生历史和四次重复失败保护保持一致。32K总输出额度覆盖思考与回答/工具参数；本次独立开发尝试配额45分钟/160次调用。
+
+配置采用[Qwen官方coding thinking建议](https://huggingface.co/Qwen/Qwen3.5-4B#best-practices)：temperature0.6、top_p0.95、top_k20、min_p0、presence_penalty0、repetition_penalty1、seed17。与历史greedy/off结果比较时，**思考模式、采样和输出额度都发生变化**，只能回答原生配置能否恢复工作，不能把结果直接解释为thinking单独效应；正式模式比较需要匹配这些条件。服务kwargs的优先级见[vLLM文档](https://docs.vllm.ai/en/latest/features/reasoning_outputs/#request-level-override)。
+
+```bash
+PYTHONPATH=src "$COEVO_PYTHON" -m coevo.mcm_run \
+  --prepared "$COEVO_MCM_PREPARED" --environment "$COEVO_MCM_ENV" \
+  --config configs/mcm-thinking.json --out "$COEVO_MCM_THINKING_RUN" \
+  --pi-entry "$COEVO_PI_ENTRY" --parent "$COEVO_MCM_PARENT_RUN" \
+  --checkpoint "$COEVO_MCM_CHECKPOINT_ID" --repeat-failure-limit 4 --thinking-recovery
+```
+
+请求字段/采样、可见reasoning回传及工具结果的传输检查已经通过；它是接口fixture，不是实际模型能力结果。实际兼容性与任务结果另行记录，方案不预设成功。

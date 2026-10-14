@@ -7,12 +7,22 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from coevo.mcm_run import forecast_check, termination, validate_budget_continuation
+from coevo.mcm_run import forecast_check, termination, validate_budget_continuation, validate_thinking_recovery
 from coevo.sandbox import command
 from tests.test_project_tools import PI_ENTRY
 
 
 class ForecastTests(unittest.TestCase):
+    def test_native_profile_change_cannot_silently_change_task_model_or_wall_quota(self):
+        old={'model':'W0','enable_thinking':False,'inference_sampling':{'temperature':0},'task_budget':{'wall_seconds':2700,'max_output_tokens':8192}}
+        new=copy.deepcopy(old);new.update(enable_thinking=True,inference_sampling={'temperature':0.6});new['task_budget']['max_output_tokens']=32768
+        validate_thinking_recovery(new,old)
+        for altered in ('model','wall'):
+            bad=copy.deepcopy(new)
+            if altered=='model':bad['model']='different-model'
+            else:bad['task_budget']['wall_seconds']=5400
+            with self.subTest(altered=altered),self.assertRaises(ValueError):validate_thinking_recovery(bad,old)
+
     def test_output_amendment_keeps_model_and_remaining_resources(self):
         old = {'model': 'W0', 'sampling': {'seed': 17}, 'task_budget': {'wall_seconds': 2700, 'max_tool_calls': 160, 'max_output_tokens': 8192, 'compaction': False}}
         new = copy.deepcopy(old)

@@ -1,5 +1,6 @@
 """Serve the pinned original model with a real 128K+ capacity."""
 import argparse
+import json
 import os
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -25,7 +26,8 @@ def main():
                "--max-num-batched-tokens", str(c["max_num_batched_tokens"]),
                "--enable-auto-tool-choice", "--tool-call-parser", c["tool_call_parser"],
                "--reasoning-parser", c["reasoning_parser"], "--language-model-only",
-               "--enable-chunked-prefill", "--default-chat-template-kwargs", '{"enable_thinking":false}']
+               "--enable-chunked-prefill", "--default-chat-template-kwargs",
+               json.dumps({'enable_thinking': bool(c.get('enable_thinking', False))}, separators=(',', ':'))]
     if c.get("enforce_eager"):
         command.append("--enforce-eager")
     if args.adapter:

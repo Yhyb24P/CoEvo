@@ -132,10 +132,13 @@ if (request.tool_probe) {
   process.exit(0);
 }
 const runtime = await ModelRuntime.create({ authPath, modelsPath: null, refreshOnCreate: false, allowModelNetwork: false });
+const reasoningCapable = typeof request.enable_thinking === 'boolean';
+const thinkingEnabled = request.enable_thinking === true;
 runtime.registerProvider('coevo-local', { api: 'openai-completions', baseUrl: request.endpoint, apiKey: 'local-no-secret',
-  models: [{ id: request.model, name: request.model, input: ['text'], reasoning: false,
+  models: [{ id: request.model, name: request.model, input: ['text'], reasoning: reasoningCapable,
     contextWindow: request.context_tokens, maxTokens: request.max_output_tokens ?? 4096,
-    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, compat: { supportsDeveloperRole: false } }],
+    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, compat: { supportsDeveloperRole: false,
+      ...(reasoningCapable ? { thinkingFormat: 'qwen-chat-template', supportsReasoningEffort: false } : {}) } }],
 });
 const systemPrompt = request.system_prompt;
 const loader = {
@@ -160,7 +163,7 @@ if (request.resume_entry_id) {
     retained_messages: retained.filter(e => e.type === 'message').map(e => e.message) };
 }
 const { session } = await createAgentSession({ cwd: request.model_cwd ?? cwd, agentDir, modelRuntime: runtime,
-  model: runtime.getModel('coevo-local', request.model), thinkingLevel: 'off', resourceLoader: loader,
+  model: runtime.getModel('coevo-local', request.model), thinkingLevel: thinkingEnabled ? 'medium' : 'off', resourceLoader: loader,
   noTools: 'builtin', customTools: tools, sessionManager: manager,
   settingsManager: SettingsManager.inMemory({ compaction: { enabled: false }, retry: { enabled: false } }),
 });
@@ -176,8 +179,8 @@ if (request.sampling || request.capture_payload || request.preview_only || reque
   session.agent.onPayload = async (payload, model) => {
     if (resourceStop) throw new Error('COEVO_REPEAT_FAILURE_STOP: four unchanged failing commands; no further inference');
     const prepared = previousPayloadHook ? (await previousPayloadHook(payload, model)) ?? payload : payload;
-    const controlled = request.sampling ? { ...prepared, temperature: request.sampling.temperature, seed: request.sampling.seed } : prepared;
-    if (request.sampling) appendFileSync(resolve(runDir, 'sampling.jsonl'), JSON.stringify({ temperature: controlled.temperature, seed: controlled.seed }) + '\n');
+    const controlled = request.sampling ? { ...prepared, ...request.sampling } : prepared;
+    if (request.sampling) appendFileSync(resolve(runDir, 'sampling.jsonl'), JSON.stringify(Object.fromEntries(Object.keys(request.sampling).map(k => [k, controlled[k]]))) + '\n');
     if (request.capture_payload || request.preview_only) appendFileSync(resolve(runDir, 'payloads.jsonl'), JSON.stringify(controlled) + '\n');
     if (request.preview_only) throw new Error('COEVO_PAYLOAD_PREVIEW_ONLY: no inference requested');
     return controlled;

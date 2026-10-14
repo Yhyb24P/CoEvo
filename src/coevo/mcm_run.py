@@ -107,13 +107,25 @@ def validate_budget_continuation(config, previous, result):
         raise ValueError('This continuation requires the authorized output allowance increase')
 
 
-def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=None, repeat_failure_limit=0, budget_continuation=False):
+def validate_thinking_recovery(config, previous):
+    allowed = {'enable_thinking', 'inference_sampling', 'task_budget'}
+    if not config.get('enable_thinking'):
+        raise ValueError('Native thinking recovery must enable thinking')
+    if {k: v for k, v in config.items() if k not in allowed} != {k: v for k, v in previous.items() if k not in allowed}:
+        raise ValueError('Native profile must keep model, service, tools and data settings')
+    if {k: v for k, v in config['task_budget'].items() if k != 'max_output_tokens'} != {k: v for k, v in previous['task_budget'].items() if k != 'max_output_tokens'}:
+        raise ValueError('Native profile only changes per-turn output allowance within the original task budget')
+
+
+def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=None, repeat_failure_limit=0, budget_continuation=False, thinking_recovery=False):
     prepared, environment, out = map(lambda p: Path(p).resolve(), (prepared, environment, out))
     if out.exists():
         raise ValueError('Use a new run directory')
     c = read_config(config)
     if bool(parent) != bool(checkpoint):
         raise ValueError('Native recovery requires both parent and checkpoint')
+    if thinking_recovery and (not parent or budget_continuation):
+        raise ValueError('Thinking recovery requires its own early checkpoint attempt')
     parent = Path(parent).resolve() if parent else None
     task_source = prepared / 'full-task'
     data_manifest = json.loads((prepared / 'manifest.json').read_text())
@@ -127,11 +139,13 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
         if not budget_continuation and hashes(parent / 'workspace') != initial:
             raise ValueError('Parent workspace changed; early state needs a real checkpoint snapshot')
         old_config = json.loads((parent / 'config.json').read_text())
-        if not budget_continuation and c != old_config:
+        if not budget_continuation and not thinking_recovery and c != old_config:
             raise ValueError('Recovery must keep the original model, sampling and budgets')
         if budget_continuation:
             old_result = json.loads((parent / 'result.json').read_text())
             validate_budget_continuation(c, old_config, old_result)
+        if thinking_recovery:
+            validate_thinking_recovery(c, old_config)
         source_session = json.loads((parent / 'transcript.json').read_text())['session_file']
         entries = [json.loads(l) for l in Path(source_session).read_text().splitlines()]
         selected = next(e for e in entries if e.get('id') == checkpoint)
@@ -159,6 +173,7 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
                'readonly_paths': ['data', 'problem.pdf', 'problem.txt'],
                'sandbox_prefix': command(ws, environment, [], readonly_paths=['data', 'problem.pdf', 'problem.txt']),
                'capture_payload': True, 'sampling': c['inference_sampling']}
+    request['enable_thinking'] = bool(c.get('enable_thinking', False))
     if parent:
         old_request = json.loads((parent / 'agent_request.json').read_text())
         request.update(resume_file=source_session, resume_entry_id=checkpoint,
@@ -184,6 +199,7 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
                 'feedback_origin': ('user-authorized-resource-adjustment' if budget_continuation
                                     else 'researcher-external-execution-check' if parent else None),
                 'budget_continuation': budget_continuation,
+                'thinking_recovery': thinking_recovery,
                 'config': c, 'source_snapshot': source_snapshot(),
                 'code_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
                 'pi_adapter_sha256': hashlib.sha256(Path('scripts/pi-project-agent.mjs').read_bytes()).hexdigest(),
@@ -209,15 +225,20 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
         new_messages = transcript['messages'][transcript['continuation_start_message_index']:]
         usage = {k: sum(m.get('usage', {}).get(k, 0) for m in new_messages if m['role'] == 'assistant')
                  for k in ('input', 'output', 'cacheRead', 'cacheWrite')}
+        thinking_blocks = [b for m in new_messages if m['role'] == 'assistant'
+                           for b in m.get('content', []) if b.get('type') == 'thinking' and b.get('thinking')]
         result = {'agent_exit_code': code, 'aborted': transcript['aborted'],
                   'termination': termination(transcript),
                   'resource_stop': transcript.get('resource_stop'), 'feedback_assisted': bool(parent),
                   'tool_calls': transcript['tool_calls'], 'usage': usage,
+                  'thinking_blocks': len(thinking_blocks),
+                  'thinking_characters': sum(len(b['thinking']) for b in thinking_blocks),
                   'agent_wall_seconds': time.time() - manifest['agent_started_at'],
                   'input_changes': [p for p, h in before.items() if after.get(p) != h],
                   'artifacts': {p: h for p, h in after.items() if p not in before},
                   'forecast_check': forecast_check(ws / 'outputs/predictions_2028.csv'),
-                  'scope': ('native task continuation after user output-budget amendment' if budget_continuation
+                  'scope': ('native thinking profile recovery; not a mode-only causal comparison' if thinking_recovery
+                            else 'native task continuation after user output-budget amendment' if budget_continuation
                             else 'early native feedback recovery' if parent else 'first autonomous development attempt')
                            + '; artifact inventory is not full modelling validation',
                   'training_executed': False, 'promotion_allowed': False}
@@ -253,8 +274,9 @@ def main():
     p.add_argument('--checkpoint')
     p.add_argument('--repeat-failure-limit', type=int, default=0)
     p.add_argument('--budget-continuation', action='store_true')
+    p.add_argument('--thinking-recovery', action='store_true')
     a = p.parse_args()
-    result = run(a.prepared, a.environment, a.config, a.out, a.pi_entry, a.parent, a.checkpoint, a.repeat_failure_limit, a.budget_continuation)
+    result = run(a.prepared, a.environment, a.config, a.out, a.pi_entry, a.parent, a.checkpoint, a.repeat_failure_limit, a.budget_continuation, a.thinking_recovery)
     print(json.dumps({k: v for k, v in result.items() if k != 'artifacts'}), flush=True)
 
 
