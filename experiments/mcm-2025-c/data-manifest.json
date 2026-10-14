@@ -1,0 +1,179 @@
+{
+  "prepared_at_utc": "2026-10-14T16:03:34.901048+00:00",
+  "source_cluster_id": "comap-2025-mcm-c",
+  "split": "D",
+  "H": false,
+  "training_executed": false,
+  "model_executed": false,
+  "sources": [
+    {
+      "url": "https://www.contest.comap.org/undergraduate/contests/mcm/contests/2025/problems/2025_MCM_Problem_C.pdf",
+      "bytes": 5119355,
+      "local_download_completed_at_utc": "2026-10-14T15:59:42.345655+00:00",
+      "sha256": "e3d1dcd7c06ba457b288ae8426707adb209fedf6f0823dcda2ba16f994708bf7"
+    },
+    {
+      "url": "https://www.contest.comap.org/undergraduate/contests/mcm/contests/2025/problems/2025_Problem_C_Data.zip",
+      "bytes": 3145600,
+      "local_download_completed_at_utc": "2026-10-14T16:00:28.222275+00:00",
+      "sha256": "7aa96d640cc7f47ffc9bd5ba30631498949d63aec4942b7642d49b33af176a99"
+    }
+  ],
+  "files": [
+    {
+      "name": "data_dictionary.csv",
+      "bytes": 3736,
+      "sha256": "0373a24a1a080151a00c307aee28f4d2b4bf0520b285cac45d3cf0deedac8497",
+      "encoding": "cp1252",
+      "data_rows": 50,
+      "columns": [
+        "summerOly_medal_counts.csv",
+        "",
+        ""
+      ],
+      "year_range": null
+    },
+    {
+      "name": "summerOly_athletes.csv",
+      "bytes": 23809049,
+      "sha256": "71ef8f0708489bee65549644d878050c3898582df767a698918a99396c671e43",
+      "encoding": "utf-8-sig",
+      "data_rows": 252565,
+      "columns": [
+        "Name",
+        "Sex",
+        "Team",
+        "NOC",
+        "Year",
+        "City",
+        "Sport",
+        "Event",
+        "Medal"
+      ],
+      "year_range": [
+        1896,
+        2024
+      ]
+    },
+    {
+      "name": "summerOly_hosts.csv",
+      "bytes": 1187,
+      "sha256": "72a964ce4ae9004852c37e0e434b21d62fdcabf2569cd90d9742df4f1e68dc46",
+      "encoding": "utf-8-sig",
+      "data_rows": 35,
+      "columns": [
+        "Year",
+        "Host"
+      ],
+      "year_range": [
+        1896,
+        2032
+      ]
+    },
+    {
+      "name": "summerOly_medal_counts.csv",
+      "bytes": 38303,
+      "sha256": "84ac7c96c36f3fb50e440768091c59a35acbbccf65edc9aebbd2e7531cb76999",
+      "encoding": "utf-8-sig",
+      "data_rows": 1435,
+      "columns": [
+        "Rank",
+        "NOC",
+        "Gold",
+        "Silver",
+        "Bronze",
+        "Total",
+        "Year"
+      ],
+      "year_range": [
+        1896,
+        2024
+      ]
+    },
+    {
+      "name": "summerOly_programs.csv",
+      "bytes": 7539,
+      "sha256": "510b55ddc444d473ebb261da1a92b5ef5b2c145efbeadba0d92cc48f5d08a687",
+      "encoding": "cp1252",
+      "data_rows": 74,
+      "columns": [
+        "Sport",
+        "Discipline",
+        "Code",
+        "Sports Governing Body",
+        "1896",
+        "1900",
+        "1904",
+        "1906*",
+        "1908",
+        "1912",
+        "1920",
+        "1924",
+        "1928",
+        "1932",
+        "1936",
+        "1948",
+        "1952",
+        "1956",
+        "1960",
+        "1964",
+        "1968",
+        "1972",
+        "1976",
+        "1980",
+        "1984",
+        "1988",
+        "1992",
+        "1996",
+        "2000",
+        "2004",
+        "2008",
+        "2012",
+        "2016",
+        "2020",
+        "2024"
+      ],
+      "year_range": null
+    }
+  ],
+  "retrospective_views": {
+    "2016": {
+      "visible_rows": {
+        "summerOly_medal_counts.csv": 1165,
+        "summerOly_athletes.csv": 208864,
+        "summerOly_hosts.csv": 30
+      },
+      "truth_medal_rows": 86,
+      "edition_year": 2016,
+      "actual_event_year": 2016
+    },
+    "2020": {
+      "visible_rows": {
+        "summerOly_medal_counts.csv": 1251,
+        "summerOly_athletes.csv": 222552,
+        "summerOly_hosts.csv": 31
+      },
+      "truth_medal_rows": 93,
+      "edition_year": 2020,
+      "actual_event_year": 2021
+    },
+    "2024": {
+      "visible_rows": {
+        "summerOly_medal_counts.csv": 1344,
+        "summerOly_athletes.csv": 237673,
+        "summerOly_hosts.csv": 32
+      },
+      "truth_medal_rows": 91,
+      "edition_year": 2024,
+      "actual_event_year": 2024
+    }
+  },
+  "visibility_policy": "Year < target for outcome records and historical hosts; no target/future covariates, PDF, dictionary, or programs in retrospective inputs",
+  "limitations": [
+    "Public task and outcomes may be in pretraining; not blind H",
+    "Official files are retrospective exports, not timestamped historical vintages; country names and athlete metadata may be revised",
+    "Programs use current taxonomy/governing names with no historical publication dates; omitted from conservative retrospective inputs",
+    "Evaluation-only directory must not be mounted in an Agent workspace; directory separation alone is not an access sandbox",
+    "Medal table contains medal-winning teams only; zero-medal cohort and country mapping still require explicit evaluation design"
+  ]
+}
