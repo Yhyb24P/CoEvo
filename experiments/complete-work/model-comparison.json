@@ -1,0 +1,55 @@
+{
+  "comparison_scope": "two public D complete-work cases; source-paired descriptive comparison, not held-out generalization",
+  "shared_conditions": {
+    "cases": ["software", "science"],
+    "initial_files": "identical task.initial_files hashes across models",
+    "feedback": "first autonomous attempt; later feedback kept as separate native continuation",
+    "tools": ["read", "write", "bash"],
+    "network": "disabled",
+    "wall_seconds_per_case": 2700,
+    "tool_calls_per_case": 100,
+    "max_output_tokens_per_turn": 32768,
+    "bash_max_seconds": 120,
+    "compaction": false,
+    "seed": 17,
+    "comparison_context_target": 139264
+  },
+  "models": {
+    "qwen": {
+      "repository": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "role": "accepted W0",
+      "config": "configs/complete-work-qwen.json",
+      "thinking": true,
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": 20,
+      "readiness": "existing real native-thinking and tools qualification; these new complete tasks not yet evaluated"
+    },
+    "spark": {
+      "repository": "XHToken/Spark-X2.5-4B",
+      "revision": "0bcb35678590218655dff3765b9e61c83b35e9c4",
+      "role": "candidate",
+      "architecture": "Spark2_5ForCausalLM",
+      "thinking": true,
+      "temperature": 1.0,
+      "top_p": 0.95,
+      "top_k": -1,
+      "reasoning_parser": "qwen3",
+      "tool_parser": "spark25",
+      "chat_template": "model-provided chat_template.jinja",
+      "trust_remote_code": true,
+      "official_plugin_repository": "https://github.com/XHToken/Spark-plugin",
+      "official_plugin_revision_reviewed": "3e1040e63a5907e4c748a485d6795d739dcd5bd6",
+      "readiness": "official metadata inspected; installed vLLM 0.31 registry lacks native Spark2_5ForCausalLM; plugin and model loading require actual qualification before execution"
+    }
+  },
+  "comparison_outputs": [
+    "independent software requirement checks and regression with substantive patch review",
+    "independently reproduced analysis with checked main estimates and scientific limitations",
+    "partial useful outcomes, failures and external assistance",
+    "actual wall time, model input/output/cache tokens, tool calls and GPU memory",
+    "model-specific template, sampling, context and resource differences",
+    "training feasibility recorded separately from task quality"
+  ]
+}

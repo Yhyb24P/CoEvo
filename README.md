@@ -14,6 +14,7 @@
 - [评价与统计](docs/评估与统计.md)：完整成果、学习来源、因果归因、长期收益与结论边界。
 - [实施与复现](docs/实施与复现.md)：Pi/vLLM/LoRA 的现行技术路径、执行权限与维护原则。
 - [MCM C 综合任务](experiments/mcm-2025-c/README.md)：赛题与数据、历史运行、部分成果及失败。
+- [跨领域完整工作案例](experiments/complete-work/README.md)：GitHub 软件维护与科研分析、共享输入、独立成果复核、底座比较预算及后续学习安排。
 - [开发与交接约定](AGENTS.md)；[既有实验复现](experiments/real-work-foundation/REPRODUCE.md)。
 
 历史方案通过[固定 Git 历史](https://github.com/Yhyb24P/CoEvo/tree/960cabc9af8dd914f76e149866d7bef768bb6022/docs)追溯，不并行维护过时规范。实验运行的私人数据、工作空间和权重不存放于公开仓库。研究在 RTX 5090 D 32GiB、约 96GB RAM 的条件下开展，32GB 无独显笔记本部署尚未验收。用户明确授权任务执行、训练和底座替换分别管理；文档修订不自动触发这些操作。

@@ -25,6 +25,17 @@ PYTHONPATH=src .cache/mcm-env/bin/python scripts/prepare-complete-work.py --case
 
 输出 workspace、输入哈希、task.json、原生 Pi agent_request.json 和实际模型配置。模型服务可用时，以 COEVO_REQUEST_FILE 指向请求文件，运行既有 scripts/pi-project-agent.mjs；运行前后记录服务、环境、源码和 GPU 使用。准备入口本身不启动模型服务。
 
+共享实现为 src/coevo/complete_work.py，脚本只作薄入口。Qwen 配置为 configs/complete-work-qwen.json。服务就绪后 `PYTHONPATH=src .cache/task-env/bin/python -m coevo.complete_work run --out RUN_DIR` 记录实际原生 session、停止原因、token、工具及工件；它连接已有服务。服务版本/模板、模型修订和 GPU 实际采样仍随运行保存。独立复核入口为：
+
+```bash
+PYTHONPATH=src .cache/task-env/bin/python -m coevo.complete_work verify --out SOFTWARE_RUN_DIR --sources SOURCES_ROOT --environment .cache/task-env
+PYTHONPATH=src .cache/mcm-env/bin/python -m coevo.complete_work verify --out SCIENCE_RUN_DIR --sources SOURCES_ROOT --environment .cache/mcm-env
+```
+
+复核副本和日志保存在各轮 review/，不改变 Agent 提交工作区；同一轮不覆盖既有复核。科研入口删除旧 results/ 后重建，并输出独立输入事实。自动证据与实质结论分开保存，具体复核和学习安排见[成果复核与后续学习](review-and-learning.md)。
+
+底座条件见 [model-comparison.json](model-comparison.json)。Spark 官方模型配置为 Spark2_5ForCausalLM，工具解析 spark25；当前安装的 vLLM 0.31 注册表没有该原生实现，因此需对[官方插件](https://github.com/XHToken/Spark-plugin)进行实际接入，而不是直接更换模型路径。已核对官方 metadata 和推荐采样，候选准备状态与真实资格结果分开记录。
+
 每模型每任务 45 分钟、100 次工具调用、每轮最多 32768 输出 token，bash 单次最多 120 秒；上下文采用服务实际容量，保持原生会话，不启用压缩。两模型各从相同初始文件开始，使用各自原生模板/解析和推荐采样，公开差异。首轮两模型两任务至多 3 小时任务时间，服务启动另记。预计单项 20–45 分钟，运行时采用预计完成时间休眠，而非循环轮询。预算中止和无效重复保护不算模型恢复成功。
 
 Q1 比较未来完整工作中原始经历/提炼经验的帮助；Q2 可采用本轮经核实的有效部分和纠错作为候选，保留辅助来源；Q3 记录 Agent 自主提出的工作方法，在另一来源的未来任务检验。两个初始案例只能建立能力与材料基础，不能单独证明长期学习。后续交互与训练许可按实际授权记录，不从数据公开自动推导。
