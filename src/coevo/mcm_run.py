@@ -17,7 +17,7 @@ from .sandbox import command
 
 
 PROMPT = """Complete the 2025 MCM Problem C modelling task in this workspace.
-Read problem.txt (a faithful pdftotext extraction) and the official problem.pdf;
+Read problem.txt (a faithful pdftotext extraction; original problem.pdf is supplied);
 the five official CSV files are in data/. Choose your own methods and organize
 the complete work: inspect data, make explicit assumptions, implement and run
 models, verify computations, correct errors, and produce a reproducible report.
