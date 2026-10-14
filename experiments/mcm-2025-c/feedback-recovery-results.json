@@ -1,0 +1,168 @@
+{
+  "source_cluster_id": "comap-2025-mcm-c",
+  "split": "D",
+  "H": false,
+  "model": "Qwen3.5-4B W0",
+  "thinking": "off",
+  "sampling": {
+    "temperature": 0,
+    "seed": 17
+  },
+  "training_executed": false,
+  "training_authorized": false,
+  "model_promoted": false,
+  "researcher_code_or_workspace_repairs": false,
+  "phases": [
+    {
+      "run_id": "20261015-W0-feedback-v1",
+      "code_commit": "43b2ece32a65725fac0d3777876e9bb50e3c4077",
+      "feedback_assisted": true,
+      "budget_continuation": false,
+      "budget": {
+        "wall_seconds": 2700,
+        "max_tool_calls": 160,
+        "max_output_tokens": 8192,
+        "bash_seconds": 120,
+        "initial_context_capacity": 139264,
+        "compaction": false
+      },
+      "checkpoint_entry_id": "716446ec",
+      "native_prefix_equal": true,
+      "retained_messages": 22,
+      "source_unchanged_at_start_and_end": true,
+      "tools_equal_to_baseline": true,
+      "system_equal_to_baseline": false,
+      "actual_API_output_caps": [
+        8192
+      ],
+      "API_requests": 14,
+      "agent_wall_seconds": 1324.6365218162537,
+      "actual_tool_calls": 10,
+      "tool_error_messages": 9,
+      "SDK_output_limit_unexecuted_tool_messages": 3,
+      "Year_KeyError_messages": 0,
+      "1906_star_ValueError_messages": 3,
+      "new_API_usage": {
+        "input": 553475,
+        "output": 46037,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "input_changes": [],
+      "artifact_count": 0,
+      "termination": {
+        "stop_reason": "error",
+        "normal_stop": false,
+        "final_response_present": true
+      },
+      "resource_stop": null,
+      "operator_interruption": true,
+      "mutable_state_hashes": [
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b"
+      ],
+      "custom_system_instruction_equal_to_baseline": true,
+      "effective_system_equal_after_workspace_namespace_normalization": true,
+      "effective_system_difference": "SDK cwd metadata names the new disposable workspace; no other system text difference"
+    },
+    {
+      "run_id": "20261015-W0-feedback-16k-v1",
+      "code_commit": "588ce831ce31a17b12c22260a4148734234137b4",
+      "feedback_assisted": true,
+      "budget_continuation": true,
+      "budget": {
+        "wall_seconds": 1375,
+        "max_tool_calls": 150,
+        "max_output_tokens": 16384,
+        "bash_seconds": 120,
+        "initial_context_capacity": 139264,
+        "compaction": false
+      },
+      "checkpoint_entry_id": "c52aee39",
+      "native_prefix_equal": true,
+      "retained_messages": 50,
+      "source_unchanged_at_start_and_end": true,
+      "tools_equal_to_baseline": true,
+      "system_equal_to_baseline": false,
+      "actual_API_output_caps": [
+        16384
+      ],
+      "API_requests": 4,
+      "agent_wall_seconds": 320.79859590530396,
+      "actual_tool_calls": 4,
+      "tool_error_messages": 4,
+      "SDK_output_limit_unexecuted_tool_messages": 0,
+      "Year_KeyError_messages": 0,
+      "1906_star_ValueError_messages": 4,
+      "new_API_usage": {
+        "input": 303019,
+        "output": 9896,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "input_changes": [],
+      "artifact_count": 0,
+      "termination": {
+        "stop_reason": "error",
+        "normal_stop": false,
+        "final_response_present": false
+      },
+      "resource_stop": {
+        "reason": "repeated_failed_command",
+        "consecutive": 4,
+        "state_hash": "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "command_sha256": "95672eb76148d650399e885b5920d2dd4921d8d7e3e1018be780227b92b37588"
+      },
+      "operator_interruption": false,
+      "mutable_state_hashes": [
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b",
+        "89998bffecb15a97f601e9bc446e6062f0ebae322ba4c850d233dbada07a127b"
+      ],
+      "custom_system_instruction_equal_to_baseline": true,
+      "effective_system_equal_after_workspace_namespace_normalization": true,
+      "effective_system_difference": "SDK cwd metadata names the new disposable workspace; no other system text difference"
+    }
+  ],
+  "total_agent_wall_seconds": 1645.4351177215576,
+  "total_actual_tool_calls": 14,
+  "combined_new_API_usage": {
+    "input": 856494,
+    "output": 55933,
+    "cacheRead": 0,
+    "cacheWrite": 0
+  },
+  "evaluation": {
+    "behavior_changed_after_feedback": true,
+    "old_error_escape": "not_confirmed; code still reads hosts as Latin-1 without fixing BOM, and host Year functions are not reached before the new error",
+    "work_recovery": false,
+    "complete_task_progress": false,
+    "persistent_source_forecast_figures_report": 0,
+    "resource_protection_triggered": true
+  },
+  "observations": [
+    "Early checkpoint after second real Year KeyError: 22 native messages preserved exactly",
+    "8K phase: long tool arguments rejected by SDK for length; no source saved",
+    "User output allowance amendment to 16K: completed 50-message native path preserved and original remaining wall/tool quotas used",
+    "All four 16K-phase requests used 16384 allowance and completed toolUse turns without length truncation",
+    "Identical inline preprocessing failed on int(1906*) four times without task state change; guard stopped further inference",
+    "Absence of a Year error is not proof of repair: Latin-1 reading remains and host functions were not reached"
+  ],
+  "limitations": [
+    "Single-source descriptive development, no same-checkpoint no-feedback arm",
+    "User instruction and output budget changed mid-course, not a frozen estimate of feedback alone",
+    "Operator-induced shutdown/API error is not a model-origin data failure",
+    "API input totals include repeated history, not independent information or uncached GPU work",
+    "No verified recovery/transfer/parameter benefit; no retroactive L admission",
+    "Effective system strings differ by SDK workspace namespace, although custom system instructions and normalized system text match; no claim of byte-identical complete system messages"
+  ]
+}

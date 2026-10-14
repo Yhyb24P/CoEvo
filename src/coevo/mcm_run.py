@@ -93,6 +93,20 @@ def termination(transcript):
             'final_response_present': bool(transcript.get('final_text'))}
 
 
+def validate_budget_continuation(config, previous, result):
+    if {k: v for k, v in config.items() if k != 'task_budget'} != {k: v for k, v in previous.items() if k != 'task_budget'}:
+        raise ValueError('Budget continuation must keep all non-budget settings')
+    new, old = config['task_budget'], previous['task_budget']
+    adjustable = {'wall_seconds', 'max_tool_calls', 'max_output_tokens'}
+    if {k: v for k, v in new.items() if k not in adjustable} != {k: v for k, v in old.items() if k not in adjustable}:
+        raise ValueError('Only output allowance and remaining wall/tool budgets may change')
+    if (not 0 < new['wall_seconds'] <= old['wall_seconds'] - result['agent_wall_seconds']
+            or not 0 < new['max_tool_calls'] <= old['max_tool_calls'] - result['tool_calls']):
+        raise ValueError('Continuation exceeds the remaining original wall/tool budget')
+    if new['max_output_tokens'] <= old['max_output_tokens']:
+        raise ValueError('This continuation requires the authorized output allowance increase')
+
+
 def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=None, repeat_failure_limit=0, budget_continuation=False):
     prepared, environment, out = map(lambda p: Path(p).resolve(), (prepared, environment, out))
     if out.exists():
@@ -116,12 +130,8 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
         if not budget_continuation and c != old_config:
             raise ValueError('Recovery must keep the original model, sampling and budgets')
         if budget_continuation:
-            if {k: v for k, v in c.items() if k != 'task_budget'} != {k: v for k, v in old_config.items() if k != 'task_budget'}:
-                raise ValueError('Budget continuation must keep all non-budget settings')
             old_result = json.loads((parent / 'result.json').read_text())
-            if (c['task_budget']['wall_seconds'] > old_config['task_budget']['wall_seconds'] - old_result['agent_wall_seconds']
-                    or c['task_budget']['max_tool_calls'] > old_config['task_budget']['max_tool_calls'] - old_result['tool_calls']):
-                raise ValueError('Continuation exceeds the remaining original wall/tool budget')
+            validate_budget_continuation(c, old_config, old_result)
         source_session = json.loads((parent / 'transcript.json').read_text())['session_file']
         entries = [json.loads(l) for l in Path(source_session).read_text().splitlines()]
         selected = next(e for e in entries if e.get('id') == checkpoint)

@@ -1,4 +1,5 @@
 import csv
+import copy
 import json
 import os
 import subprocess
@@ -6,12 +7,26 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from coevo.mcm_run import forecast_check, termination
+from coevo.mcm_run import forecast_check, termination, validate_budget_continuation
 from coevo.sandbox import command
 from tests.test_project_tools import PI_ENTRY
 
 
 class ForecastTests(unittest.TestCase):
+    def test_output_amendment_keeps_model_and_remaining_resources(self):
+        old = {'model': 'W0', 'sampling': {'seed': 17}, 'task_budget': {'wall_seconds': 2700, 'max_tool_calls': 160, 'max_output_tokens': 8192, 'compaction': False}}
+        new = copy.deepcopy(old)
+        new['task_budget'].update(wall_seconds=1375, max_tool_calls=150, max_output_tokens=16384)
+        result = {'agent_wall_seconds': 1324.64, 'tool_calls': 10}
+        validate_budget_continuation(new, old, result)
+        for alter in ('model', 'wall', 'compaction'):
+            bad = copy.deepcopy(new)
+            if alter == 'model': bad['model'] = 'different-model'
+            elif alter == 'wall': bad['task_budget']['wall_seconds'] = 2700
+            else: bad['task_budget']['compaction'] = True
+            with self.subTest(alter=alter), self.assertRaises(ValueError):
+                validate_budget_continuation(bad, old, result)
+
     def test_empty_length_limited_turn_is_not_normal_completion(self):
         t = {'messages': [{'role': 'assistant', 'stopReason': 'length'}], 'aborted': False, 'final_text': None}
         self.assertFalse(termination(t)['normal_stop'])
