@@ -93,7 +93,7 @@ def termination(transcript):
             'final_response_present': bool(transcript.get('final_text'))}
 
 
-def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=None, repeat_failure_limit=0):
+def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=None, repeat_failure_limit=0, budget_continuation=False):
     prepared, environment, out = map(lambda p: Path(p).resolve(), (prepared, environment, out))
     if out.exists():
         raise ValueError('Use a new run directory')
@@ -110,15 +110,26 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
         # This run produced no writes, so its final workspace is also its early state.
         # Do not generalize this shortcut to trajectories with changed files.
         initial = json.loads((parent / 'input-hashes.json').read_text())
-        if hashes(parent / 'workspace') != initial:
+        if not budget_continuation and hashes(parent / 'workspace') != initial:
             raise ValueError('Parent workspace changed; early state needs a real checkpoint snapshot')
-        if c != json.loads((parent / 'config.json').read_text()):
+        old_config = json.loads((parent / 'config.json').read_text())
+        if not budget_continuation and c != old_config:
             raise ValueError('Recovery must keep the original model, sampling and budgets')
+        if budget_continuation:
+            if {k: v for k, v in c.items() if k != 'task_budget'} != {k: v for k, v in old_config.items() if k != 'task_budget'}:
+                raise ValueError('Budget continuation must keep all non-budget settings')
+            old_result = json.loads((parent / 'result.json').read_text())
+            if (c['task_budget']['wall_seconds'] > old_config['task_budget']['wall_seconds'] - old_result['agent_wall_seconds']
+                    or c['task_budget']['max_tool_calls'] > old_config['task_budget']['max_tool_calls'] - old_result['tool_calls']):
+                raise ValueError('Continuation exceeds the remaining original wall/tool budget')
         source_session = json.loads((parent / 'transcript.json').read_text())['session_file']
         entries = [json.loads(l) for l in Path(source_session).read_text().splitlines()]
         selected = next(e for e in entries if e.get('id') == checkpoint)
         msg = selected.get('message', {})
-        if msg.get('role') != 'toolResult' or not msg.get('isError') or 'KeyError' not in str(msg.get('content')) or 'Year' not in str(msg.get('content')):
+        if budget_continuation:
+            if selected['id'] != [e for e in entries if e.get('message', {}).get('role') == 'toolResult'][-1]['id']:
+                raise ValueError('Budget continuation must use the last completed tool result')
+        elif msg.get('role') != 'toolResult' or not msg.get('isError') or 'KeyError' not in str(msg.get('content')) or 'Year' not in str(msg.get('content')):
             raise ValueError('Recovery checkpoint must include the real Year error observation')
         shutil.copytree(parent / 'workspace', out / 'workspace')
     else:
@@ -142,6 +153,8 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
         old_request = json.loads((parent / 'agent_request.json').read_text())
         request.update(resume_file=source_session, resume_entry_id=checkpoint,
                        prompts=[RECOVERY_FEEDBACK], system_prompt=old_request['system_prompt'])
+        if budget_continuation:
+            request['prompts'] = [f"用户允许适当提高输出上限。当前单次输出上限已从{old_config['task_budget']['max_output_tokens']}提高到{c['task_budget']['max_output_tokens']}token；剩余工作时间{c['task_budget']['wall_seconds']}秒、工具调用{c['task_budget']['max_tool_calls']}次。上轮服务因研究控制器调整输出预算而关闭，不是新的数据错误。保留已有工作与原生历史，继续自主修正、保存并实际执行代码，完成原题；没有额外参考代码或数据。"]
     if repeat_failure_limit:
         request['repeat_failure_limit'] = repeat_failure_limit
     write_json(out / 'agent_request.json', request)
@@ -158,7 +171,9 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
                 'feedback_assisted': bool(parent), 'H': False, 'budget': c['task_budget'],
                 'training_authorized': False, 'repeat_failure_limit': repeat_failure_limit,
                 'parent_run': str(parent) if parent else None, 'checkpoint_entry_id': checkpoint,
-                'feedback_origin': 'researcher-external-execution-check' if parent else None,
+                'feedback_origin': ('user-authorized-resource-adjustment' if budget_continuation
+                                    else 'researcher-external-execution-check' if parent else None),
+                'budget_continuation': budget_continuation,
                 'config': c, 'source_snapshot': source_snapshot(),
                 'code_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
                 'pi_adapter_sha256': hashlib.sha256(Path('scripts/pi-project-agent.mjs').read_bytes()).hexdigest(),
@@ -192,7 +207,9 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
                   'input_changes': [p for p, h in before.items() if after.get(p) != h],
                   'artifacts': {p: h for p, h in after.items() if p not in before},
                   'forecast_check': forecast_check(ws / 'outputs/predictions_2028.csv'),
-                  'scope': 'first autonomous development attempt; artifact inventory is not full modelling validation',
+                  'scope': ('native task continuation after user output-budget amendment' if budget_continuation
+                            else 'early native feedback recovery' if parent else 'first autonomous development attempt')
+                           + '; artifact inventory is not full modelling validation',
                   'training_executed': False, 'promotion_allowed': False}
         write_json(out / 'result.json', result)
         manifest['status'] = ('agent-returned' if code == 0 and result['termination']['normal_stop']
@@ -225,8 +242,9 @@ def main():
     p.add_argument('--parent')
     p.add_argument('--checkpoint')
     p.add_argument('--repeat-failure-limit', type=int, default=0)
+    p.add_argument('--budget-continuation', action='store_true')
     a = p.parse_args()
-    result = run(a.prepared, a.environment, a.config, a.out, a.pi_entry, a.parent, a.checkpoint, a.repeat_failure_limit)
+    result = run(a.prepared, a.environment, a.config, a.out, a.pi_entry, a.parent, a.checkpoint, a.repeat_failure_limit, a.budget_continuation)
     print(json.dumps({k: v for k, v in result.items() if k != 'artifacts'}), flush=True)
 
 
