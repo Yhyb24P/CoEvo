@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync, realpathSync, appendFileSync, e
 import { resolve, dirname, relative, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
+import { makeLearningSelectionTool } from './learning-selection.mjs';
 
 const request = JSON.parse(readFileSync(process.env.COEVO_REQUEST_FILE, 'utf8'));
 const { createAgentSession, createExtensionRuntime, ModelRuntime, SessionManager, SettingsManager,
@@ -61,6 +62,8 @@ const bash = createBashToolDefinition(cwd, { exposeSessionEnvironment: false, op
 }});
 let calls = 0, aborted = false, currentSession;
 const tools = [read, write, bash];
+if (request.learning_candidates) tools.push(makeLearningSelectionTool(request.learning_candidates,
+  request.training_selection_token_budget, resolve(runDir, 'learning-selection.jsonl'), request.training_selection_max_items ?? 2));
 for (const tool of tools) {
   const original = tool.execute;
   tool.execute = async (...args) => {

@@ -2,6 +2,8 @@
 import argparse
 import hashlib
 import json
+import math
+import random
 from collections import defaultdict
 from pathlib import Path
 from .runtime import write_json,read_config
@@ -14,11 +16,15 @@ def output_target(component):
     trace=Path(component['raw_generation_and_tool_trace_ref'])
     states=trace.parent/'tool-states.jsonl'
     call=component['target']['tool_calls'][0]['id']
-    if not states.exists():return False
-    for line in states.read_text().splitlines():
-        state=json.loads(line)
-        if state['tool_call_id']==call:
-            return any(value!=state['before_outputs'].get(path) for path,value in state['after_outputs'].items())
+    paths=[states] if states.exists() else []
+    if component.get('verifier_ref'):
+        proof=json.loads(Path(component['verifier_ref']).read_text())
+        paths.extend(Path(ref['path']) for ref in proof.get('prior_state_refs',[]))
+    for path in paths:
+        for line in path.read_text().splitlines():
+            state=json.loads(line)
+            if state['tool_call_id']==call:
+                return any(value!=state['before_outputs'].get(p) for p,value in state['after_outputs'].items())
     return False
 
 
@@ -27,7 +33,7 @@ def project(components,mode):
     base=compose(components)
     selected=base['target_indices'] if mode=='full' else [len(c['prefix']) for c in base['components'] if output_target(c)]
     if not selected:raise ValueError('Trace has no verified output-producing target')
-    return {'candidate_format':'verified_behavior_ablation_v1','candidate_id':base['candidate_id']+'-'+mode,
+    return {'candidate_format':'verified_behavior_ablation_v1','candidate_id':base['components'][0]['candidate_id']+'-ablation-'+mode,
         'source_cluster_id':base['source_cluster_id'],'split':'L','train_authorized':True,
         'actor':'student','behavior_kind':'same-trace-'+mode,'mode':mode,'base':base,
         'messages':base['messages'],'tools':base['tools'],'target_indices':selected,
@@ -76,7 +82,16 @@ def plan(learning_tokens,replay_tokens,budget,max_steps,tolerance):
     return result
 
 
-def build(learning,replay,tokenizer_path,out,config,budget,tolerance,max_steps,max_length):
+def update_groups(main_count,replay_count,main_passes,replay_passes,epochs,seed=17):
+    if main_passes%epochs:raise ValueError('Main exposure cannot be grouped into declared optimizer epochs')
+    groups=[[i]*(main_passes//epochs) for _ in range(epochs) for i in range(main_count)]
+    rng=random.Random(seed)
+    for _ in range(replay_passes):
+        for i in range(replay_count):groups[rng.randrange(len(groups))].append(main_count+i)
+    return groups
+
+
+def build(learning,replay,tokenizer_path,out,config,budget,tolerance,max_steps,max_length,equal_updates=False,loss_mode='dense'):
     from transformers import AutoTokenizer
     out=Path(out).resolve();out.mkdir(parents=True,exist_ok=False)
     tokenizer=AutoTokenizer.from_pretrained(tokenizer_path,local_files_only=True)
@@ -94,17 +109,31 @@ def build(learning,replay,tokenizer_path,out,config,budget,tolerance,max_steps,m
         return result
     previews={mode:preview(pool) for mode,pool in pools.items()};replay_preview=preview(replay_pool)
     schedules=plan({k:[r['supervised_tokens'] for r in v] for k,v in previews.items()},[r['supervised_tokens'] for r in replay_preview],budget,max_steps,tolerance)
+    epochs=math.gcd(*(s['main_passes'] for s in schedules.values()))
     manifest={'learning_sources':sorted(learning_sources),'replay_sources':sorted(replay_sources),'previews':previews,
         'replay_preview':replay_preview,'matched_schedules':schedules,'budget':budget,'tolerance':tolerance,
         'scope':'same-source mask comparison plus token-matched allocation; repetition/steps/context costs differ and must be reported',
         'training_executed':False,'H_used':False,'arms':{}}
+    manifest['equal_optimizer_updates']=equal_updates
     for arm in ('output-only','full','full-replay'):
         pool=pools['output-only' if arm=='output-only' else 'full']+(replay_pool if arm=='full-replay' else [])
         path=out/(arm+'.jsonl');path.write_text(''.join(json.dumps(c,ensure_ascii=False)+'\n' for c in pool))
         for design,schedule in [('same-exposure',list(range(len(pool)))),('token-matched',schedules[arm]['schedule'])]:
+            grouped=None
+            if equal_updates:
+                entry=schedules[arm] if design=='token-matched' else {'main_passes':1,'replay_passes':int(arm=='full-replay')}
+                grouped=update_groups(len(learning_groups),len(replay_groups),entry['main_passes'],entry['replay_passes'],epochs if design=='token-matched' else 1)
+                schedule=[i for g in grouped for i in g]
             c={**read_config(config),'training_schedule':schedule,'training_max_steps':max_steps,
                 'training_token_cap':max(budget,sum((previews['output-only' if arm=='output-only' else 'full']+ (replay_preview if arm=='full-replay' else []))[i]['supervised_tokens'] for i in range(len(pool)))),
-                'training_max_length':max_length,'study_id':'supervision-ablation','stream_id':design,'arm_id':arm}
+                'training_max_length':max_length,'training_max_microsteps':max_steps,'training_loss_mode':loss_mode,
+                'study_id':'supervision-ablation','stream_id':design,'arm_id':arm}
+            if grouped:c['training_update_groups']=grouped
+            if grouped and design=='token-matched':
+                schedules[arm]['micro_steps']=len(schedule)
+                schedules[arm]['optimizer_steps']=len(grouped)
+                schedules[arm]['schedule']=schedule
+                schedules[arm]['update_groups']=grouped
             write_json(out/(arm+'-'+design+'.json'),c)
         manifest['arms'][arm]={'dataset':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
     write_json(out/'plan.json',manifest)
@@ -116,6 +145,7 @@ def main():
     p.add_argument('--tokenizer',required=True);p.add_argument('--out',required=True);p.add_argument('--config',required=True)
     p.add_argument('--budget',type=int,required=True);p.add_argument('--tolerance',type=float,default=.03)
     p.add_argument('--max-steps',type=int,default=40);p.add_argument('--max-length',type=int,default=5120)
-    a=p.parse_args();build(a.learning,a.replay,a.tokenizer,a.out,a.config,a.budget,a.tolerance,a.max_steps,a.max_length)
+    p.add_argument('--equal-updates',action='store_true');p.add_argument('--loss-mode',choices=['dense','selected-logits'],default='dense')
+    a=p.parse_args();build(a.learning,a.replay,a.tokenizer,a.out,a.config,a.budget,a.tolerance,a.max_steps,a.max_length,a.equal_updates,a.loss_mode)
 
 if __name__=='__main__':main()

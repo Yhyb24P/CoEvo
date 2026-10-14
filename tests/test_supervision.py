@@ -5,10 +5,29 @@ import unittest
 from pathlib import Path
 from coevo.everyday import prepare,verify
 from coevo.behavior import certify
-from coevo.supervision import project,admit,plan,output_target
+from coevo.supervision import project,admit,plan,output_target,update_groups
 from tests.test_everyday_behavior import fixture
 
 class SupervisionTests(unittest.TestCase):
+    def test_token_matching_can_keep_same_optimizer_update_count(self):
+        from collections import Counter
+        a=update_groups(12,3,6,0,3);b=update_groups(12,3,3,0,3);c=update_groups(12,3,3,1,3)
+        self.assertEqual([len(x) for x in [a,b,c]],[36,36,36])
+        self.assertEqual(Counter(i for g in a for i in g),Counter({i:6 for i in range(12)}))
+        self.assertEqual(Counter(i for g in b for i in g),Counter({i:3 for i in range(12)}))
+        self.assertEqual(Counter(i for g in c for i in g),Counter({**{i:3 for i in range(12)},12:1,13:1,14:1}))
+
+    def test_same_family_traces_keep_distinct_dataset_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            projected=[]
+            for index in range(2):
+                out=Path(tmp)/str(index);task=prepare(out,'normalize')
+                task['episode_id']=f'L-variant-{index}'
+                fixture(task,out);self.assertTrue(verify(task,out)['passed'])
+                projected.append(project(certify(task,out),'full'))
+            self.assertEqual(projected[0]['source_cluster_id'],projected[1]['source_cluster_id'])
+            self.assertNotEqual(projected[0]['candidate_id'],projected[1]['candidate_id'])
+
     def test_context_is_identical_and_only_verified_mask_changes(self):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'run';task=prepare(out,'normalize');fixture(task,out,fail_first=True)

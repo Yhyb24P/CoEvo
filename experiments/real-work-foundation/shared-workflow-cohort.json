@@ -1,0 +1,66 @@
+{
+  "scope": "controlled L cohort, native tool nominations, teacher-assisted recovery and same-source supervision preparation; not formal Q3",
+  "episodes": 12,
+  "family_source_clusters": 4,
+  "initial_passed": 3,
+  "first_correction_passed": 5,
+  "additional_teacher_feedback_passed": 7,
+  "additional_teacher_feedback_attempted": 7,
+  "initial_targets_superseded": 69,
+  "admission_v2_targets": 30,
+  "initial_nominations_superseded": 14,
+  "revalidated_nominations": 8,
+  "final_training_targets": 59,
+  "max_context_tokens": 11495,
+  "H_used": false,
+  "mask_groups": {
+    "same-exposure": {
+      "output-only": {
+        "supervised_tokens": 1734,
+        "context_tokens": 39952,
+        "micro_steps": 12,
+        "optimizer_steps": 12
+      },
+      "full": {
+        "supervised_tokens": 3401,
+        "context_tokens": 39952,
+        "micro_steps": 12,
+        "optimizer_steps": 12
+      },
+      "full-replay": {
+        "supervised_tokens": 3649,
+        "context_tokens": 42908,
+        "micro_steps": 15,
+        "optimizer_steps": 12
+      }
+    },
+    "token-matched": {
+      "output-only": {
+        "supervised_tokens": 10404,
+        "context_tokens": 239712,
+        "micro_steps": 72,
+        "optimizer_steps": 36
+      },
+      "full": {
+        "supervised_tokens": 10203,
+        "context_tokens": 119856,
+        "micro_steps": 36,
+        "optimizer_steps": 36
+      },
+      "full-replay": {
+        "supervised_tokens": 10451,
+        "context_tokens": 122812,
+        "micro_steps": 39,
+        "optimizer_steps": 36
+      }
+    }
+  },
+  "paired_panel": {
+    "D_instances": 16,
+    "family_clusters": 4,
+    "G_instances": 3,
+    "same_tool_and_sampling": true,
+    "native_vs_memory_comparison": false
+  },
+  "autonomous_12_of_12_claim": false
+}

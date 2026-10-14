@@ -39,16 +39,6 @@ def admit(candidate):
 
 def encode(tokenizer,candidate,max_length):
     from .train import normalize_messages
+    from .assistant_mask import encode as encode_canonical
     messages=normalize_messages(candidate['messages'])
-    def render(part,generation=False):
-        return tokenizer.apply_chat_template(part,tools=candidate['tools'],tokenize=True,return_dict=False,
-            add_generation_prompt=generation,enable_thinking=False)
-    full=render(messages);labels=[-100]*len(full)
-    if len(full)>max_length:raise ValueError('Replay sequence exceeds length; no silent truncation')
-    for index in candidate['target_indices']:
-        before=render(messages[:index],True);through=render(messages[:index+1])
-        if through[:len(before)]!=before or full[:len(through)]!=through:
-            raise ValueError('Replay target boundaries do not align with the actual template')
-        labels[len(before):len(through)]=full[len(before):len(through)]
-    if not any(x!=-100 for x in labels):raise ValueError('No replay supervision')
-    return full,labels
+    return encode_canonical(tokenizer,messages,candidate['tools'],candidate['target_indices'],max_length)

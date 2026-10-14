@@ -174,6 +174,10 @@ def execute_task(task, out, config, model=None, resume_file=None):
         request['resume_file'] = resume_file
     if config.get('inference_sampling') is not None:
         request['sampling'] = config['inference_sampling']
+    if task.get('learning_candidates') is not None:
+        request['learning_candidates']=task['learning_candidates']
+        request['training_selection_token_budget']=task['training_selection_token_budget']
+        request['training_selection_max_items']=task.get('training_selection_max_items',2)
     write_json(out / 'agent_request.json', request)
     started = time.monotonic()
     try:
