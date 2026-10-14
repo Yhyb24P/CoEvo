@@ -22,5 +22,6 @@
   "training_wall_seconds": 600,
   "stream_id": "new-inputs-20261014",
   "arm_id": "W0",
-  "state_path": ".state/{study_id}/{stream_id}/{arm_id}.sqlite"
+  "state_path": ".state/{study_id}/{stream_id}/{arm_id}.sqlite",
+  "memory_source": "/mnt/e/CoEvo/runs/codex-replay-pilot/20261014-W0-rootfix/replay/unique"
 }

@@ -11,8 +11,6 @@ from .state import State
 from .memory import Memory
 from .learning_decisions import packet,validate
 
-ROOT=Path('/mnt/e/CoEvo/runs/decision-replay/20261014-v1')
-CORRECTION=Path('/mnt/e/CoEvo/runs/decision-replay/20261014-correction-v1')
 CONTEXTS={'quoted_csv':{'operation':'csv','delimiter':','},'digest_check':{'operation':'hash','algorithm':'sha256'},
           'conditional_rows':{'operation':'filter','contract':'ids-object'}}
 FIXED={
@@ -54,16 +52,18 @@ def future(name):
         'task_family':'agent-learning-future-task','program_family':name,'interaction_origin':'controlled-new-input-learning-decision-trial'}
 
 
-def run(config,out,adapter):
+def run(config,out,adapter,learning_root=None,correction_root=None):
     out=Path(out).resolve();out.mkdir(parents=True,exist_ok=False);c=read_config(config)
-    candidates=[json.loads(x) for p in [ROOT/'selected-candidates.jsonl',CORRECTION/'candidates.jsonl'] for x in p.read_text().splitlines()]
+    root=Path(learning_root or c['learning_root']).resolve()
+    correction=Path(correction_root or c['correction_root']).resolve()
+    candidates=[json.loads(x) for p in [root/'selected-candidates.jsonl',correction/'candidates.jsonl'] for x in p.read_text().splitlines()]
     pools={};packets={};proposaltasks={};futures={};decisions={};results=[];proposal_results=[]
     for name,context in CONTEXTS.items():
-        task=json.loads((ROOT/name/'task.json').read_text());source=task['source_cluster_id']
+        task=json.loads((root/name/'task.json').read_text());source=task['source_cluster_id']
         pools[name]=[x for x in candidates if x['source_cluster_id']==source]
         traces=[]
-        for root in [ROOT,CORRECTION]:
-            p=root/name/'transcript.json'
+        for trace_root in [root,correction]:
+            p=trace_root/name/'transcript.json'
             if p.exists():
                 trace=json.loads(p.read_text());traces.append({'origin':str(p),'messages':trace['messages'],
                     'continuation_start_message_index':trace.get('continuation_start_message_index',0)})
@@ -135,6 +135,7 @@ def run(config,out,adapter):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--out',required=True);p.add_argument('--adapter',required=True)
-    a=p.parse_args();run(a.config,a.out,a.adapter)
+    p.add_argument('--learning-root');p.add_argument('--correction-root')
+    a=p.parse_args();run(a.config,a.out,a.adapter,a.learning_root,a.correction_root)
 
 if __name__=='__main__':main()

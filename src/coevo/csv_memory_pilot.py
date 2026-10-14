@@ -10,7 +10,6 @@ from .memory import Memory
 from .state import State
 from .memory_pilot import run
 
-SOURCE=Path('/mnt/e/CoEvo/runs/decision-replay/20261014-v1/quoted_csv')
 NAMES=['transferable','unrelated','reversal','withdrawal']
 
 
@@ -44,12 +43,13 @@ def prepare(out,name):
 
 def pool(config,mode,out):
     state=State.for_experiment({**config,'arm_id':mode,'state_path':str(out/'state.sqlite')});memory=Memory(state)
-    task=json.loads((SOURCE/'task.json').read_text());verdict=json.loads((SOURCE/'verdict.json').read_text())
+    source=Path(config['memory_source']).resolve()
+    task=json.loads((source/'task.json').read_text());verdict=json.loads((source/'verdict.json').read_text())
     if task['split']!='L' or not verdict['outputs'].get('output.csv') or verdict['unauthorized_changes']:
         raise ValueError('Memory requires independently correct L artifact')
-    origins=[str(SOURCE/'verdict.json'),str(SOURCE/'transcript.json')]
+    origins=[str(source/'verdict.json'),str(source/'transcript.json')]
     memory.register('csv-instance','instance',task['source_cluster_id'],
-        json.dumps({'input':task['inputs']['source.tsv'],'output':(SOURCE/'workspace/output.csv').read_text()},ensure_ascii=False),
+        json.dumps({'input':task['inputs']['source.tsv'],'output':(source/'workspace/output.csv').read_text()},ensure_ascii=False),
         {'operation':'csv','delimiter':','},origins)
     memory.register('csv-skill','skill',task['source_cluster_id'],
         '此实例的逗号 CSV 使用 Python csv.writer：字段内部逗号触发双引号包裹，内部双引号重复转义。读取本次字段，不能复制历史数据。此技能仅适用于逗号输出。',
@@ -59,6 +59,7 @@ def pool(config,mode,out):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--out',required=True)
-    a=p.parse_args();run(a.config,a.out,prepare,pool,NAMES,SOURCE)
+    p.add_argument('--source')
+    a=p.parse_args();run(a.config,a.out,prepare,pool,NAMES,source=a.source)
 
 if __name__=='__main__':main()

@@ -15,7 +15,6 @@ CASES={
  'reversal':{'operation':'sort','values':[5,-2,5,10,-2],'order':'ascending'},
  'withdrawal':{'operation':'unique','values':[11,4,11,-5],'order':'descending'},
 }
-SOURCE=Path('/mnt/e/CoEvo/runs/codex-replay-pilot/20261014-W0-rootfix/replay/unique')
 
 
 def prepare(out,name):
@@ -41,20 +40,23 @@ def prepare(out,name):
 def pool(config,mode,out):
     c={**config,'arm_id':mode,'state_path':str(out/'state.sqlite')}
     state=State.for_experiment(c);memory=Memory(state)
-    task=json.loads((SOURCE/'task.json').read_text());verdict=json.loads((SOURCE/'verdict.json').read_text())
+    source=Path(config['memory_source']).resolve()
+    task=json.loads((source/'task.json').read_text());verdict=json.loads((source/'verdict.json').read_text())
     if not verdict['passed'] or task['split']!='L':raise ValueError('Shared memory must come from a verified L source')
-    actual=json.loads((SOURCE/'workspace/output.json').read_text())
+    actual=json.loads((source/'workspace/output.json').read_text())
     body='过去的成功实例：'+json.dumps({'input':json.loads(task['inputs']['input.json']),'output':actual},ensure_ascii=False)
-    memory.register('unique-instance','instance',task['source_cluster_id'],body,{'operation':'unique'},[str(SOURCE/'verdict.json')])
+    memory.register('unique-instance','instance',task['source_cluster_id'],body,{'operation':'unique'},[str(source/'verdict.json')])
     memory.register('unique-skill','skill',task['source_cluster_id'],
                     '历史程序经验：去除 values 中的重复数字，再按升序排列；result 应为数组。读取本次实际值，不使用历史实例的具体数值。',
-                    {'operation':'unique'},[str(SOURCE/'verdict.json')],['unique-instance'])
+                    {'operation':'unique'},[str(source/'verdict.json')],['unique-instance'])
     return state,memory
 
 
-def run(config,out,prepare_task=prepare,create_pool=pool,case_names=None,source=SOURCE):
+def run(config,out,prepare_task=prepare,create_pool=pool,case_names=None,source=None):
     out=Path(out).resolve();out.mkdir(parents=True,exist_ok=False);c=read_config(config)
     modes=['M0','M1','M2','M3'];tasks={};pools={}
+    if source is not None:c['memory_source']=str(Path(source).resolve())
+    source=Path(c['memory_source']).resolve()
     names=list(case_names or CASES)
     for mode in modes:
         pools[mode]=create_pool(c,mode,out/mode)
@@ -92,7 +94,8 @@ def run(config,out,prepare_task=prepare,create_pool=pool,case_names=None,source=
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--out',required=True)
-    a=p.parse_args();run(a.config,a.out)
+    p.add_argument('--source')
+    a=p.parse_args();run(a.config,a.out,source=a.source)
 
 
 if __name__=='__main__':main()

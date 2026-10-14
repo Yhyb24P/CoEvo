@@ -199,7 +199,7 @@ def run(out, source, environment, config, start_server=False, resume_run=None):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--out', required=True)
-    p.add_argument('--source', default='/mnt/e/CoEvo/upstream/task-candidates/frostming--marko')
+    p.add_argument('--source', required=True)
     p.add_argument('--environment', default='.cache/task-env')
     p.add_argument('--config', default='configs/workstation.json')
     p.add_argument('--start-server', action='store_true')

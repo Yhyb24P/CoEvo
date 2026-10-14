@@ -11,6 +11,9 @@ from .runtime import read_config, new_run, finish_run, write_json
 def admit(candidate):
     if candidate.get("split") != "L" or candidate.get("train_authorized") is not True:
         raise ValueError("Candidate has no L training authorization")
+    if candidate.get('candidate_format') == 'verified_behavior_ablation_v1':
+        from .supervision import admit as admit_ablation
+        return admit_ablation(candidate)
     if candidate.get('candidate_format') == 'verified_behavior_sequence_v1':
         from .sequences import admit as admit_sequence
         return admit_sequence(candidate)
@@ -56,6 +59,9 @@ def normalize_messages(messages):
 
 
 def encode(tokenizer, candidate, max_length):
+    if candidate.get('candidate_format') == 'verified_behavior_ablation_v1':
+        from .supervision import encode as encode_ablation
+        return encode_ablation(tokenizer,candidate,max_length)
     if candidate.get('candidate_format') == 'verified_behavior_sequence_v1':
         from .sequences import encode as encode_sequence
         return encode_sequence(tokenizer, candidate, max_length)
@@ -93,10 +99,15 @@ def train(config, dataset, adapter_out, previous_adapter=None, seed=17, passes=1
         torch.manual_seed(seed)
         tokenizer = AutoTokenizer.from_pretrained(c["model_path"], local_files_only=True)
         examples = [encode(tokenizer, x, c.get('training_max_length', 4096)) for x in raw]
-        target_tokens = sum(sum(v != -100 for v in y) for _, y in examples) * passes
+        schedule=c.get('training_schedule',list(range(len(examples)))*passes)
+        if not isinstance(schedule,list) or not schedule or any(type(i)!=int or i<0 or i>=len(examples) for i in schedule):
+            raise ValueError('Training schedule must reference legal dataset rows')
+        if c.get('training_schedule') is not None and passes!=1:
+            raise ValueError('Explicit schedule already includes repetitions; use passes=1')
+        target_tokens = sum(sum(v != -100 for v in examples[i][1]) for i in schedule)
         if target_tokens > c.get('training_token_cap', 200000):
             raise ValueError("Supervised token cap exceeded")
-        if len(examples) * passes > c.get('training_max_steps', 200000):
+        if len(schedule) > c.get('training_max_steps', 200000):
             raise ValueError('Training step cap exceeded')
         model = AutoModelForImageTextToText.from_pretrained(c["model_path"], local_files_only=True,
             dtype=torch.bfloat16, device_map={"": 0}, attn_implementation="sdpa")
@@ -118,25 +129,25 @@ def train(config, dataset, adapter_out, previous_adapter=None, seed=17, passes=1
         before = tensor_hash(model)
         losses, steps, grad_nonzero = [], 0, False
         model.train()
-        for _ in range(passes):
-            for ids, labels in examples:
-                if time.monotonic() - started > c.get('training_wall_seconds', 7200):
-                    raise TimeoutError("Training job exceeded two GPU-hour wall cap")
-                inputs = torch.tensor([ids], device="cuda")
-                target = torch.tensor([labels], device="cuda")
-                optimizer.zero_grad(set_to_none=True)
-                loss = model(input_ids=inputs, attention_mask=torch.ones_like(inputs), labels=target).loss
-                if not math.isfinite(loss.item()):
-                    raise ValueError("Non-finite training loss")
-                loss.backward()
-                norm = torch.nn.utils.clip_grad_norm_(trainable, 1.0).item()
-                if not math.isfinite(norm):
-                    raise ValueError("Non-finite gradient norm")
-                grad_nonzero = grad_nonzero or norm > 0
-                optimizer.step()
-                steps += 1
-                losses.append(loss.item())
-                print(json.dumps({"step": steps, "loss": loss.item()}), flush=True)
+        for i in schedule:
+            ids, labels = examples[i]
+            if time.monotonic() - started > c.get('training_wall_seconds', 7200):
+                raise TimeoutError("Training job exceeded two GPU-hour wall cap")
+            inputs = torch.tensor([ids], device="cuda")
+            target = torch.tensor([labels], device="cuda")
+            optimizer.zero_grad(set_to_none=True)
+            loss = model(input_ids=inputs, attention_mask=torch.ones_like(inputs), labels=target).loss
+            if not math.isfinite(loss.item()):
+                raise ValueError("Non-finite training loss")
+            loss.backward()
+            norm = torch.nn.utils.clip_grad_norm_(trainable, 1.0).item()
+            if not math.isfinite(norm):
+                raise ValueError("Non-finite gradient norm")
+            grad_nonzero = grad_nonzero or norm > 0
+            optimizer.step()
+            steps += 1
+            losses.append(loss.item())
+            print(json.dumps({"step": steps, "loss": loss.item()}), flush=True)
         after = tensor_hash(model)
         if before == after or not grad_nonzero:
             raise ValueError("No actual parameter update")
@@ -147,8 +158,9 @@ def train(config, dataset, adapter_out, previous_adapter=None, seed=17, passes=1
             "dataset_hash": hashlib.sha256(Path(dataset).read_bytes()).hexdigest(),
             "parent_adapter": previous_adapter, "parameters_before": before, "parameters_after": after})
         result = {"checkpoint_and_export_ref": str(adapter_out), "optimizer_steps": steps,
-                  "actual_supervised_tokens": target_tokens, "actual_context_tokens": sum(len(x) for x, _ in examples)*passes,
-                  "actual_sequences": len(examples)*passes, "unique_source_clusters": len({x['source_cluster_id'] for x in raw}),
+                  "actual_supervised_tokens": target_tokens, "actual_context_tokens": sum(len(examples[i][0]) for i in schedule),
+                  "actual_sequences": len(schedule), "training_schedule":schedule,
+                  "unique_source_clusters": len({raw[i]['source_cluster_id'] for i in schedule}),
                   "initial_and_final_parameter_check_ref": {"before": before, "after": after},
                   "gradient_nonzero": grad_nonzero, "training_loss": losses,
                   "expected_and_actual_trainable_modules_ref": targets,

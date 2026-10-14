@@ -27,5 +27,7 @@
   "inference_sampling": {
     "temperature": 0,
     "seed": 17
-  }
+  },
+  "learning_root": "/mnt/e/CoEvo/runs/decision-replay/20261014-v1",
+  "correction_root": "/mnt/e/CoEvo/runs/decision-replay/20261014-correction-v1"
 }
