@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 
 
-def command(workspace, environment, argv, readonly=False, writable_paths=()):
+def command(workspace, environment, argv, readonly=False, writable_paths=(), readonly_paths=()):
     workspace, environment = Path(workspace).resolve(), Path(environment).resolve()
     if not workspace.is_dir() or not (environment / "bin/python").is_file():
         raise ValueError("Task workspace or Python environment does not exist")
@@ -19,6 +19,11 @@ def command(workspace, environment, argv, readonly=False, writable_paths=()):
             args += ["--ro-bind", directory, directory]
     args += ["--ro-bind", str(environment), "/opt/task-env",
              "--ro-bind" if readonly else "--bind", str(workspace), "/workspace"]
+    for name in readonly_paths:
+        path = workspace / name
+        if path.is_symlink() or not path.exists() or path.resolve() != path.absolute() or not path.resolve().is_relative_to(workspace):
+            raise ValueError("Readonly task paths must exist inside the workspace")
+        args += ["--ro-bind", str(path), "/workspace/" + str(path.relative_to(workspace))]
     for name in writable_paths:
         path = workspace / name
         if path.is_symlink() or not path.is_file() or path.resolve() != path.absolute() or not path.resolve().is_relative_to(workspace):

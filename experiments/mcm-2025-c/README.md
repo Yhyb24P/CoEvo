@@ -68,3 +68,21 @@ PYTHONPATH=src "$COEVO_PYTHON" -m coevo.mcm_data \
 ```
 
 本批两项编码/时间过滤单元检查，以及真实ZIP CRC、全部回测输入年份与重复下载哈希核验通过。没有选择预测算法或替模型写解答。下一步是建立现有Pi执行环境中的完整任务入口和实际资源预算，再运行W0；训练或Spark替换不随数据准备自动启动。全部当前派生资料属于同一公开赛题D来源簇，既不标H，也不自动准入L。
+
+## 首次完整 W0 执行入口
+
+用户已要求启动自主建模。复用 `coevo.mcm_run` → 现有 Pi SDK 的 read/write/bash，不新建执行框架。使用 `configs/mcm-2025-c.json`：Qwen3.5-4B BF16 W0、原生上下文容量139264、thinking关闭、temperature0/seed17、原生会话不压缩；45分钟Agent墙钟、160次工具调用、每次输出最多8192token、单次bash最多120秒。服务初始化另有现有15分钟上限，不计入Agent工作时间；启动和总耗时分别记录。预算是首次有界开发配额，不是正式研究最优预算。
+
+任务环境独立于训练环境：`requirements.in` 列科学计算库，`requirements.txt` 记录本次解析版本和包哈希。只读绑定官方数据/题面，其余工作区允许正常编辑；离线执行，不挂载CoEvo源码、私人资料或评价区。给完整题面、完整数据和交付要求，模型自主选择数学与编程方法，不提供参考算法或解答。机器可读2028预测表的列约定仅用于成果读取，不要求学习建议或推理过程采用固定schema。
+
+```bash
+uv venv --python /usr/bin/python3 "$COEVO_MCM_ENV"
+uv pip sync --python "$COEVO_MCM_ENV/bin/python" --require-hashes experiments/mcm-2025-c/requirements.txt
+PYTHONPATH=src "$COEVO_PYTHON" -m coevo.mcm_run \
+  --prepared "$COEVO_MCM_PREPARED" --environment "$COEVO_MCM_ENV" \
+  --config configs/mcm-2025-c.json --out "$COEVO_MCM_RUN" --pi-entry "$COEVO_PI_ENTRY"
+```
+
+输出目录必须为新目录。初始官方输入哈希、环境/锁、配置/源码哈希、Git提交、Pi版本入口哈希、模型请求、工具轨迹、原生会话、GPU五秒采样及所有工作工件留在本地运行目录。任务结束后关闭本次服务；不因观察等待超时重启任务。不训练或晋升。
+
+自动检查只覆盖输入未修改、工件清单和预测表基本数值约束；不把正常退出、PDF存在、工具运行或模型自报完成视为整题成功。国家覆盖、时间过滤实现、区间方法和建模质量须结合模型实际代码/工件核查。全量工作区已经含历史成绩，不能将本次内生回测包装成隐藏真值预测；保守视图用于后续真正隔离执行。

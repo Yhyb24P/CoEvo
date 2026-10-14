@@ -21,6 +21,7 @@ function allowed(path, writing = false) {
   const rel = relative(cwd, absolute);
   if (!rel || rel === '..' || rel.startsWith('..' + sep) || rel.startsWith(sep)) throw new Error('Path outside task workspace');
   if (writing && request.allowed_write_paths !== undefined && !request.allowed_write_paths.includes(rel)) throw new Error('No write permission for this task path');
+  if (writing && (request.readonly_paths ?? []).some(p => rel === p || rel.startsWith(p + sep))) throw new Error('Readonly task input');
   let current = cwd;
   for (const part of rel.split(sep)) {
     current = resolve(current, part);
