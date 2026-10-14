@@ -30,7 +30,7 @@ def freeze(matrix, out, config):
             'allowed_write_paths':['output.json'],'prompt':legacy['prompt']+' 结束时只回复“已完成”。'})
     write_json(out/'panel.json',specs)
     configs=sorted(p for p in matrix.glob('*.json') if p.name!='plan.json')
-    arms=[{'name':p.stem,'config':str(p),'dataset':str(matrix/(p.stem.rsplit('-',2)[0]+'.jsonl'))} for p in configs]
+    arms=[{'name':p.stem,'config':str(p)} for p in configs]
     # Arm names end in same-exposure or token-matched.
     for arm in arms:
         arm['dataset']=str(matrix/(arm['name'].removesuffix('-same-exposure').removesuffix('-token-matched')+'.jsonl'))
@@ -49,7 +49,8 @@ def run(out):
     if m['status']!='frozen':raise ValueError('Trial already started; inspect retained outputs rather than restarting')
     for p,digest in m['inputs_sha256'].items():
         if hashlib.sha256(Path(p).read_bytes()).hexdigest()!=digest:raise ValueError('Frozen input changed')
-    write_json(out/'manifest.json',{**m,'status':'running','start_time':time.time()})
+    m={**m,'status':'running','start_time':time.time()}
+    write_json(out/'manifest.json',m)
     results={};server=None
     try:
         for arm in m['arms']:

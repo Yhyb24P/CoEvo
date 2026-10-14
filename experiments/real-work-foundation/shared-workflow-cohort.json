@@ -62,5 +62,7 @@
     "same_tool_and_sampling": true,
     "native_vs_memory_comparison": false
   },
-  "autonomous_12_of_12_claim": false
+  "autonomous_12_of_12_claim": false,
+  "additional_reference_code_episodes": 6,
+  "additional_stop_only_feedback_episodes": 1
 }
