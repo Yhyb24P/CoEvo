@@ -1,0 +1,226 @@
+{
+  "scope": "development same-pool cross-retraining; SU proxy is not accepted SU, single seed, same generator families, no H or multi-stream claim",
+  "selector_roles": {
+    "SF": "W0",
+    "SU-proxy": "unaccepted full same-exposure candidate",
+    "SR": "uniform feasible family-stratified random"
+  },
+  "common_budget": 2340,
+  "tolerance": 0.03,
+  "H_used": false,
+  "promotion": false,
+  "checkpoint_for_all_retraining": "original W0; no previous_adapter",
+  "source_snapshot_sha256": "88e819ee670a342a33159c581d7f10d4f62bcd19aa74c71b1b479841f65c9ff8",
+  "arms": {
+    "SF": {
+      "selection": [
+        {
+          "index_1_based": 3,
+          "family": "filter",
+          "supervised_tokens": 175,
+          "context_tokens": 1669,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 6,
+          "family": "hash",
+          "supervised_tokens": 190,
+          "context_tokens": 7758,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 7,
+          "family": "filter",
+          "supervised_tokens": 178,
+          "context_tokens": 1689,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 9,
+          "family": "csv",
+          "supervised_tokens": 195,
+          "context_tokens": 3855,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 10,
+          "family": "hash",
+          "supervised_tokens": 190,
+          "context_tokens": 6249,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 11,
+          "family": "filter",
+          "supervised_tokens": 175,
+          "context_tokens": 1613,
+          "teacher_reference_supplied": true
+        }
+      ],
+      "exposures_1_based": {
+        "3": 4,
+        "6": 1,
+        "7": 5,
+        "9": 1,
+        "10": 1,
+        "11": 1
+      },
+      "training": {
+        "optimizer_steps": 12,
+        "actual_supervised_tokens": 2340,
+        "actual_context_tokens": 34596,
+        "actual_sequences": 13,
+        "unique_source_clusters": 3,
+        "initial_and_final_parameter_check_ref": {
+          "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+          "after": "9b58347ea9c312c3de8ed8184d5b2129da60febdec5060ee602b29ffbfac3967"
+        },
+        "gradient_nonzero": true,
+        "peak_gpu_allocated": 14725788160,
+        "gpu_wall_hours": 0.00773716342054993,
+        "training_seeds": [
+          17
+        ],
+        "learning_rate": 1e-05,
+        "training_loss_mode": "selected-logits"
+      },
+      "native_prefix_preserved": true,
+      "selection_wall_seconds": 12.217765903042164,
+      "selection_tool_calls": 1
+    },
+    "SU-proxy": {
+      "selection": [
+        {
+          "index_1_based": 3,
+          "family": "filter",
+          "supervised_tokens": 175,
+          "context_tokens": 1669,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 4,
+          "family": "merge",
+          "supervised_tokens": 146,
+          "context_tokens": 1086,
+          "teacher_reference_supplied": false
+        },
+        {
+          "index_1_based": 7,
+          "family": "filter",
+          "supervised_tokens": 178,
+          "context_tokens": 1689,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 9,
+          "family": "csv",
+          "supervised_tokens": 195,
+          "context_tokens": 3855,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 11,
+          "family": "filter",
+          "supervised_tokens": 175,
+          "context_tokens": 1613,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 12,
+          "family": "merge",
+          "supervised_tokens": 146,
+          "context_tokens": 1085,
+          "teacher_reference_supplied": false
+        }
+      ],
+      "exposures_1_based": {
+        "3": 3,
+        "4": 1,
+        "7": 1,
+        "9": 6,
+        "11": 1,
+        "12": 1
+      },
+      "training": {
+        "optimizer_steps": 12,
+        "actual_supervised_tokens": 2340,
+        "actual_context_tokens": 33610,
+        "actual_sequences": 13,
+        "unique_source_clusters": 3,
+        "initial_and_final_parameter_check_ref": {
+          "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+          "after": "57531c3259cd7ece9d0420ddad64897bcc875caded32ba25800da5eade53bd02"
+        },
+        "gradient_nonzero": true,
+        "peak_gpu_allocated": 12135844352,
+        "gpu_wall_hours": 0.006738607211122548,
+        "training_seeds": [
+          17
+        ],
+        "learning_rate": 1e-05,
+        "training_loss_mode": "selected-logits"
+      },
+      "native_prefix_preserved": true,
+      "selection_wall_seconds": 39.7606995489914,
+      "selection_tool_calls": 1
+    },
+    "SR": {
+      "selection": [
+        {
+          "index_1_based": 9,
+          "family": "csv",
+          "supervised_tokens": 195,
+          "context_tokens": 3855,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 7,
+          "family": "filter",
+          "supervised_tokens": 178,
+          "context_tokens": 1689,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 6,
+          "family": "hash",
+          "supervised_tokens": 190,
+          "context_tokens": 7758,
+          "teacher_reference_supplied": true
+        },
+        {
+          "index_1_based": 4,
+          "family": "merge",
+          "supervised_tokens": 146,
+          "context_tokens": 1086,
+          "teacher_reference_supplied": false
+        }
+      ],
+      "exposures_1_based": {
+        "4": 1,
+        "6": 2,
+        "7": 8,
+        "9": 2
+      },
+      "training": {
+        "optimizer_steps": 12,
+        "actual_supervised_tokens": 2340,
+        "actual_context_tokens": 37824,
+        "actual_sequences": 13,
+        "unique_source_clusters": 4,
+        "initial_and_final_parameter_check_ref": {
+          "before": "b3d87a0638f7e101ca4bbe1daa768243e1382969d659ec5df593b7c0f59038ff",
+          "after": "cfc9da311f3b0b2832f6c9c64e66203bda9cc5e2dbf3af4e407dc7683f2d31ce"
+        },
+        "gradient_nonzero": true,
+        "peak_gpu_allocated": 14894838272,
+        "gpu_wall_hours": 0.008816069415544109,
+        "training_seeds": [
+          17
+        ],
+        "learning_rate": 1e-05,
+        "training_loss_mode": "selected-logits"
+      }
+    }
+  },
+  "evaluation_completed": true
+}
