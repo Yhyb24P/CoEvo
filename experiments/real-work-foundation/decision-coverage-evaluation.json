@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-14",
+  "G": {
+    "passed": 3,
+    "total": 3,
+    "sampling": "legacy entry default; not fixed inference seed"
+  },
+  "D": {
+    "results": [
+      {
+        "arm": "teacher-replay",
+        "case": "nested_merge",
+        "passed": true,
+        "split": "D",
+        "train_authorized": false,
+        "source_cluster_id": "D-independent-20261014-nested_merge",
+        "post_state_hash": "22674c90cc45e7f53690444d7255087bf9368739c50f537fd35872ca3df9ca71",
+        "outputs": {
+          "output.json": true
+        },
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 7.046616630017525
+      },
+      {
+        "arm": "teacher-replay",
+        "case": "dialect",
+        "passed": true,
+        "split": "D",
+        "train_authorized": false,
+        "source_cluster_id": "D-independent-20261014-dialect",
+        "post_state_hash": "487fef0c6fc293661ebf9a27f7362e49e9f2baa97c9e4243ca1e81489a94075a",
+        "outputs": {
+          "output.csv": true
+        },
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 4.338806558982469
+      },
+      {
+        "arm": "teacher-replay",
+        "case": "markdown_links",
+        "passed": false,
+        "split": "D",
+        "train_authorized": false,
+        "source_cluster_id": "D-independent-20261014-markdown_links",
+        "post_state_hash": "aaab525fd7b06a0c822665877967966e49cba97cb28cecbd21bd00798c69b231",
+        "outputs": {
+          "output.md": false
+        },
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 5.893933930987259
+      },
+      {
+        "arm": "teacher-replay",
+        "case": "manifest",
+        "passed": true,
+        "split": "D",
+        "train_authorized": false,
+        "source_cluster_id": "D-independent-20261014-manifest",
+        "post_state_hash": "249f57f6cb4164d6f799d062e8be3f1a52c302de946513800b586a78bb69b70a",
+        "outputs": {
+          "output.json": true
+        },
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 9.166783812979702
+      }
+    ],
+    "by_arm": {
+      "teacher-replay": {
+        "passed": 3,
+        "total": 4
+      }
+    },
+    "inference_sampling": {
+      "temperature": 0,
+      "seed": 17
+    },
+    "candidate_promoted": false,
+    "H_used": false,
+    "scope": "one new D input per family; descriptive headroom/transfer pilot, no statistical benefit claim"
+  },
+  "comparators": {
+    "W0": {
+      "passed": 2,
+      "total": 4,
+      "ref": "independent-tool-panel.json"
+    },
+    "prior_teacher_replay": {
+      "passed": 1,
+      "total": 4,
+      "ref": "independent-tool-panel.json"
+    }
+  },
+  "interpretation": "descriptive improvement on exposed development inputs; added data and budget, overlapping operation families; no independent statistical generalization or coverage causality claim",
+  "training_ref": "decision-coverage-training.json",
+  "candidate_promoted": false,
+  "H_used": false,
+  "initial_unfixed_D": "retained at /mnt/e/CoEvo/runs/decision-coverage-pilot/20261014-evaluation; not used for fixed-sampling comparison"
+}

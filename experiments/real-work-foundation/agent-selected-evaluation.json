@@ -1,0 +1,156 @@
+{
+  "results": [
+    {
+      "arm": "W0",
+      "case": "mixed-prefixes",
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-selected-20261014-mixed-prefixes",
+      "post_state_hash": "27872725187455ed83bd136a502935d12c7e34060e0ead43c269986a5bd99c87",
+      "outputs": {
+        "answer.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 9.21482927998295
+    },
+    {
+      "arm": "W0",
+      "case": "dot-paths",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-selected-20261014-dot-paths",
+      "post_state_hash": "8b735a97f237561dff77d63f4a594af0b483cef0f2e4121dfc7707c0d7bc134e",
+      "outputs": {
+        "answer.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 4.747722964006243
+    },
+    {
+      "arm": "agent-selected-update",
+      "case": "mixed-prefixes",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-selected-20261014-mixed-prefixes",
+      "post_state_hash": "703bb4b3490e5b3c146a5ee8a98d24eba102b7c394beaf39965e992cfaa3a8fe",
+      "outputs": {
+        "answer.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 10.980333637999138
+    },
+    {
+      "arm": "agent-selected-update",
+      "case": "dot-paths",
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-selected-20261014-dot-paths",
+      "post_state_hash": "a626543d03ec807840a6145c77bdd6aa3820943dca50b1ca48507a90efb402b4",
+      "outputs": {
+        "answer.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": false,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": false,
+      "agent_exit_code": 1,
+      "final_response": "",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 23.29108571098186
+    }
+  ],
+  "by_arm": {
+    "W0": {
+      "passed": 1,
+      "total": 2
+    },
+    "agent-selected-update": {
+      "passed": 0,
+      "total": 2
+    }
+  },
+  "G": {
+    "split": "G",
+    "cycle": 0,
+    "model": "coevo-current",
+    "passed": 3,
+    "total": 3,
+    "tasks": [
+      {
+        "episode_id": "G-c0-n0",
+        "source_cluster_id": "G-c0-n0",
+        "passed": true,
+        "actual": {
+          "result": [
+            -3,
+            0,
+            2,
+            7
+          ]
+        },
+        "post_state_hash": "214ce7105f19de31ae797e112ad49d4eb1ef4b07fbbfaed9b0a8ec0da1b1ce85",
+        "agent_exit_code": 0
+      },
+      {
+        "episode_id": "G-c0-n1",
+        "source_cluster_id": "G-c0-n1",
+        "passed": true,
+        "actual": {
+          "result": 7
+        },
+        "post_state_hash": "3453dbd81238456769b6d2a6a50bc6a1981a6abac493426f28b1911a2f26e66b",
+        "agent_exit_code": 0
+      },
+      {
+        "episode_id": "G-c0-n2",
+        "source_cluster_id": "G-c0-n2",
+        "passed": true,
+        "actual": {
+          "result": [
+            -1,
+            2,
+            5
+          ]
+        },
+        "post_state_hash": "cea1b1dfa3e328ea290daf79780bbb7245be8ad7784cc379542a795576a0a768",
+        "agent_exit_code": 0
+      }
+    ],
+    "scope": "file-transform pilot; instance transfer; adaptive G feedback; no H confirmation"
+  },
+  "G_sampling": "legacy default, not fixed inference seed",
+  "D_sampling": {
+    "temperature": 0,
+    "seed": 17
+  },
+  "candidate_promoted": false,
+  "H_used": false,
+  "scope": "prospective Agent-selected added-budget pilot; two fresh D inputs in shared operation family, no Q3 selector attribution or statistical gain claim",
+  "failure_observations": {
+    "W0_dot_paths": "non-object output",
+    "candidate_mixed_prefixes": "two arrays rather than requested object",
+    "candidate_dot_paths": "repeated bash calls, aborted at execution bound; not connection failure"
+  }
+}

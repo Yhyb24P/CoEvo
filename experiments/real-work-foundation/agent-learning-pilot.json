@@ -1,0 +1,517 @@
+{
+  "proposals": [
+    {
+      "arm": "W0-proposer",
+      "case": "quoted_csv",
+      "runtime": {
+        "passed": true,
+        "split": "L",
+        "train_authorized": false,
+        "source_cluster_id": "L-decision-20261014-quoted_csv",
+        "post_state_hash": "ec70b21e3182d8b6482e72802362bcd03a8700f05cb0bc0ded5372e5614c6ce9",
+        "outputs": {},
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 11.60290406999411
+      },
+      "proposal_valid": false,
+      "rejection_reason": "Proposal cannot change its source"
+    },
+    {
+      "arm": "W0-proposer",
+      "case": "digest_check",
+      "runtime": {
+        "passed": true,
+        "split": "L",
+        "train_authorized": false,
+        "source_cluster_id": "L-decision-20261014-digest_check",
+        "post_state_hash": "9dd76f42997ef1299c4e71c21fc2d761ee7167c3385bfb5199e148b5d9d4cf18",
+        "outputs": {},
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 8.943308033020003
+      },
+      "proposal_valid": true,
+      "proposal": {
+        "source_cluster_id": "L-decision-20261014-digest_check",
+        "memory_kind": "skill",
+        "body": "读取 expected.json，用 Python hashlib 对其中每个路径的实际文件字节算 SHA256，按相等与不同分成 matching、different 两个排序数组。路径保留完整 docs/ 前缀，不要猜测哈希。只允许写 output.json，输入保持不变。可用 bash 执行 Python 标准库。写入后必须用 read 读取实际输出并核对，再只回复'已完成'。",
+        "conditions": {
+          "operation": "hash",
+          "algorithm": "sha256"
+        },
+        "training_candidate_ids": [
+          "L-decision-20261014-digest_check-m2",
+          "L-decision-20261014-digest_check-m4",
+          "L-decision-20261014-digest_check-m6",
+          "L-decision-20261014-digest_check-m8"
+        ],
+        "reason": "本次交互完整执行了任务：先读取 expected.json 获取预期哈希，再用 bash 执行 Python 脚本计算实际文件 SHA256 并分类，然后读取 output.json 核对结果，最后回复'已完成'。所有步骤符合约束，输出正确。"
+      },
+      "selected_count": 4
+    },
+    {
+      "arm": "W0-proposer",
+      "case": "conditional_rows",
+      "runtime": {
+        "passed": true,
+        "split": "L",
+        "train_authorized": false,
+        "source_cluster_id": "L-decision-20261014-conditional_rows",
+        "post_state_hash": "11164daa22a3baababaeb5fd5716dcf4c1c1178bfb95ea650c0dee4d0a603fe5",
+        "outputs": {},
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 10.19769974600058
+      },
+      "proposal_valid": true,
+      "proposal": {
+        "source_cluster_id": "L-decision-20261014-conditional_rows",
+        "memory_kind": "instance",
+        "body": "在 conditional_rows 任务中，模型正确读取了 policy.json 和 rows.json，根据 minimum=12 和 include_equal=false 筛选出 score>=12 的行，得到 id 为 q（score=18）。但首次写入 output.json 时使用了数组格式 [\"q\"]，违反了要求输出只有 ids 字段的 JSON 对象结构。在外部核验确认内容正确后，模型通过第二次 write 操作将 output.json 修正为 {\"ids\": [\"q\"]}，并通过 read 回读验证，最终正确回复'已完成'并停止。",
+        "conditions": {
+          "operation": "filter",
+          "contract": "ids-object"
+        },
+        "training_candidate_ids": [
+          "L-decision-20261014-conditional_rows-correction-m13",
+          "L-decision-20261014-conditional_rows-correction-m15",
+          "L-decision-20261014-conditional_rows-correction-m17"
+        ],
+        "reason": "该经验展示了模型在遵循输出格式约束时的自我修正能力：首次输出格式错误（数组而非对象），但在外部反馈后能正确修正并验证。这是 instance 级别的记忆，用于强化模型在复杂约束下的格式遵守和验证行为。"
+      },
+      "selected_count": 3
+    },
+    {
+      "arm": "updated-candidate-proposer",
+      "case": "quoted_csv",
+      "runtime": {
+        "passed": true,
+        "split": "L",
+        "train_authorized": false,
+        "source_cluster_id": "L-decision-20261014-quoted_csv",
+        "post_state_hash": "9bf466faf2c98c2a13cff07ddfed77c6c838280846c9c888460dd95675ffb00d",
+        "outputs": {},
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 27.779624236980453
+      },
+      "proposal_valid": true,
+      "proposal": {
+        "source_cluster_id": "L-decision-20261014-quoted_csv",
+        "memory_kind": "skill",
+        "body": "处理 TSV 转 CSV 时，若价格字段可能包含逗号（与标签混在一起），需先检查 price_str 是否含逗号。若含逗号且 split(',') 后恰为 2 部分，则重新解析 label 和 price_str；否则按原字段处理。使用 csv 模块的 QUOTE_MINIMAL 自动处理字段内逗号和双引号转义。",
+        "conditions": {
+          "operation": "csv",
+          "delimiter": ","
+        },
+        "training_candidate_ids": [
+          "L-decision-20261014-quoted_csv-m2",
+          "L-decision-20261014-quoted_csv-correction-m30",
+          "L-decision-20261014-quoted_csv-correction-m32"
+        ],
+        "reason": "该交互展示了从初始错误（未处理标签与价格混在一起的情况）到正确修复的完整过程，包含关键纠错逻辑和最终验证步骤，适合作为技能记忆用于类似 TSV 转 CSV 任务。"
+      },
+      "selected_count": 3
+    },
+    {
+      "arm": "updated-candidate-proposer",
+      "case": "digest_check",
+      "runtime": {
+        "passed": true,
+        "split": "L",
+        "train_authorized": false,
+        "source_cluster_id": "L-decision-20261014-digest_check",
+        "post_state_hash": "e2cdd7660621a156a2bdd27fe03b6d803a2dc1713c2161ef909a53700b2358b3",
+        "outputs": {},
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 15.860314504010603
+      },
+      "proposal_valid": true,
+      "proposal": {
+        "source_cluster_id": "L-decision-20261014-digest_check",
+        "memory_kind": "skill",
+        "body": "读取 expected.json，用 Python hashlib 对其中每个路径的实际文件字节算 SHA256，按相等与不同分成 matching、different 两个排序数组。路径保留完整 docs/ 前缀，不要猜测哈希。只允许写 output.json，输入保持不变。可用 bash 执行 Python 标准库。写入后必须用 read 读取实际输出并核对，再只回复“已完成”。",
+        "conditions": {
+          "operation": "hash",
+          "algorithm": "sha256"
+        },
+        "training_candidate_ids": [
+          "L-decision-20261014-digest_check-m2",
+          "L-decision-20261014-digest_check-m4",
+          "L-decision-20261014-digest_check-m6",
+          "L-decision-20261014-digest_check-m8"
+        ],
+        "reason": "本次交互完整展示了任务执行流程：读取输入、执行哈希计算、验证输出、最终回复。所有步骤均正确完成，符合预期行为模式。"
+      },
+      "selected_count": 4
+    },
+    {
+      "arm": "updated-candidate-proposer",
+      "case": "conditional_rows",
+      "runtime": {
+        "passed": true,
+        "split": "L",
+        "train_authorized": false,
+        "source_cluster_id": "L-decision-20261014-conditional_rows",
+        "post_state_hash": "64d26eaf451a70e1e546c6d72b83a3a7a061f7d9ae0c2147195a058c3414c5a8",
+        "outputs": {},
+        "unauthorized_changes": [],
+        "response_check": true,
+        "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+        "normal_stop": true,
+        "agent_exit_code": 0,
+        "final_response": "已完成",
+        "feedback_origin": "external-executable-checks",
+        "wall_seconds": 22.114780617004726
+      },
+      "proposal_valid": true,
+      "proposal": {
+        "source_cluster_id": "L-decision-20261014-conditional_rows",
+        "memory_kind": "instance",
+        "body": "任务：读取 policy.json 和 rows.json，按 minimum 阈值和 include_equal 过滤，输出 ids 字段。正确执行：先 read policy.json 得 {\"minimum\": 12, \"include_equal\": false}，再 read rows.json 得 [{\"id\": \"p\", \"score\": 12}, {\"id\": \"q\", \"score\": 18}, {\"id\": \"r\", \"score\": 4}]。过滤：score >= 12 且 include_equal=false 时排除等于12的p，仅保留q。按 id 排序输出 [\"q\"]。第一次 write 输出 [\"q\"] 数组，违反要求应为对象 {\"ids\": [\"q\"]}。第二次修正：read 现有 output.json 确认内容为 [\"q\"]，write 为 {\"ids\": [\"q\"]}，再 read 回读确认正确，回复“已完成”并停止。",
+        "conditions": {
+          "operation": "filter",
+          "contract": "ids-object"
+        },
+        "training_candidate_ids": [
+          "L-decision-20261014-conditional_rows-correction-m13",
+          "L-decision-20261014-conditional_rows-correction-m15",
+          "L-decision-20261014-conditional_rows-correction-m17"
+        ],
+        "reason": "该交互展示了正确的工具调用顺序（先 read 后 write 再 readback）、对约束条件的理解（ids-object 结构）、以及自我纠错能力（发现数组输出错误后修正为对象）。三个候选分别代表写操作、回读验证和停止回复，构成完整闭环。"
+      },
+      "selected_count": 3
+    }
+  ],
+  "future_results": [
+    {
+      "mode": "no-memory",
+      "case": "quoted_csv",
+      "selected_ids": [],
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-quoted_csv",
+      "post_state_hash": "48499a1c84bcc9a996347241e7c1e1cbffd0a0e5c1835a379f1ede1c7e5f942e",
+      "outputs": {
+        "output.csv": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 3.179259472002741
+    },
+    {
+      "mode": "fixed-rule",
+      "case": "quoted_csv",
+      "selected_ids": [
+        "fixed-skill"
+      ],
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-quoted_csv",
+      "post_state_hash": "a42fda196d79390f7c2402580df8a52760a81efd169df85c4ee3faff89eff1f1",
+      "outputs": {
+        "output.csv": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 3.028937044000486
+    },
+    {
+      "mode": "W0-proposer",
+      "case": "quoted_csv",
+      "selected_ids": [],
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-quoted_csv",
+      "post_state_hash": "48499a1c84bcc9a996347241e7c1e1cbffd0a0e5c1835a379f1ede1c7e5f942e",
+      "outputs": {
+        "output.csv": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.9291440680099186
+    },
+    {
+      "mode": "updated-candidate-proposer",
+      "case": "quoted_csv",
+      "selected_ids": [
+        "agent-proposed-experience"
+      ],
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-quoted_csv",
+      "post_state_hash": "a42fda196d79390f7c2402580df8a52760a81efd169df85c4ee3faff89eff1f1",
+      "outputs": {
+        "output.csv": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.4785264689999167
+    },
+    {
+      "mode": "fixed-rule",
+      "case": "digest_check",
+      "selected_ids": [
+        "fixed-skill"
+      ],
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-digest_check",
+      "post_state_hash": "9a474303ed222e5eeccac6af23f6bb8dc624f875e654d1de530edd31a369d7ce",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 4.23703303001821
+    },
+    {
+      "mode": "W0-proposer",
+      "case": "digest_check",
+      "selected_ids": [
+        "agent-proposed-experience"
+      ],
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-digest_check",
+      "post_state_hash": "cdc32a106b9f019137cefa7652c3e085229dbdcefe4d413a7d9103782c2acf50",
+      "outputs": {
+        "output.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 6.742755040002521
+    },
+    {
+      "mode": "updated-candidate-proposer",
+      "case": "digest_check",
+      "selected_ids": [
+        "agent-proposed-experience"
+      ],
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-digest_check",
+      "post_state_hash": "cdc32a106b9f019137cefa7652c3e085229dbdcefe4d413a7d9103782c2acf50",
+      "outputs": {
+        "output.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 6.792673079005908
+    },
+    {
+      "mode": "no-memory",
+      "case": "digest_check",
+      "selected_ids": [],
+      "passed": false,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-digest_check",
+      "post_state_hash": "c73e82bc8efc4168d6dcbcb7edc8abecb3682b00d574924119e8536fad058b31",
+      "outputs": {
+        "output.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": false,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": false,
+      "agent_exit_code": 1,
+      "final_response": "",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 18.563257276982768
+    },
+    {
+      "mode": "W0-proposer",
+      "case": "conditional_rows",
+      "selected_ids": [
+        "agent-proposed-experience"
+      ],
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-conditional_rows",
+      "post_state_hash": "d1a4f04d961dc4c95884a4bbb208c488b09cbe1799e4bc1c6e33d67c0c2b6444",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.8297844670014456
+    },
+    {
+      "mode": "updated-candidate-proposer",
+      "case": "conditional_rows",
+      "selected_ids": [
+        "agent-proposed-experience"
+      ],
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-conditional_rows",
+      "post_state_hash": "d1a4f04d961dc4c95884a4bbb208c488b09cbe1799e4bc1c6e33d67c0c2b6444",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.8330262920062523
+    },
+    {
+      "mode": "no-memory",
+      "case": "conditional_rows",
+      "selected_ids": [],
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-conditional_rows",
+      "post_state_hash": "d1a4f04d961dc4c95884a4bbb208c488b09cbe1799e4bc1c6e33d67c0c2b6444",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.7312443379778415
+    },
+    {
+      "mode": "fixed-rule",
+      "case": "conditional_rows",
+      "selected_ids": [
+        "fixed-skill"
+      ],
+      "passed": true,
+      "split": "D",
+      "train_authorized": false,
+      "source_cluster_id": "D-agent-learning-20261014-conditional_rows",
+      "post_state_hash": "d1a4f04d961dc4c95884a4bbb208c488b09cbe1799e4bc1c6e33d67c0c2b6444",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 2.9790784119977616
+    }
+  ],
+  "by_mode": {
+    "no-memory": {
+      "passed": 1,
+      "total": 3
+    },
+    "fixed-rule": {
+      "passed": 3,
+      "total": 3
+    },
+    "W0-proposer": {
+      "passed": 1,
+      "total": 3
+    },
+    "updated-candidate-proposer": {
+      "passed": 2,
+      "total": 3
+    }
+  },
+  "training_executed": false,
+  "candidate_promoted": false,
+  "H_used": false,
+  "scope": "Agent actually proposes memory and selects existing certified targets; proposed skill truth not automatically certified; no selector-training causal result yet",
+  "interpretation": {
+    "prototype_only": true,
+    "provenance_and_schema_valid_proposals": {
+      "W0": 2,
+      "updated_unpromoted_candidate": 3
+    },
+    "no_selector_training_causal_evidence": true,
+    "learning_sources_seen_by_updated_candidate": true,
+    "observed_failure": "both proposed hash skills retained docs/ prefix; actual bash joined docs with current records paths, misclassified matching file",
+    "semantic_errors": "CSV proposal describes price/label splitting unsupported as a general rule; external-correction narration sometimes claims self-correction",
+    "next_step": "fresh L actual feedback and prospective target selection, then test revised experience and train selected certified targets"
+  }
+}

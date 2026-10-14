@@ -1,0 +1,149 @@
+{
+  "study_id": "everyday-tables",
+  "date": "2026-10-14",
+  "scope": "development qualification, no formal learning benefit claim",
+  "candidate_promoted": false,
+  "accepted_model": "W0",
+  "H_used": false,
+  "runs": {
+    "tables-W0-20261014": {
+      "passed": 1,
+      "total": 5,
+      "cases": [
+        {
+          "name": "normalize",
+          "split": "L",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-normalize",
+          "wall_seconds": 43.686814556014724
+        },
+        {
+          "name": "reconcile",
+          "split": "L",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-reconcile",
+          "wall_seconds": 4.221560798003338
+        },
+        {
+          "name": "subtotal",
+          "split": "L",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-subtotal",
+          "wall_seconds": 18.546679793013027
+        },
+        {
+          "name": "missing_rate",
+          "split": "D",
+          "passed": true,
+          "source_cluster_id": "tables-20261014-missing_rate",
+          "wall_seconds": 4.572127313003875
+        },
+        {
+          "name": "readonly",
+          "split": "D",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-readonly",
+          "wall_seconds": 11.785665789997438
+        }
+      ]
+    },
+    "tables-W1-regression-20261014": {
+      "old_G": {
+        "passed": 3,
+        "total": 3
+      },
+      "boundary_D": [
+        {
+          "name": "missing_rate",
+          "passed": true
+        },
+        {
+          "name": "readonly",
+          "passed": true
+        }
+      ]
+    },
+    "old-G-W0-20261014": {
+      "passed": 3,
+      "total": 3
+    },
+    "tables-W0-cwdfix-20261014": {
+      "passed": 3,
+      "total": 5,
+      "cases": [
+        {
+          "name": "normalize",
+          "split": "L",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-normalize",
+          "wall_seconds": 4.222045686998172
+        },
+        {
+          "name": "reconcile",
+          "split": "L",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-reconcile",
+          "wall_seconds": 4.271640080987709
+        },
+        {
+          "name": "subtotal",
+          "split": "L",
+          "passed": true,
+          "source_cluster_id": "tables-20261014-subtotal",
+          "wall_seconds": 8.528756525978679
+        },
+        {
+          "name": "missing_rate",
+          "split": "D",
+          "passed": true,
+          "source_cluster_id": "tables-20261014-missing_rate",
+          "wall_seconds": 2.6696378119813744
+        },
+        {
+          "name": "readonly",
+          "split": "D",
+          "passed": true,
+          "source_cluster_id": "tables-20261014-readonly",
+          "wall_seconds": 3.320139467017725
+        }
+      ]
+    },
+    "tables-W0-feedback-20261014": {
+      "passed": 0,
+      "total": 2,
+      "cases": [
+        {
+          "name": "normalize",
+          "split": "L",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-normalize",
+          "wall_seconds": 4.273136128991609
+        },
+        {
+          "name": "reconcile",
+          "split": "L",
+          "passed": false,
+          "source_cluster_id": "tables-20261014-reconcile",
+          "wall_seconds": 17.195757141016657
+        }
+      ]
+    }
+  },
+  "training": {
+    "run_id": "B-train-20261014T002336-691180",
+    "learning_rate": 1e-05,
+    "steps": 4,
+    "supervised_tokens": 369,
+    "context_tokens": 4356,
+    "source_clusters": 2,
+    "target_counts": {
+      "read": 2,
+      "bash": 1,
+      "stop": 1
+    },
+    "nonzero_gradients": true,
+    "peak_allocated_bytes": 13784464896,
+    "gpu_wall_seconds": 6.783853625995107,
+    "dataset_sha256": "20086ea681f85e46ef0d5192e7825a38b57b92747c3de862b4c5b2660f1e5794"
+  }
+}

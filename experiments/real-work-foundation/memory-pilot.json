@@ -1,0 +1,154 @@
+{
+  "scope": "development pilot; conditions/revocation mechanism measured separately from behavioral benefit",
+  "by_mode": {
+    "M0": {
+      "passed": 4,
+      "total": 4
+    },
+    "M1": {
+      "passed": 4,
+      "total": 4
+    },
+    "M2": {
+      "passed": 4,
+      "total": 4
+    },
+    "M3": {
+      "passed": 3,
+      "total": 4
+    }
+  },
+  "retrieval": [
+    {
+      "mode": "M0",
+      "case": "transferable",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M1",
+      "case": "transferable",
+      "selected_ids": [
+        "unique-instance"
+      ],
+      "passed": true
+    },
+    {
+      "mode": "M2",
+      "case": "transferable",
+      "selected_ids": [
+        "unique-skill"
+      ],
+      "passed": true
+    },
+    {
+      "mode": "M3",
+      "case": "transferable",
+      "selected_ids": [
+        "unique-skill"
+      ],
+      "passed": true
+    },
+    {
+      "mode": "M1",
+      "case": "unrelated",
+      "selected_ids": [
+        "unique-instance"
+      ],
+      "passed": true
+    },
+    {
+      "mode": "M2",
+      "case": "unrelated",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M3",
+      "case": "unrelated",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M0",
+      "case": "unrelated",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M2",
+      "case": "reversal",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M3",
+      "case": "reversal",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M0",
+      "case": "reversal",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M1",
+      "case": "reversal",
+      "selected_ids": [
+        "unique-instance"
+      ],
+      "passed": true
+    },
+    {
+      "mode": "M3",
+      "case": "withdrawal",
+      "selected_ids": [],
+      "passed": false
+    },
+    {
+      "mode": "M0",
+      "case": "withdrawal",
+      "selected_ids": [],
+      "passed": true
+    },
+    {
+      "mode": "M1",
+      "case": "withdrawal",
+      "selected_ids": [
+        "unique-instance"
+      ],
+      "passed": true
+    },
+    {
+      "mode": "M2",
+      "case": "withdrawal",
+      "selected_ids": [
+        "unique-skill"
+      ],
+      "passed": true
+    }
+  ],
+  "failure": {
+    "mode": "M3",
+    "case": "withdrawal",
+    "selected_ids": [],
+    "expected": [
+      11,
+      4,
+      -5
+    ],
+    "actual": [
+      -5,
+      4,
+      11
+    ],
+    "same_visible_request_as_M0": true,
+    "attribution": "no retrieved source was injected; cannot attribute single failure to invalidation policy"
+  },
+  "inference_seed_fixed": false,
+  "training_executed": false,
+  "H_used": false,
+  "interpretation": "retrieval conditions and ancestor revocation operated; no behavioral superiority evidence; M0 ceiling on this small panel"
+}

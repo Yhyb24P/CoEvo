@@ -3,6 +3,7 @@ import argparse
 import json
 from pathlib import Path
 from .evaluate import evaluate
+from .runtime import read_config
 from .state import State
 
 
@@ -18,7 +19,11 @@ def main():
         result = evaluate(request.get('config', 'configs/workstation.json'), request['out'],
                           request.get('cycle', 0), request.get('split', 'G'), request.get('model'))
     else:
-        result = {'accepted': State().accepted()}
+        state = State.for_experiment(read_config(request.get('config', 'configs/workstation.json')))
+        try:
+            result = {'accepted': state.accepted(), **state.manifest()}
+        finally:
+            state.close()
     print(json.dumps(result), flush=True)
 
 

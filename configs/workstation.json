@@ -1,5 +1,5 @@
 {
-  "protocol_revision": "workstation-128k-2026-10-13",
+  "protocol_revision": "workstation-pilot-isolated-20261014",
   "model_path": ".cache/active-model/Qwen3.5-4B",
   "served_model": "coevo-qwen3.5-4b",
   "endpoint": "http://127.0.0.1:18000/v1",
@@ -14,5 +14,9 @@
   "reasoning_parser": "qwen3",
   "cold_root": "/mnt/e/CoEvo",
   "rsi_cycles": 3,
-  "enforce_eager": true
+  "enforce_eager": true,
+  "study_id": "workstation-rsi",
+  "stream_id": "legacy-pilot-new-namespace",
+  "arm_id": "pilot",
+  "state_path": ".state/{study_id}/{stream_id}/{arm_id}.sqlite"
 }

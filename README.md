@@ -14,11 +14,11 @@ K=指令生命周期，R=外部经验，W=模型参数，S=训练候选选择。
 
 ## 实施方法
 
-复用既有 Pi SDK/momo-code、vLLM、Transformers/PEFT。以文件整理、文档修改、表格清理、信息提取、本地清单和常规工具操作为主要任务环境；合成文件任务用于接口诊断。持久化或训练私人交互必须单独获得授权。采用经核验的完整 Assistant 行为监督，并参考 [SRFT](https://openbmb.cn/en/blog/self-replay-fine-tuning) 自生成通用能力 replay。作者技术报告 Task:Replay=4:1 是样本数比例，实际配比与效果由本项目实验确定。
+复用既有 Pi SDK/momo-code、vLLM、Transformers/PEFT。以文件整理、文档修改、表格清理、信息提取、本地清单、常规工具操作，以及用户日常软件开发和科研分析为任务环境；合成文件任务用于接口诊断。持久化或训练私人交互必须单独获得授权。采用经核验的完整 Assistant 行为监督，并参考 [SRFT](https://openbmb.cn/en/blog/self-replay-fine-tuning) 自生成通用能力 replay。作者技术报告 Task:Replay=4:1 是样本数比例，实际配比与效果由本项目实验确定。
 
 ## 实际状态（2026-10-13）
 
-[工作站研究快照](experiments/workstation-rsi/review_snapshot.md)记录：原始 Qwen3.5-4B 在 RTX 5090 D 上完成一次 **131072 输入 token** 的定位与工具资格试跑；一次真实 BF16 LoRA 训练共 **6 条合成任务、327 个监督 token、6 步**，候选独立加载后旧任务从 **3/3 降至 0/3**，未晋升。已有交互提取、工具核验、版本记录和真实参数更新，但**没有完成真实日常长期交互、多周期 RSI、正式 Q1–Q3 评价或笔记本部署**。当前未运行推理、训练或周期实验；本次合并研究文档不启动实验。详见[机器可读结果](experiments/workstation-rsi/measured_results.json)。
+[工作站研究快照](experiments/workstation-rsi/review_snapshot.md)记录：原始 Qwen3.5-4B 在 RTX 5090 D 上完成一次 **131072 输入 token** 的定位与工具资格试跑；一次真实 BF16 LoRA 训练共 **6 条合成任务、327 个监督 token、6 步**，候选独立加载后旧任务从 **3/3 降至 0/3**，未晋升。已有交互提取、工具核验、版本记录和真实参数更新，但**没有完成真实日常长期交互、多周期 RSI、正式 Q1–Q3 评价或笔记本部署**。该历史候选未晋升，原始失败证据保留。详见[机器可读结果](experiments/workstation-rsi/measured_results.json)。
 
 独立 Marko 开发任务已实测 Pi read/write/bash、会话 fork 与独立检查，结果见[开发试跑记录](experiments/project-tasks/progress.md)。编码功能和旧回归通过，但整任务未完成；这些 D 记录用于工程诊断，普通用户的长期日常任务流仍需建立。
 
@@ -27,3 +27,11 @@ K=指令生命周期，R=外部经验，W=模型参数，S=训练候选选择。
 [当前研究导航](docs/当前研究导航.md) · [研究方案](docs/研究方案.md) · [评估协议](docs/评估与统计.md) · [日常任务与学习闭环](docs/日常任务与学习闭环.md) · [运行与训练约束](docs/运行与训练约束.md) · [研发规范](AGENTS.md)
 
 历史 v0.4 协议及冻结的试跑记录见文档导航。
+
+## 当前阶段（2026-10-14）
+
+已接通交互纠错、Agent 学习提议与笔记更新、真实选样、参数训练和评价反馈。学习过程保留模型原生会话上下文，Agent 可自由复盘并提出下一项工作，实际动作由独立结果检查确认。
+
+开发候选出现改善与负迁移：追加完整行为覆盖候选四族 D 为 3/4（W0 2/4）；后续 Agent 选样更新在新路径 D 为 0/2（W0 1/2）。原始 W0 仍为接受版本。最新原生会话两项边界工作均通过并主动更新笔记；这些小样本尚未证明稳定收益。
+
+详见[阶段更新](experiments/real-work-foundation/stage-update-2026-10-14.md)与[完整进展](experiments/real-work-foundation/progress.md)。私人原始交互和模型权重仅保存在本地，不进入版本控制。

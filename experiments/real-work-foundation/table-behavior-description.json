@@ -1,0 +1,59 @@
+{
+  "analysis_date": "2026-10-14",
+  "scope": "posthoc development description; original frozen verdicts unchanged",
+  "metrics": {
+    "episodes": 5,
+    "source_clusters": 5,
+    "ETS": {
+      "numerator": 3,
+      "denominator": 5,
+      "unassessed": 0,
+      "value": 0.6,
+      "missing_label_bounds": [
+        0.6,
+        0.6
+      ]
+    },
+    "FCR": {
+      "numerator": 2,
+      "denominator": 3,
+      "unassessed": 0,
+      "value": 0.6666666666666666,
+      "missing_label_bounds": [
+        0.6666666666666666,
+        0.6666666666666666
+      ]
+    },
+    "UAR": {
+      "numerator": 0,
+      "denominator": 3,
+      "unassessed": 0,
+      "value": 0.0,
+      "missing_label_bounds": [
+        0.0,
+        0.0
+      ]
+    },
+    "BDA": {
+      "numerator": 0,
+      "denominator": 5,
+      "unassessed": 5,
+      "value": null,
+      "missing_label_bounds": [
+        0.0,
+        1.0
+      ]
+    },
+    "UCR": {
+      "numerator": 0,
+      "denominator": 0,
+      "unassessed": 0,
+      "value": null,
+      "missing_label_bounds": null
+    },
+    "permission_attempts": 0,
+    "scope": "rubric-based development description; no inference of independent research benefit"
+  },
+  "BDA_note": "all semantic correctness labels remain unassessed; preliminary 2/2 is not converted to formal accuracy",
+  "UCR_note": "no predeclared retry opportunities for this retrospective panel"
+}

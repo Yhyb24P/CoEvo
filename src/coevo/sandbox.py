@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 
 
-def command(workspace, environment, argv, readonly=False):
+def command(workspace, environment, argv, readonly=False, writable_paths=()):
     workspace, environment = Path(workspace).resolve(), Path(environment).resolve()
     if not workspace.is_dir() or not (environment / "bin/python").is_file():
         raise ValueError("Task workspace or Python environment does not exist")
@@ -18,8 +18,13 @@ def command(workspace, environment, argv, readonly=False):
         if Path(directory).exists():
             args += ["--ro-bind", directory, directory]
     args += ["--ro-bind", str(environment), "/opt/task-env",
-             "--ro-bind" if readonly else "--bind", str(workspace), "/workspace",
-             "--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp",
+             "--ro-bind" if readonly else "--bind", str(workspace), "/workspace"]
+    for name in writable_paths:
+        path = workspace / name
+        if path.is_symlink() or not path.is_file() or path.resolve() != path.absolute() or not path.resolve().is_relative_to(workspace):
+            raise ValueError("Writable task paths must be existing regular files in the workspace")
+        args += ["--bind", str(path), "/workspace/" + str(path.relative_to(workspace))]
+    args += ["--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp",
              "--setenv", "PATH", "/opt/task-env/bin:/usr/bin:/bin",
              "--setenv", "PYTHONPATH", "/workspace",
              "--setenv", "PYTHONDONTWRITEBYTECODE", "1",

@@ -1,0 +1,72 @@
+{
+  "scope": "near-token-matched development mixture; no formal independent replay gain claim",
+  "data": {
+    "candidate_count": 23,
+    "teacher_examples": 20,
+    "replay_sequences": 3,
+    "teacher_source_clusters": 14,
+    "replay_source_clusters": 3,
+    "supervised_tokens": 1200,
+    "baseline_supervised_tokens": 1174,
+    "token_difference": 26,
+    "relative_token_difference": 0.022146507666098807,
+    "dataset_sha256": "1ada20cc4dfed7ee828c1c6c8f48e344800541881e665aff6742510ff2b35e81"
+  },
+  "training": {
+    "optimizer_steps": 23,
+    "actual_supervised_tokens": 1200,
+    "actual_context_tokens": 34590,
+    "actual_sequences": 23,
+    "gradient_nonzero": true,
+    "peak_gpu_allocated": 22226794496,
+    "gpu_wall_hours": 0.007743666927773221,
+    "learning_rate": 1e-05,
+    "training_seeds": [
+      17
+    ],
+    "behavior_target_counts": {
+      "read-output-stop-replay": 3,
+      "readonly-tool-query": 17,
+      "visible-read-plan": 3
+    }
+  },
+  "replay_generation": {
+    "sort": {
+      "passed": true,
+      "kinds": [
+        "read",
+        "write",
+        "stop"
+      ]
+    },
+    "sum": {
+      "passed": true,
+      "kinds": [
+        "read",
+        "write",
+        "stop"
+      ]
+    },
+    "unique": {
+      "passed": true,
+      "kinds": [
+        "read",
+        "write",
+        "stop"
+      ]
+    }
+  },
+  "comparison": {
+    "W0_old_G": "3/3",
+    "teacher_only_old_G": "2/3",
+    "teacher_plus_replay_old_G": "3/3",
+    "W0_tables_after_interface_fix": "3/5",
+    "teacher_plus_replay_tables_after_interface_fix": "4/5"
+  },
+  "implementation_fix": "virtual /workspace parent-directory mkdir allowed; output writes still individually scoped",
+  "inference_seed_fixed": false,
+  "teacher_order_and_supervision_coverage_changed": true,
+  "H_used": false,
+  "candidate_promoted": false,
+  "accepted_model": "W0"
+}

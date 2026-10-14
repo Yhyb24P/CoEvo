@@ -1,0 +1,77 @@
+{
+  "results": [
+    {
+      "name": "quoted_csv",
+      "passed": false,
+      "split": "L",
+      "train_authorized": true,
+      "source_cluster_id": "L-decision-20261014-quoted_csv",
+      "post_state_hash": "16536822a40c9178ad312733983872bc9f9f1d1ba0d160933525c47994dd3840",
+      "outputs": {
+        "output.csv": true
+      },
+      "unauthorized_changes": [],
+      "response_check": false,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": false,
+      "agent_exit_code": 1,
+      "final_response": "",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 69.75215628897422,
+      "target_kinds": []
+    },
+    {
+      "name": "digest_check",
+      "passed": true,
+      "split": "L",
+      "train_authorized": true,
+      "source_cluster_id": "L-decision-20261014-digest_check",
+      "post_state_hash": "eb2bb9b31e16732ae2c1cbf174c0f62c1b5bf4ce4acdc8f3874866bd815eba9b",
+      "outputs": {
+        "output.json": true
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 6.950586407998344,
+      "target_kinds": [
+        "read",
+        "bash",
+        "stop"
+      ]
+    },
+    {
+      "name": "conditional_rows",
+      "passed": false,
+      "split": "L",
+      "train_authorized": true,
+      "source_cluster_id": "L-decision-20261014-conditional_rows",
+      "post_state_hash": "cba18b38e0273f297b06e7510c1d99235dd37ca06326c28e606a1158323fd575",
+      "outputs": {
+        "output.json": false
+      },
+      "unauthorized_changes": [],
+      "response_check": true,
+      "response_check_scope": "explicit completion string or preliminary boundary phrase check; no formal BDA/FCR claim",
+      "normal_stop": true,
+      "agent_exit_code": 0,
+      "final_response": "已完成",
+      "feedback_origin": "external-executable-checks",
+      "wall_seconds": 3.4872758129786234,
+      "target_kinds": []
+    }
+  ],
+  "passed": 1,
+  "total": 3,
+  "targets": 3,
+  "scope": "guided fresh L; observations not loss targets; not independent ability evidence",
+  "training_executed": false,
+  "post_collection_selection": {
+    "selected_targets": 5,
+    "policy": "retain verified partial input/readback/write; exclude repeated bash from nonterminating CSV episode; no false stop target"
+  }
+}

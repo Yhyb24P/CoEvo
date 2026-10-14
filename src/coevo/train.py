@@ -11,6 +11,15 @@ from .runtime import read_config, new_run, finish_run, write_json
 def admit(candidate):
     if candidate.get("split") != "L" or candidate.get("train_authorized") is not True:
         raise ValueError("Candidate has no L training authorization")
+    if candidate.get('candidate_format') == 'verified_behavior_sequence_v1':
+        from .sequences import admit as admit_sequence
+        return admit_sequence(candidate)
+    if candidate.get('candidate_format') == 'verified_tool_transition_v1':
+        from .tool_corpus import admit as admit_teacher
+        return admit_teacher(candidate)
+    if candidate.get('candidate_format') == 'verified_behavior_v1':
+        from .behavior import admit as admit_behavior
+        return admit_behavior(candidate)
     evidence = Path(candidate["verifier_ref"])
     verdict = json.loads(evidence.read_text())
     if not verdict.get("passed") or verdict.get("post_state_hash") != candidate["verified_state_hash"]:
@@ -37,12 +46,20 @@ def tensor_hash(model):
     return h.hexdigest()
 
 
-def encode(tokenizer, candidate, max_length):
-    messages = json.loads(json.dumps(candidate["prefix"] + [candidate["target"]]))
+def normalize_messages(messages):
+    messages = json.loads(json.dumps(messages))
     for message in messages:
         for call in message.get("tool_calls", []):
             if isinstance(call["function"]["arguments"], str):
                 call["function"]["arguments"] = json.loads(call["function"]["arguments"])
+    return messages
+
+
+def encode(tokenizer, candidate, max_length):
+    if candidate.get('candidate_format') == 'verified_behavior_sequence_v1':
+        from .sequences import encode as encode_sequence
+        return encode_sequence(tokenizer, candidate, max_length)
+    messages = normalize_messages(candidate["prefix"] + [candidate["target"]])
     prefix = tokenizer.apply_chat_template(messages[:-1], tools=candidate["tools"], tokenize=True, return_dict=False,
             add_generation_prompt=True, enable_thinking=False)
     full = tokenizer.apply_chat_template(messages, tools=candidate["tools"], tokenize=True, return_dict=False,
@@ -69,14 +86,18 @@ def train(config, dataset, adapter_out, previous_adapter=None, seed=17, passes=1
         raw = [admit(json.loads(line)) for line in Path(dataset).read_text().splitlines() if line.strip()]
         if not raw:
             raise ValueError("No legal verified candidates")
+        if len({x.get('candidate_id') for x in raw}) != len(raw):
+            raise ValueError("Duplicate supervised target IDs")
         if passes not in [1, 2]:
             raise ValueError("Pilot allows at most two passes")
         torch.manual_seed(seed)
         tokenizer = AutoTokenizer.from_pretrained(c["model_path"], local_files_only=True)
-        examples = [encode(tokenizer, x, 4096) for x in raw]
+        examples = [encode(tokenizer, x, c.get('training_max_length', 4096)) for x in raw]
         target_tokens = sum(sum(v != -100 for v in y) for _, y in examples) * passes
-        if target_tokens > 200000:
+        if target_tokens > c.get('training_token_cap', 200000):
             raise ValueError("Supervised token cap exceeded")
+        if len(examples) * passes > c.get('training_max_steps', 200000):
+            raise ValueError('Training step cap exceeded')
         model = AutoModelForImageTextToText.from_pretrained(c["model_path"], local_files_only=True,
             dtype=torch.bfloat16, device_map={"": 0}, attn_implementation="sdpa")
         targets = [name for name, module in model.named_modules() if isinstance(module, torch.nn.Linear)
@@ -93,13 +114,13 @@ def train(config, dataset, adapter_out, previous_adapter=None, seed=17, passes=1
         model.gradient_checkpointing_enable()
         model.enable_input_require_grads()
         trainable = [p for p in model.parameters() if p.requires_grad]
-        optimizer = torch.optim.AdamW(trainable, lr=1e-4)
+        optimizer = torch.optim.AdamW(trainable, lr=c.get('training_learning_rate', 1e-4))
         before = tensor_hash(model)
         losses, steps, grad_nonzero = [], 0, False
         model.train()
         for _ in range(passes):
             for ids, labels in examples:
-                if time.monotonic() - started > 7200:
+                if time.monotonic() - started > c.get('training_wall_seconds', 7200):
                     raise TimeoutError("Training job exceeded two GPU-hour wall cap")
                 inputs = torch.tensor([ids], device="cuda")
                 target = torch.tensor([labels], device="cuda")
@@ -133,6 +154,9 @@ def train(config, dataset, adapter_out, previous_adapter=None, seed=17, passes=1
                   "expected_and_actual_trainable_modules_ref": targets,
                   "peak_gpu_allocated": torch.cuda.max_memory_allocated(),
                   "gpu_wall_hours": (time.monotonic() - started)/3600, "training_seeds": [seed]}
+        result['learning_rate'] = c.get('training_learning_rate', 1e-4)
+        result['behavior_target_counts'] = {kind: sum(x.get('behavior_kind', 'legacy-write') == kind for x in raw)
+                                           for kind in sorted({x.get('behavior_kind', 'legacy-write') for x in raw})}
         finish_run(runpath, "completed", result)
         return result
     except Exception as exc:
