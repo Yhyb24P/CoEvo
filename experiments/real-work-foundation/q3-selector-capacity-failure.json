@@ -1,0 +1,35 @@
+{
+  "scope": "first same-pool native selection; nomination capacity fault, no cross-retraining",
+  "status": "completed-without-matched-training",
+  "pool_sequences": 12,
+  "initial_selection_call_cap": 12,
+  "SF_selected_1_based": [
+    3,
+    6,
+    7,
+    9,
+    10,
+    11
+  ],
+  "SF_supervised_tokens": 1103,
+  "SF_tool_calls": 1,
+  "SU_proxy_accepted": false,
+  "SU_proxy_aborted": true,
+  "SU_proxy_tool_attempts": 13,
+  "SU_proxy_unexecuted_nomination_arguments": [
+    [
+      4,
+      8,
+      12,
+      2,
+      6,
+      10
+    ]
+  ],
+  "SU_proxy_decision_ledger_empty": true,
+  "both_native_prefixes_preserved": true,
+  "correction": "v2 gives both selectors 16 tool calls; evaluation retains 12; same pool and weights",
+  "training_executed": false,
+  "H_used": false,
+  "promotion": false
+}

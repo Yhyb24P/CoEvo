@@ -45,7 +45,7 @@ def cases(variants,seed):
             yield family,index,spec
 
 
-def collect(config,out,batch,variants=3,seed=17):
+def collect(config,out,batch,variants=3,seed=17,learning_discussion=True):
     from transformers import AutoTokenizer
     from .train import encode
     out=Path(out).resolve();out.mkdir(parents=True,exist_ok=False);c=read_config(config)
@@ -62,6 +62,7 @@ def collect(config,out,batch,variants=3,seed=17):
         tasks[name]=task
     write_json(out/'manifest.json',{'config':c,'source_snapshot':source_snapshot(),'batch':batch,'variants':variants,'seed':seed,
         'episodes':len(tasks),'source_clusters':sorted({t['source_cluster_id'] for t in tasks.values()}),
+        'learning_discussion':learning_discussion,
         'checkpoint':'W0','max_corrections_per_episode':1,'selection_max_items':2,'selection_token_cap':1000,
         'all_sources':'L only; no prior D/G/H task content imported','start_time':time.time(),'status':'running'})
     results=[];all_candidates=[];all_selected=[];server=None
@@ -88,7 +89,7 @@ def collect(config,out,batch,variants=3,seed=17):
             record={'episode':name,'source_cluster_id':task['source_cluster_id'],'initial':initial_verdict,
                 'final':verdict,'corrected':root!=initial_root,'candidate_kinds':[x['behavior_kind'] for x in candidates]}
             # L-only native session; prose is not a target, actual nomination is.
-            if candidates:
+            if candidates and learning_discussion:
                 options=[];eligible=[]
                 for candidate in candidates:
                     admit(candidate)
@@ -179,8 +180,9 @@ def repair(config,out,parent):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--out',required=True);p.add_argument('--batch',default='shared-20261014');p.add_argument('--resume-cohort')
     p.add_argument('--variants',type=int,default=3);p.add_argument('--seed',type=int,default=17)
+    p.add_argument('--no-learning-discussion',action='store_true',help='Collect shared candidates; defer selection to a separate same-pool comparison')
     a=p.parse_args()
     if a.resume_cohort:repair(a.config,a.out,a.resume_cohort)
-    else:collect(a.config,a.out,a.batch,a.variants,a.seed)
+    else:collect(a.config,a.out,a.batch,a.variants,a.seed,not a.no_learning_discussion)
 
 if __name__=='__main__':main()
