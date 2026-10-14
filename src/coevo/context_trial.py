@@ -21,8 +21,8 @@ def record_text(history):
     return json.dumps({'kind':'Experience, not Instruction','complete_visible_history':history},ensure_ascii=False).replace('<','\\u003c').replace('>','\\u003e')
 
 
-def task_cases():
-    for family,index,spec in cases(3,404):
+def task_cases(seed=404):
+    for family,index,spec in cases(3,seed):
         spec=json.loads(json.dumps(spec));kind=('transfer','condition-change','withdrawal')[index]
         if index==1:
             if family=='csv':
