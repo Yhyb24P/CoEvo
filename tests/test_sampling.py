@@ -12,6 +12,29 @@ from tests.test_project_tools import PI_ENTRY
 
 @unittest.skipUnless(PI_ENTRY.exists(),'Pinned Pi required')
 class SamplingTests(unittest.TestCase):
+    def test_exhausted_wall_quota_stops_before_actual_http(self):
+        captured=[]
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self,*args):pass
+            def do_POST(self):captured.append(True);self.send_response(500);self.end_headers()
+        server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
+        threading.Thread(target=server.serve_forever,daemon=True).start()
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp);(root/'workspace').mkdir()
+                request={'workspace':str(root/'workspace'),'run_dir':str(root/'run'),'pi_entry':str(PI_ENTRY.resolve()),
+                         'endpoint':f'http://127.0.0.1:{server.server_port}/v1','model':'fixture','context_tokens':4096,
+                         'prompts':['No remaining quota.'],'system_prompt':'Fixture.','timeout_ms':0,
+                         'max_tool_calls':1,'sandbox_prefix':['unused'],'capture_payload':True}
+                p=root/'request.json';p.write_text(json.dumps(request))
+                proc=subprocess.run(['node','scripts/pi-project-agent.mjs'],env={**os.environ,'COEVO_REQUEST_FILE':str(p)},capture_output=True,text=True,timeout=25)
+                self.assertNotEqual(proc.returncode,0)
+                self.assertFalse(captured)
+                trace=json.loads((root/'run/transcript.json').read_text())
+                self.assertIn('COEVO_WALL_TIMEOUT_STOP',trace['messages'][-1]['errorMessage'])
+                self.assertEqual(trace['resource_stop']['reason'],'wall_timeout')
+        finally:server.shutdown();server.server_close()
+
     def test_qwen_thinking_round_trips_provider_reasoning_and_tool_results(self):
         captured=[]
         class Handler(BaseHTTPRequestHandler):

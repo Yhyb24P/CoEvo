@@ -62,7 +62,7 @@ const bash = createBashToolDefinition(cwd, { exposeSessionEnvironment: false, op
     });
   },
 }});
-let calls = 0, aborted = false, currentSession, resourceStop;
+let calls = 0, aborted = false, currentSession, resourceStop, executionWallStart, executionMonotonicStart;
 let lastFailedCommand, repeatedFailures = 0;
 function mutableWorkspaceHash() {
   const hash = createHash('sha256');
@@ -177,7 +177,12 @@ if (checkpointProvenance) {
 if (request.sampling || request.capture_payload || request.preview_only || request.repeat_failure_limit) {
   const previousPayloadHook = session.agent.onPayload;
   session.agent.onPayload = async (payload, model) => {
-    if (resourceStop) throw new Error('COEVO_REPEAT_FAILURE_STOP: four unchanged failing commands; no further inference');
+    if (resourceStop) throw new Error(`COEVO_RESOURCE_STOP: ${resourceStop.reason}; no further inference`);
+    if (executionMonotonicStart !== undefined && Math.max(performance.now() - executionMonotonicStart, Date.now() - executionWallStart) >= request.timeout_ms) {
+      aborted = true;
+      resourceStop = { reason: 'wall_timeout', scope: 'checked before further inference' };
+      throw new Error('COEVO_WALL_TIMEOUT_STOP: task deadline exceeded before request');
+    }
     const prepared = previousPayloadHook ? (await previousPayloadHook(payload, model)) ?? payload : payload;
     const controlled = request.sampling ? { ...prepared, ...request.sampling } : prepared;
     if (request.sampling) appendFileSync(resolve(runDir, 'sampling.jsonl'), JSON.stringify(Object.fromEntries(Object.keys(request.sampling).map(k => [k, controlled[k]]))) + '\n');
@@ -187,7 +192,9 @@ if (request.sampling || request.capture_payload || request.preview_only || reque
   };
 }
 const continuationStart = session.messages.length;
-const timer = setTimeout(() => { aborted = true; void session.abort(); }, request.timeout_ms);
+executionWallStart = Date.now();
+executionMonotonicStart = performance.now();
+const timer = setTimeout(() => { aborted = true; resourceStop ??= { reason: 'wall_timeout', scope: 'timer abort' }; void session.abort(); }, request.timeout_ms);
 session.subscribe(event => {
   appendFileSync(resolve(runDir, 'events.jsonl'), JSON.stringify(event) + '\n');
 });
@@ -198,7 +205,9 @@ try {
   writeFileSync(resolve(runDir, 'transcript.json'), JSON.stringify({ system: session.systemPrompt, messages: session.messages,
     tools: tools.map(t => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters } })),
     session_file: session.sessionFile, tool_calls: calls, aborted, resource_stop: resourceStop, continuation_start_message_index: continuationStart,
-    final_text: session.getLastAssistantText() }, null, 2) + '\n');
+    final_text: session.getLastAssistantText(),
+    execution_wall_seconds: (Date.now() - executionWallStart) / 1000,
+    execution_monotonic_seconds: (performance.now() - executionMonotonicStart) / 1000 }, null, 2) + '\n');
   session.dispose();
 }
 if (aborted || session.messages.slice(continuationStart).some(m => m.role === 'assistant' && m.stopReason === 'error')) process.exitCode = 1;

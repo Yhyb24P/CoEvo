@@ -1,0 +1,186 @@
+{
+  "run_id": "20261015-W0-thinking-v1",
+  "code_commit": "0f0f7f395216524a3a5afbd237c210e6ef8e3aa6",
+  "source_cluster_id": "comap-2025-mcm-c",
+  "split": "D",
+  "model": "Qwen3.5-4B W0 BF16",
+  "config": {
+    "protocol_revision": "workstation-pilot-isolated-20261014",
+    "model_path": ".cache/active-model/Qwen3.5-4B",
+    "served_model": "coevo-qwen3.5-4b",
+    "endpoint": "http://127.0.0.2:18000/v1",
+    "max_model_len": 139264,
+    "qualification_min_input_tokens": 131072,
+    "dtype": "bfloat16",
+    "gpu_memory_utilization": 0.9,
+    "max_num_seqs": 1,
+    "max_num_batched_tokens": 4096,
+    "enable_thinking": true,
+    "tool_call_parser": "qwen3_coder",
+    "reasoning_parser": "qwen3",
+    "cold_root": "/mnt/e/CoEvo",
+    "rsi_cycles": 3,
+    "enforce_eager": true,
+    "study_id": "mcm-2025-c",
+    "stream_id": "autonomous-W0-v1",
+    "arm_id": "W0",
+    "state_path": ".state/{study_id}/{stream_id}/{arm_id}.sqlite",
+    "inference_sampling": {
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "presence_penalty": 0.0,
+      "repetition_penalty": 1.0,
+      "seed": 17
+    },
+    "task_budget": {
+      "wall_seconds": 2700,
+      "max_tool_calls": 160,
+      "max_output_tokens": 32768,
+      "bash_seconds": 120,
+      "initial_context_capacity": 139264,
+      "compaction": false
+    }
+  },
+  "checkpoint_entry_id": "716446ec",
+  "native_prefix_equal": true,
+  "retained_messages": 22,
+  "source_session_unchanged_at_end": true,
+  "qualification": {
+    "run_id": "20261015-thinking-qualification-v1",
+    "duration_seconds": 38.717976808547974,
+    "exit_code": 0,
+    "termination": {
+      "stop_reason": "stop",
+      "normal_stop": true,
+      "final_response_present": true
+    },
+    "thinking_blocks": 4,
+    "thinking_characters": 703,
+    "actual_tool_names": [
+      "read",
+      "write",
+      "bash"
+    ],
+    "exact_copy": true,
+    "reasoning_roundtrip": true,
+    "request_thinking_flags": [
+      {
+        "enable_thinking": true,
+        "preserve_thinking": true
+      },
+      {
+        "enable_thinking": true,
+        "preserve_thinking": true
+      },
+      {
+        "enable_thinking": true,
+        "preserve_thinking": true
+      },
+      {
+        "enable_thinking": true,
+        "preserve_thinking": true
+      }
+    ],
+    "passed": true
+  },
+  "result": {
+    "agent_exit_code": 0,
+    "aborted": false,
+    "termination": {
+      "stop_reason": "length",
+      "normal_stop": false,
+      "final_response_present": false
+    },
+    "resource_stop": null,
+    "feedback_assisted": true,
+    "tool_calls": 90,
+    "usage": {
+      "input": 7301998,
+      "output": 88331,
+      "cacheRead": 0,
+      "cacheWrite": 0
+    },
+    "thinking_blocks": 92,
+    "thinking_characters": 10600,
+    "agent_wall_seconds": 2965.93106341362,
+    "input_changes": [],
+    "artifacts": {
+      "models/olympic_medal_model.py": "037b7f26cf32408f3ee866fa6c8f838b40ad4d2f3b544c5eac4cc106a904c959"
+    },
+    "forecast_check": {
+      "present": false,
+      "valid": false,
+      "errors": [
+        "missing forecast table"
+      ]
+    },
+    "scope": "native thinking profile recovery; not a mode-only causal comparison; artifact inventory is not full modelling validation",
+    "training_executed": false,
+    "promotion_allowed": false
+  },
+  "API_requests": 92,
+  "actual_output_allowance": {
+    "first": 32768,
+    "last": 1,
+    "minimum": 1,
+    "maximum": 32768,
+    "requests_below_configured_allowance": 32
+  },
+  "all_requests_thinking_enabled": true,
+  "API_returned_reasoning_tokens": 2453,
+  "tool_call_attempt_types": {
+    "bash": 90,
+    "write": 1
+  },
+  "tool_error_messages": 32,
+  "output_limit_unexecuted_tool_messages": 1,
+  "total_GPU_5s_sample_peak_MiB": 31853.0,
+  "timing": {
+    "planned_wall_seconds": 2700,
+    "reported_agent_wall_seconds": 2965.93106341362,
+    "reported_wall_overrun_seconds": 265.93106341362,
+    "message_timeline_seconds": 2964.460000038147,
+    "executor_start_before_first_user_seconds": 1.2839102745056152,
+    "post_response_to_run_end_seconds": 1.519211769104004,
+    "deadline_marked_by_runner": false,
+    "limitation": "Wall report exceeded planned quota. Old run lacks monotonic clocks; no retrospective cause assertion. Startup/closing timestamps alone do not explain the difference."
+  },
+  "independent_recheck": {
+    "syntax_valid": true,
+    "run_in_disposable_copy": true,
+    "execution_exit_code": 1,
+    "execution_timed_out": false,
+    "execution_wall_seconds": 2.4250483179930598,
+    "error": "KeyError: requested feature columns absent from (9,1) DataFrame constructed from a row Series",
+    "schema_check_exit_code": 0,
+    "host_Year_column_present": true,
+    "program_year_index_nan_count": 1,
+    "first_medal_label_classes": [
+      true
+    ],
+    "mixed_country_names_and_IOC_codes": true
+  },
+  "review": {
+    "error_escape": "partial: host BOM removal and coercion avoid initial exceptions; remaining NaN/year semantics not fully resolved",
+    "work_recovery": "partial: persistent syntactically valid source, real execution/fitting attempts; final standalone execution fails",
+    "task_completion": false,
+    "methodological_defects": [
+      "Gold is both contemporaneous input feature and label in random-split validation; high printed score is not forecasting validation",
+      "np.corrcoef correlation is printed as R-squared",
+      "Medal-count table gives only positive HasMedal class; fallback probability is not a calibrated first-medal model",
+      "Country universe unions full country names and IOC codes without normalization",
+      "A row Series converted without transposition yields wrong feature axes at prediction",
+      "No successful rolling backtest, calibrated intervals or verified final report"
+    ]
+  },
+  "interpretation": "Native provider reasoning and tool transport validated. Partial work progress under a different inference profile; not a mode-only causal effect or learned Harness strategy.",
+  "limits": [
+    "Mode, sampling and output allowance differ from greedy/off history; no matched mode-only control",
+    "One public task source and one seed; not independent H",
+    "Input usage sums repeated histories, not independent information or uncached computation",
+    "GPU sampling covers entire device including other processes, not exclusive model allocation",
+    "Actual cost and budget discrepancy retained; no claim of compliant 45-minute completion"
+  ]
+}

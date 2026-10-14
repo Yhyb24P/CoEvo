@@ -214,12 +214,15 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
             telemetry = subprocess.Popen(['nvidia-smi', '--query-gpu=timestamp,memory.used,utilization.gpu', '--format=csv,noheader,nounits', '-l', '5'], stdout=gpu, stderr=subprocess.STDOUT)
         server = Server(config, out / 'server.log')
         manifest['agent_started_at'] = time.time()
+        manifest['agent_started_monotonic'] = time.monotonic()
         write_json(out / 'manifest.json', manifest)
         with (out / 'agent.log').open('w') as log:
             child = subprocess.Popen(['node', 'scripts/pi-project-agent.mjs'],
                 env={**os.environ, 'COEVO_REQUEST_FILE': str(out / 'agent_request.json'), 'NO_PROXY': '127.0.0.2,127.0.0.1,localhost'},
                 stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
             code = child.wait(timeout=c['task_budget']['wall_seconds'] + 60)
+        process_finished_at = time.time()
+        process_monotonic_seconds = time.monotonic() - manifest['agent_started_monotonic']
         transcript = json.loads((out / 'transcript.json').read_text())
         after = hashes(ws)
         new_messages = transcript['messages'][transcript['continuation_start_message_index']:]
@@ -234,6 +237,10 @@ def run(prepared, environment, config, out, pi_entry, parent=None, checkpoint=No
                   'thinking_blocks': len(thinking_blocks),
                   'thinking_characters': sum(len(b['thinking']) for b in thinking_blocks),
                   'agent_wall_seconds': time.time() - manifest['agent_started_at'],
+                  'agent_process_wall_seconds': process_finished_at - manifest['agent_started_at'],
+                  'agent_process_monotonic_seconds': process_monotonic_seconds,
+                  'node_execution_wall_seconds': transcript.get('execution_wall_seconds'),
+                  'node_execution_monotonic_seconds': transcript.get('execution_monotonic_seconds'),
                   'input_changes': [p for p, h in before.items() if after.get(p) != h],
                   'artifacts': {p: h for p, h in after.items() if p not in before},
                   'forecast_check': forecast_check(ws / 'outputs/predictions_2028.csv'),
