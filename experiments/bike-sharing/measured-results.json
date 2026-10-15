@@ -1,0 +1,178 @@
+{
+  "date": "2026-10-15",
+  "model": "Qwen3.5-4B W0",
+  "source_cluster": "uci-bike-sharing",
+  "split": "D",
+  "train_authorized": false,
+  "fresh_native_session": true,
+  "feedback_assisted": false,
+  "effective_budget": {
+    "wall_seconds": 2700,
+    "max_tool_calls": 100,
+    "max_output_tokens": 32768,
+    "context_capacity": 139264,
+    "compaction": false
+  },
+  "pi": "1.2.0",
+  "context_budget_policy": "server-tokenize",
+  "execution_monotonic_seconds": 1495.252070596,
+  "tool_calls": 25,
+  "tool_errors": 10,
+  "completion": {
+    "complete": false,
+    "stop_reason": "length",
+    "incomplete_reason": "length"
+  },
+  "usage": {
+    "input": 846987,
+    "output": 49808,
+    "cacheRead": 0,
+    "cacheWrite": 0
+  },
+  "final_request": {
+    "input_tokens": 88173,
+    "output_allowance": 32768,
+    "actual_output_tokens": 32768,
+    "reported_reasoning_tokens": 32768,
+    "capacity": 139264,
+    "interpretation": "Valid context allocation; final assistant contained only thinking and stopped at output length."
+  },
+  "protected_inputs_unchanged": true,
+  "deliverables": {
+    "source_code": "analysis.py",
+    "source_code_sha256": "16c77e161261da0b6b6fd3dc5f0a486376f99cc577bce56e4864261d986c5b55",
+    "report_present": false,
+    "workbook_present": false,
+    "predictions_present": false,
+    "task_success": false
+  },
+  "independent_review": {
+    "source_facts": {
+      "daily_rows": 731,
+      "hourly_rows": 17379,
+      "duplicate_date_hour_keys": 0,
+      "daily_hourly_total_mismatches": 0,
+      "unrepresented_hours_vs_24_per_day": 165,
+      "days_with_fewer_than_24_rows": 76,
+      "scope": "Researcher reference facts from original inputs, not Agent deliverables."
+    },
+    "reproduction": {
+      "original_environment": {
+        "exit_code": -9,
+        "timed_out": true,
+        "wall_seconds": 180.0038278259999,
+        "network": "isolated",
+        "workspace_readonly": false
+      },
+      "explicit_cache_environment": {
+        "exit_code": -9,
+        "timed_out": true,
+        "wall_seconds": 120.00451428100041,
+        "network": "isolated",
+        "workspace_readonly": false
+      },
+      "explicit_fontconfig_environment": {
+        "exit_code": -9,
+        "timed_out": true,
+        "wall_seconds": 120.00326061599935,
+        "network": "isolated",
+        "workspace_readonly": false
+      }
+    },
+    "source_findings": [
+      "Dates converted to datetime.date are compared with original string date columns; all rows are misclassified as missing and repeated filling is expensive.",
+      "Merge of two cnt columns leaves suffixed columns; subsequent cnt access fails in actual inline tool runs.",
+      "Forecast source uses contemporaneous observed weather despite task information-availability requirement; forecasting itself was not reached."
+    ],
+    "scope": "Source inspection and independent reproduction attempts, not a repaired Agent success."
+  },
+  "environment_packages": [
+    [
+      "cloudpickle",
+      "3.1.2"
+    ],
+    [
+      "contourpy",
+      "1.4.0"
+    ],
+    [
+      "cycler",
+      "0.12.1"
+    ],
+    [
+      "et_xmlfile",
+      "2.0.0"
+    ],
+    [
+      "fonttools",
+      "4.67.0"
+    ],
+    [
+      "joblib",
+      "1.6.0"
+    ],
+    [
+      "kiwisolver",
+      "1.5.1"
+    ],
+    [
+      "matplotlib",
+      "3.11.2"
+    ],
+    [
+      "narwhals",
+      "2.27.1"
+    ],
+    [
+      "numpy",
+      "2.5.4"
+    ],
+    [
+      "openpyxl",
+      "3.1.5"
+    ],
+    [
+      "packaging",
+      "26.3"
+    ],
+    [
+      "pandas",
+      "3.0.6"
+    ],
+    [
+      "pillow",
+      "12.3.0"
+    ],
+    [
+      "pyparsing",
+      "3.3.3"
+    ],
+    [
+      "python-dateutil",
+      "2.9.0.post0"
+    ],
+    [
+      "scikit-learn",
+      "1.9.1"
+    ],
+    [
+      "scipy",
+      "1.18.1"
+    ],
+    [
+      "six",
+      "1.17.0"
+    ],
+    [
+      "threadpoolctl",
+      "3.7.0"
+    ]
+  ],
+  "provenance": {
+    "transcript_sha256": "e0f86638999529a15c5323ba69c972d8fd8496e8d4605404d3017b4bf36b4a4e",
+    "request_sha256": "5a8ff37490a722b58b86d21130acc61a2adbbe160a4924b2f9113dcf7de9b4ce",
+    "context_budget_sha256": "8fe8893e0071bc445b1e5d9eb0ecc7425f5173021a28b3fbe2fd7bf065b1bc8c",
+    "prompt_sha256": "73ac006ea502a63ef8aae34484b34d4187627d0b2c70ac4117e269cf7a489832"
+  },
+  "conclusion": "Different-source complete development task failed. No confirmed transferable experience benefit, effective W1, or Q3 evidence."
+}
