@@ -1,0 +1,65 @@
+schemaVersion: 1
+agent:
+  model: local/coevo-qwen3.5-4b
+  maxContextTokens: 139264
+  maxOutputTokens: 32768
+model:
+  providers:
+    local:
+      protocol: openai
+      url: http://127.0.0.2:18000/v1
+      apiKey: local-no-secret
+      timeoutMs: 600000
+      retry:
+        requestMaxRetries: 0
+        streamMaxRetries: 0
+      extraBody:
+        temperature: 0.6
+        top_p: 0.95
+        top_k: 20
+        min_p: 0
+        presence_penalty: 0
+        repetition_penalty: 1
+        seed: 17
+        chat_template_kwargs:
+          enable_thinking: true
+          preserve_thinking: true
+      models:
+        coevo-qwen3.5-4b:
+          thinking:
+            state: enabled
+            format: qwen-local
+            efforts: []
+          capabilities:
+            supportsToolUse: true
+            supportsStreaming: true
+            supportsParallelToolCalls: false
+            supportsThinking: true
+            supportsSystemPrompt: true
+            supportsPromptCache: false
+            supportsJsonSchema: false
+            maxContextTokens: 139264
+            maxOutputTokens: 32768
+memory:
+  enabled: false
+  provider: edgeclaw
+  captureStrategy: full_session
+  includeAssistant: true
+router:
+  enabled: false
+  autoOrchestrate:
+    enabled: false
+extension:
+  builtinPluginsEnabled:
+    browser-use: false
+    funasr: false
+    windows-skills: false
+  includeHookEvents: true
+telemetry:
+  enabled: false
+gateway:
+  port: 18879
+  bindAddress: 127.0.0.1
+adapters:
+  cli:
+    autoConnectServer: false
