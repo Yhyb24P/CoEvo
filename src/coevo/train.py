@@ -52,6 +52,12 @@ def tensor_hash(model):
 def normalize_messages(messages):
     messages = json.loads(json.dumps(messages))
     for message in messages:
+        # vLLM chat_utils maps the OpenAI `reasoning` field to this
+        # Qwen template field. Preserve the same context in offline replay.
+        if message.get('role') == 'assistant' and message.get('reasoning') is not None:
+            if message.get('reasoning_content') not in (None, message['reasoning']):
+                raise ValueError('Conflicting native reasoning fields')
+            message['reasoning_content'] = message['reasoning']
         for call in message.get("tool_calls", []):
             if isinstance(call["function"]["arguments"], str):
                 call["function"]["arguments"] = json.loads(call["function"]["arguments"])

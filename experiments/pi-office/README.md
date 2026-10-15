@@ -41,3 +41,21 @@ PYTHONPATH=src .cache/task-env/bin/python -m coevo.pi_office --out NEW_RUN_DIR
 原始请求、API payload、原生会话、工具结果、可见思考及工件在本地运行目录保留；三段交互按原始消息索引规范化，保留 D、辅助来源和训练未授权标记。反馈运行的旧执行摘要错误包含父会话成本并标记无辅助，修正解释另存 execution-reviewed.json；公开汇总采用新消息成本，不改写原始记录。
 
 工程回归：80 项 Python 测试运行，4 项跳过，其余通过；Pi 适配器 JavaScript 语法与四项纯单元检查通过。这些是工程证据，经验迁移仍须后续完整任务检验。
+
+## 从真实会话准备学习对照（2026-10-15）
+
+[准备结果](learning-preparation.json)来自已核实的反馈修复：选取原生 Skill 读取、工作簿修复及最终数据检查三个实际工具调用。修复与检查命令在独立的原始状态副本中原样重放；输出行、公式及保真检查与已接受工件一致，其他文件未变。错误经验笔记与最终自述不在所选目标内。
+
+[prepare-learning.py](prepare-learning.py)从相邻的实际 API 请求获取当时可见上下文、助手调用和工具返回，要求前缀与工具定义不变；不靠人工摘要或用未来工具结果重建提示。原始思考保留在本地原生上下文中。离线归一化补齐 vLLM 实际使用的 reasoning → reasoning_content 映射，三个目标提示的 token 数分别与实测 13672、15533、18567 一致；计数一致是必要校验，不单独作为整个服务逐 token 等价的证明。
+
+同一 canonical 序列共 19243 token，两个 mask 的输入 token IDs 完全相同：output-only 仅监督正确修复，1031 token；reviewed-turns 再加入读取与检查，1749 token。监督区域覆盖所选助手动作，不覆盖工具观察、历史失败和未经核实的思考；这不是完整行为或思考链 SFT，也未匹配监督 token 总量。完整原生思考作为可追溯来源保留，可进一步研究其适用的学习方式。
+
+复现准备（使用已有本地证据，输出必须为新目录）：
+
+```bash
+PYTHONPATH=src .venv/bin/python experiments/pi-office/prepare-learning.py --run FEEDBACK_RUN_DIR --out NEW_PREPARATION_DIR
+```
+
+脚本固定选择本次已核实调用，属于历史来源的学习准备，不是通用任务运行器。完整上下文和重放文件留在本地，仓库保存受控汇总。它继续继承 D 与反馈辅助身份，不通过修改来源标记绕开现有训练准入；下一轮参数研究还需要明确开发训练用途，并将后续任务评价与这些来源区分。
+
+工程验证：84 项标准库测试运行，4 项因环境跳过，其余通过；另在本地冻结 tokenizer 环境执行两项真实模板检查通过，包括“思考保留在输入、动作 mask 不监督思考”的回归。

@@ -38,6 +38,36 @@ def read_optional(path):
     return json.loads(path.read_text()) if path.is_file() else None
 
 
+def native_tool_pairs(payloads, transcript):
+    """Recover actual API contexts and returned actions, without certifying them.
+
+    The next captured request contains the SDK's serialized Assistant turn and
+    its tool observations. Refuse changed prefixes rather than reconstructing
+    history. The final response has no subsequent request and is not inferred.
+    """
+    results = {m['toolCallId']: m for m in transcript['messages'] if m.get('role') == 'toolResult'}
+    pairs = []
+    for index, (request, following) in enumerate(zip(payloads, payloads[1:])):
+        prefix = request['messages']
+        if following['messages'][:len(prefix)] != prefix or following.get('tools') != request.get('tools'):
+            raise ValueError('Native request history or tools changed between captured requests')
+        suffix = following['messages'][len(prefix):]
+        if not suffix or suffix[0].get('role') != 'assistant':
+            raise ValueError('No unambiguous returned Assistant turn')
+        target, observations = suffix[0], suffix[1:]
+        ids = [c['id'] for c in target.get('tool_calls', [])]
+        if not ids or len(set(ids)) != len(ids) or any(m.get('role') != 'tool' for m in observations):
+            raise ValueError('Expected one actual Assistant tool turn and its observations')
+        if sorted(ids) != sorted(m.get('tool_call_id', '') for m in observations) or any(i not in results for i in ids):
+            raise ValueError('Tool calls and recorded observations do not match')
+        pairs.append({'request_index': index, 'prefix': prefix, 'target': target,
+                      'tools': request.get('tools', []), 'observations': observations,
+                      'tool_call_ids': ids, 'tool_errors': [bool(results[i].get('isError')) for i in ids],
+                      'chat_template_kwargs': request.get('chat_template_kwargs', {}),
+                      'independently_verified': False})
+    return pairs
+
+
 def extract(root, out, origin="unspecified"):
     root, out = Path(root).resolve(), Path(out).resolve()
     out.mkdir(parents=True, exist_ok=True)

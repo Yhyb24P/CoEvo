@@ -1,0 +1,60 @@
+{
+  "split": "D",
+  "source_cluster": "coevo-research-workbook",
+  "train_authorized": false,
+  "feedback_assisted": true,
+  "replayed_recorded_commands": 2,
+  "replay_artifact_matches_reviewed_rows": true,
+  "mask_arms": {
+    "output-only": {
+      "context_tokens": 19243,
+      "supervised_tokens": 1031,
+      "target_indices": [
+        59
+      ],
+      "tool_call_ids": [
+        "chatcmpl-tool-84de4569b835296f"
+      ]
+    },
+    "reviewed-turns": {
+      "context_tokens": 19243,
+      "supervised_tokens": 1749,
+      "target_indices": [
+        55,
+        59,
+        69
+      ],
+      "tool_call_ids": [
+        "chatcmpl-tool-889a863dee9157e7",
+        "chatcmpl-tool-84de4569b835296f",
+        "chatcmpl-tool-ac28e8c89a7c284f"
+      ]
+    }
+  },
+  "request_token_counts": {
+    "chatcmpl-tool-889a863dee9157e7": {
+      "offline_tokens": 13672,
+      "recorded_tokens": 13672
+    },
+    "chatcmpl-tool-84de4569b835296f": {
+      "offline_tokens": 15533,
+      "recorded_tokens": 15533
+    },
+    "chatcmpl-tool-ac28e8c89a7c284f": {
+      "offline_tokens": 18567,
+      "recorded_tokens": 18567
+    }
+  },
+  "raw_refs_sha256": {
+    "transcript.json": "71cb25b1b38faa149de4997a05d051ac82178ed0d878ae867a9edf82c1d2902d",
+    "payloads.jsonl": "461d617c32cd7eac24ac3c7321cb343ff561e78b00b3d4c17f55bd145cbd1629",
+    "task.json": "4ad199e72f0187877bbfa7b6f3d05b99af3f88e9334254e29bce490f0edb5605",
+    "semantic-review.json": "6c8c9f82761584bea8f9c4babf288e40ccd7a45cbe5f2c0cd0bb241ff6196617",
+    "workbook-verdict.json": "6d456b49447646b143b21f2733baa063de92d4896ff0bbd9cc587424e73889ff"
+  },
+  "scope": "Same-context reviewed action masks; not complete-behavior supervision or independent learning evidence.",
+  "date": "2026-10-15",
+  "local_artifacts": "pi-office/20261015-reviewed-learning-v3: reviewed-context.json, replay-workspace/, replay-verdict.json",
+  "tokenizer_model": "Qwen3.5-4B local frozen tokenizer",
+  "comparison": "Identical canonical token IDs in both arms; supervised token totals differ. No token-matched effect claim."
+}
