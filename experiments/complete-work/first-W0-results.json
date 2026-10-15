@@ -1,0 +1,72 @@
+{
+  "code_commit": "f965d66cb98b605a9d1543dd7fc980bf1fd75991",
+  "split": "D",
+  "task_wall_seconds": 3142.7314121129457,
+  "cases": {
+    "software": {
+      "wall_seconds": 1637.7234707099851,
+      "reported_tool_counter": 101,
+      "termination": {
+        "stop_reason": "error",
+        "normal_stop": false,
+        "final_response_present": false
+      },
+      "usage": {
+        "input": 4462285,
+        "output": 62189,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "feedback_assisted": false,
+      "upstream_tests_passed": 56,
+      "requirements_passed": false,
+      "submitted_tests_collect": false,
+      "report_present": false,
+      "assessment": "partial implementation; handler metadata still crashes, submitted test has repeated keyword SyntaxError; tool budget exhausted"
+    },
+    "science": {
+      "wall_seconds": 1505.0079414029606,
+      "reported_tool_counter": 69,
+      "termination": {
+        "stop_reason": "stop",
+        "normal_stop": true,
+        "final_response_present": true
+      },
+      "usage": {
+        "input": 2835682,
+        "output": 54432,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "feedback_assisted": false,
+      "reproduction_passed": true,
+      "byte_identical_results": true,
+      "report_present": true,
+      "data_unchanged": true,
+      "artifacts": [
+        "analysis.py",
+        "REPORT.md",
+        "results/penguin_analysis.png",
+        "results/summary_statistics.csv"
+      ],
+      "assessment": "useful executable partial analysis; not a scientifically complete deliverable",
+      "verified_partial": [
+        "sample counts and body mass descriptive means",
+        "reported OLS coefficients and R-squared independently matched"
+      ],
+      "important_errors": [
+        "observational quantiles mislabeled confidence intervals for means",
+        "within-group averages of fitted values mislabeled common-covariate adjusted means",
+        "isotope missing union is 14; report adds counts to claim 27 individuals",
+        "global identifier collisions treated as confirmed repeated individuals without identifying scope"
+      ],
+      "unfulfilled": [
+        "island adjustment and identifiability analysis",
+        "adjusted isotope analysis",
+        "substantive sensitivity to sampling/grouping"
+      ]
+    }
+  },
+  "whole_gpu_sampled_peak_mib": 31759.0,
+  "gpu_scope": "whole GPU including other processes; not isolated model memory"
+}
