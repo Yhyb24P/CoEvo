@@ -23,6 +23,6 @@ jobs:
           PYTHONPATH: src
         run: python -m unittest discover -s tests -v
       - name: Pi adapter syntax
-        run: node --check scripts/pi-project-agent.mjs
+        run: node --check scripts/pi-project-agent.mjs && node --test tests/pi-task-support.test.mjs
       - name: Whitespace
         run: git diff --check

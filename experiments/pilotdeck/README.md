@@ -1,6 +1,6 @@
-# PilotDeck 接入
+# PilotDeck 独立参考执行与证据提取
 
-固定上游 [OpenBMB/PilotDeck@783499ff](https://github.com/OpenBMB/PilotDeck/tree/783499ffdb2d501bf590b2e035acd027a882df10)，许可证 AGPL-3.0，保留上游 LICENSE。冷源码在 `/mnt/e/CoEvo/upstream/PilotDeck`，活动源码归档在 `.cache/pilotdeck`；不提交上游代码与 node_modules。
+本目录是 PilotDeck 自身原生 CLI 的隔离评估与素材来源，**不是 CoEvo 主框架迁移**；相关已发生任务和本地记录保持事实身份，不因架构决定改变而重写。CoEvo 的原生 Pi 执行器与 RSI 学习主体保持独立。\n\n固定上游 [OpenBMB/PilotDeck@783499ff](https://github.com/OpenBMB/PilotDeck/tree/783499ffdb2d501bf590b2e035acd027a882df10)，许可证 AGPL-3.0，保留上游 LICENSE。冷源码在 `/mnt/e/CoEvo/upstream/PilotDeck`，活动源码归档在 `.cache/pilotdeck`；不提交上游代码与 node_modules。
 
 ## 已完成的本机准备
 
@@ -39,3 +39,7 @@ PYTHONPATH=src .cache/task-env/bin/python -m coevo.pilotdeck --transcript NATIVE
 ```
 
 入口只读取明确指定的一份原生 Transcript，保留原始字节、来源哈希、会话/轮次、工具调用与返回、文件及恢复边界；不扫描私人全局会话。不自动读取持久化工具输出引用所指向的其他文件。工具未报错、正常 turn_result 和文件存在不自动成为正向监督，导出的片段均待实质核实。控制/恢复边界保持原样，不把整个日志假装成当前有效会话分支。有效部分成果和纠错经历核实后，继续复用现有经验与训练代码。
+
+## 技术吸收边界
+
+后续优先挑选经任务需要证明有用的 Office Skills、源文件保真与会话/记忆方法，在 CoEvo 原生环境集成。Pi SDK 已支持通过明确工作区 `skill_dir` 选择原生 Skills，不要求把 PilotDeck Gateway 搬入 CoEvo。原生 PilotDeck 的 JSONL 与 Pi 的原生会话不能未经来源映射就拼成同一训练轨迹。对具体 PilotDeck 代码/脚本的复制及分发，应核查 AGPL-3.0 与相关文件的单独许可证；仅借鉴思想与复制实现不同。任何新研究收益以真实未来工作结果而非 CLI 引导、安装或技术复刻数量判断。

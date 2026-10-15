@@ -5,10 +5,14 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { makeLearningSelectionTool } from './learning-selection.mjs';
+import { classifyPiOutcome, installedPiVersion } from './pi-task-support.mjs';
 
 const request = JSON.parse(readFileSync(process.env.COEVO_REQUEST_FILE, 'utf8'));
 const { createAgentSession, createExtensionRuntime, ModelRuntime, SessionManager, SettingsManager,
-  createReadToolDefinition, createWriteToolDefinition, createBashToolDefinition } = await import(pathToFileURL(request.pi_entry));
+  createReadToolDefinition, createWriteToolDefinition, createBashToolDefinition, loadSkillsFromDir } = await import(pathToFileURL(request.pi_entry));
+const sdkVersion = installedPiVersion(request.pi_entry);
+if (request.required_pi_version && sdkVersion !== request.required_pi_version)
+  throw new Error(`Pi SDK version mismatch: required ${request.required_pi_version}, observed ${sdkVersion ?? 'unknown'}`);
 const cwd = realpathSync(request.workspace);
 const runDir = resolve(request.run_dir);
 mkdirSync(runDir, { recursive: true });
@@ -141,9 +145,18 @@ runtime.registerProvider('coevo-local', { api: 'openai-completions', baseUrl: re
       ...(reasoningCapable ? { thinkingFormat: 'qwen-chat-template', supportsReasoningEffort: false } : {}) } }],
 });
 const systemPrompt = request.system_prompt;
+// An explicit workspace directory, never implicit global Skill discovery.
+let taskSkills = { skills: [], diagnostics: [] };
+if (request.skill_dir) {
+  const directory = allowed(request.skill_dir);
+  if (!existsSync(directory) || !lstatSync(directory).isDirectory()) throw new Error('Selected Skills directory is missing');
+  taskSkills = loadSkillsFromDir({ dir: directory, source: 'project' });
+  for (const skill of taskSkills.skills) allowed(skill.filePath);
+  if (taskSkills.diagnostics.some(d => d.type === 'error')) throw new Error('Invalid task Skills');
+}
 const loader = {
   getExtensions: () => ({ extensions: [], errors: [], runtime: createExtensionRuntime() }),
-  getSkills: () => ({ skills: [], diagnostics: [] }), getPrompts: () => ({ prompts: [], diagnostics: [] }),
+  getSkills: () => taskSkills, getPrompts: () => ({ prompts: [], diagnostics: [] }),
   getThemes: () => ({ themes: [], diagnostics: [] }), getAgentsFiles: () => ({ agentsFiles: [] }),
   getSystemPrompt: () => systemPrompt, getSystemPromptSource: () => undefined,
   getAppendSystemPrompt: () => [], getAppendSystemPromptSources: () => [], extendResources: () => {}, reload: async () => {},
@@ -192,6 +205,7 @@ if (request.sampling || request.capture_payload || request.preview_only || reque
   };
 }
 const continuationStart = session.messages.length;
+let completion;
 executionWallStart = Date.now();
 executionMonotonicStart = performance.now();
 const timer = setTimeout(() => { aborted = true; resourceStop ??= { reason: 'wall_timeout', scope: 'timer abort' }; void session.abort(); }, request.timeout_ms);
@@ -199,15 +213,22 @@ session.subscribe(event => {
   appendFileSync(resolve(runDir, 'events.jsonl'), JSON.stringify(event) + '\n');
 });
 try {
-  for (const prompt of request.prompts) await session.prompt(prompt);
+  for (const prompt of request.prompts) {
+    await session.prompt(prompt);
+    completion = classifyPiOutcome(session.messages.slice(continuationStart), { aborted, resourceStop });
+    if (!completion.complete) break;
+  }
 } finally {
   clearTimeout(timer);
+  completion = classifyPiOutcome(session.messages.slice(continuationStart), { aborted, resourceStop });
   writeFileSync(resolve(runDir, 'transcript.json'), JSON.stringify({ system: session.systemPrompt, messages: session.messages,
     tools: tools.map(t => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters } })),
     session_file: session.sessionFile, tool_calls: calls, aborted, resource_stop: resourceStop, continuation_start_message_index: continuationStart,
+    sdk_version: sdkVersion, required_pi_version: request.required_pi_version ?? null,
+    selected_skills: taskSkills.skills.map(s => ({ name: s.name, path: s.filePath })), completion,
     final_text: session.getLastAssistantText(),
     execution_wall_seconds: (Date.now() - executionWallStart) / 1000,
     execution_monotonic_seconds: (performance.now() - executionMonotonicStart) / 1000 }, null, 2) + '\n');
   session.dispose();
 }
-if (aborted || session.messages.slice(continuationStart).some(m => m.role === 'assistant' && m.stopReason === 'error')) process.exitCode = 1;
+if (!completion?.complete) process.exitCode = 1;
