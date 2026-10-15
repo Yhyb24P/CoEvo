@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-15",
+  "source_cluster": "mcm-2025-c",
+  "split": "D",
+  "task": "Olympic complete Office audit",
+  "scope": "Single sequential complete-work development comparison; model, native template/parser and recommended sampling vary together. No independent generalization or weight-learning effect estimate.",
+  "order": [
+    "spark",
+    "qwen"
+  ],
+  "same_initial_files": true,
+  "fresh_native_sessions": true,
+  "feedback_assisted": false,
+  "train_authorized": false,
+  "effective_budget": {
+    "wall_seconds": 1500,
+    "max_tool_calls": 80,
+    "max_output_tokens_per_request": 32768,
+    "context_capacity": 139264,
+    "compaction": false,
+    "context_budget_policy": "server-tokenize"
+  },
+  "model_sources": {
+    "spark": {
+      "repo": "XHToken/Spark-X2.5-4B",
+      "revision": "0bcb35678590218655dff3765b9e61c83b35e9c4",
+      "download_bytes": 8224192408
+    },
+    "plugin": {
+      "repo": "XHToken/Spark-plugin",
+      "revision": "3e1040e63a5907e4c748a485d6795d739dcd5bd6",
+      "local_version": "0.1.0+coevo.vllm031",
+      "compatibility_patch_sha256": "ecfb6f4b7666b369199678e6e3bf3eef323bffe110f41156f85de41a852e1a67"
+    }
+  },
+  "runtime": {
+    "vllm": "0.31.0",
+    "transformers": "5.17.0",
+    "torch": "2.13.0",
+    "pi": "1.2.0",
+    "gpu": "RTX 5090 D 32 GiB",
+    "cross_backend_numerical_parity_verified": false
+  },
+  "first_startup_attempt": {
+    "task_started": false,
+    "failure": "TypeError: AutoWeightsLoader.__init__() got an unexpected keyword argument 'skip_prefixes'",
+    "log_sha256": "9fb3d1d4c2207f1548d18665aa2b13919f00259bcae2b6f8362b3d4aed6ddd0d"
+  },
+  "training_readiness": {
+    "native_vllm_supports_lora": false,
+    "hf_config_current_transformers": "Fails on nested RoPE plus scalar defaults; original model code unchanged.",
+    "interpretation": "Current training/reload path requires further qualification; not evidence that the model cannot be trained."
+  },
+  "models": {
+    "spark": {
+      "served_model": "coevo-spark-x2.5-4b",
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "top_k": -1,
+        "min_p": 0.0,
+        "presence_penalty": 0.0,
+        "repetition_penalty": 1.0,
+        "seed": 17
+      },
+      "request_sha256": "9a7b73d181e1e524edcf038ceed0fcc683dadd4a95578ae22d630f1a7b059a72",
+      "server_ready_seconds": 102.16890227899421,
+      "execution_monotonic_seconds": 1183.3480572070112,
+      "execution_wall_clock_seconds": 1296.903,
+      "tool_calls": 23,
+      "tool_errors": 8,
+      "completion": {
+        "complete": false,
+        "stop_reason": "length",
+        "incomplete_reason": "length"
+      },
+      "resource_stop": null,
+      "cumulative_api_usage": {
+        "input": 1551497,
+        "output": 75744,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "protected_inputs_unchanged": true,
+      "file_checks_passed": false,
+      "file_problems": [
+        "clean_medals.csv missing",
+        "updated-olympic-audit.xlsx missing",
+        "audit.md missing/empty",
+        "prepare_audit.py missing/empty"
+      ],
+      "raw_transcript_sha256": "45fc8275432c357f18d9a3143efc856a5e162d2c7bf5085467a0e8d7ea254f5f",
+      "execution_sha256": "64a467f5735f6e601f2ebe46fc3a136d28b4016f2e38405c0aeed1de1eb46a50",
+      "context_budget_sha256": "c66cf028be9cbf525aadccb2a586f40123f4ba235f42abc572e840c15218d386",
+      "task_success": false,
+      "partial_results": {
+        "required_deliverables_present": false,
+        "diagnostic_only": ".work/tmp/probe.xlsx"
+      },
+      "stop_detail": "Final request: 126414 input tokens, 8735 output allowance, length stop. Existing SDK cap remained below server remainder; counted request fit capacity."
+    },
+    "qwen": {
+      "served_model": "coevo-qwen3.5-4b",
+      "sampling": {
+        "temperature": 0.6,
+        "top_p": 0.95,
+        "top_k": 20,
+        "min_p": 0.0,
+        "presence_penalty": 0.0,
+        "repetition_penalty": 1.0,
+        "seed": 17
+      },
+      "request_sha256": "7416a874b1186c480f8ead069ff6ff91f34bf8dcdd0ac06a59d8b698fd56018e",
+      "server_ready_seconds": 68.07376177498372,
+      "execution_monotonic_seconds": 1396.9717767779948,
+      "execution_wall_clock_seconds": 1541.907,
+      "tool_calls": 63,
+      "tool_errors": 12,
+      "completion": {
+        "complete": false,
+        "stop_reason": "error",
+        "incomplete_reason": "wall_timeout"
+      },
+      "resource_stop": {
+        "reason": "wall_timeout",
+        "scope": "checked before further inference"
+      },
+      "cumulative_api_usage": {
+        "input": 2658113,
+        "output": 49358,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "protected_inputs_unchanged": true,
+      "file_checks_passed": false,
+      "file_problems": [
+        "updated-olympic-audit.xlsx missing",
+        "audit.md missing/empty",
+        "prepare_audit.py missing/empty"
+      ],
+      "raw_transcript_sha256": "221f3c6798a4da53df7fdae17558d382d1e1031dda6e2b0ebcca5130be653e8f",
+      "execution_sha256": "99192f3b48ae719a20b131f0d38b1b789218cdc9a16398b932473eaf724ffd44",
+      "context_budget_sha256": "cc72c002d321ad33bc9bdb3a79be58899c8a339d6deb7ff012bcf29220d5ffa7",
+      "task_success": false,
+      "partial_results": {
+        "clean_medals_rows": 1435,
+        "clean_medals_verified": true,
+        "source_code_saved": ".work/olympic/prepare_audit.py",
+        "source_code_sha256": "bd791d590ae58b12e758bde1e99c3b331cb8e7122f7c0921f5c06e0c3ecbda1f",
+        "independent_reproduction_exit_code": 1,
+        "independent_reproduction_error": "NameError: name 'summary_data' is not defined",
+        "clean_reproduction_csv_verified": true
+      },
+      "stop_detail": "Deadline guard triggered before another inference; last saved code was not run by Agent."
+    }
+  },
+  "budget_interpretation": "Task request/task.json override generic config: 25 minutes/80 calls, not generic 45 minutes/100 calls. Clock and monotonic durations differ; deadline checks use the greater elapsed value. Durations do not justify an efficiency ranking.",
+  "conclusion": "Both complete tasks failed. Qwen produced a verified clean CSV; Spark runtime/tool integration works after compatibility patch but no required artifact. No basis to replace accepted Qwen W0 or infer long-term RSI gain."
+}

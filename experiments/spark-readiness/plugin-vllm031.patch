@@ -1,0 +1,52 @@
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -4,7 +4,7 @@
+ 
+ [project]
+ name = "vllm-spark2_5-plugin"
+-version = "0.1.0"
++version = "0.1.0+coevo.vllm031"
+ description = "Spark2_5 support for vLLM, maintained out of tree"
+ readme = "README.md"
+ license = "Apache-2.0"
+--- a/src/vllm_spark2_5_plugin/spark2_5_tool_parser.py
++++ b/src/vllm_spark2_5_plugin/spark2_5_tool_parser.py
+@@ -14,7 +14,7 @@
+     ChatCompletionNamedToolChoiceParam,
+     ChatCompletionRequest,
+ )
+-from vllm.entrypoints.openai.engine.protocol import (
++from vllm.entrypoints.generate.base.protocol import (
+     DeltaFunctionCall,
+     DeltaMessage,
+     DeltaToolCall,
+--- a/src/vllm_spark2_5_plugin/spark2_5_config.py
++++ b/src/vllm_spark2_5_plugin/spark2_5_config.py
+@@ -67,3 +67,12 @@
+             }
+ 
+         super().__init__(**kwargs)
++
++    def convert_rope_params_to_dict(self, **kwargs):
++        # Transformers 5.17 adds global defaults even for per-layer RoPE.
++        # Keep the existing per-layer numerical parameters unchanged.
++        kwargs = super().convert_rope_params_to_dict(**kwargs)
++        if self.layer_types and set(self.layer_types).issubset(self.rope_parameters):
++            self.rope_parameters.pop("rope_theta", None)
++            self.rope_parameters.pop("partial_rotary_factor", None)
++        return kwargs
+--- a/src/vllm_spark2_5_plugin/spark2_5.py
++++ b/src/vllm_spark2_5_plugin/spark2_5.py
+@@ -384,8 +384,8 @@
+         return logits
+ 
+     def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
+-        loader = AutoWeightsLoader(
+-            self,
+-            skip_prefixes=(["lm_head."] if self.config.tie_word_embeddings else None),
+-        )
++        if self.config.tie_word_embeddings:
++            weights = ((name, value) for name, value in weights
++                       if not name.startswith("lm_head."))
++        loader = AutoWeightsLoader(self)
+         return loader.load_weights(weights, mapper=self.hf_to_vllm_mapper)

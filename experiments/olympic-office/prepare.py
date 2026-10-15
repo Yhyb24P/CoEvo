@@ -14,16 +14,13 @@ from coevo.sandbox import command
 ROOT=Path(__file__).resolve().parents[2]
 
 
-def prepare(out, data, parent, source, pi_entry, environment, skill_cache):
+def make_template(data, destination):
     from openpyxl import Workbook
     from openpyxl.comments import Comment
     from openpyxl.styles import Font,PatternFill
     from openpyxl.utils import get_column_letter
-    out,data,parent=map(lambda p:Path(p).resolve(),(out,data,parent))
-    out.mkdir(parents=True,exist_ok=False)
     reference=runpy.run_path(str(ROOT/'experiments/olympic-office/check.py'))['reference']
     _,summary,_=reference(data)
-    inputs=out/'inputs';inputs.mkdir()
     w=Workbook();s=w.active;s.title='Summary'
     s.append(['Olympic dataset review']);s.merge_cells('A1:H1')
     s.append(['Year','NOCs','Gold','Silver','Bronze','Total','Events (programs)','Host'])
@@ -38,7 +35,14 @@ def prepare(out, data, parent, source, pi_entry, environment, skill_cache):
     for col in range(1,9):s.column_dimensions[get_column_letter(col)].width=18 if col<8 else 85
     a=w.create_sheet('Archive');a.append(['Frozen historical record','2016 source snapshot'])
     a.append(['2016 NOCs',summary[2016][1]]);a['B2'].comment=Comment('Historical input; do not overwrite.','CoEvo')
-    w.save(inputs/'olympic-audit.xlsx')
+    w.save(destination)
+
+
+def prepare(out, data, parent, source, pi_entry, environment, skill_cache):
+    out,data,parent=map(lambda p:Path(p).resolve(),(out,data,parent))
+    out.mkdir(parents=True,exist_ok=False)
+    inputs=out/'inputs';inputs.mkdir()
+    make_template(data, inputs/'olympic-audit.xlsx')
     prompt=(ROOT/'experiments/olympic-office/task.txt').read_text()
     parent_trace=json.loads((parent/'transcript.json').read_text())
     parent_session=Path(parent_trace['session_file'])

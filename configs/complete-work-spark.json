@@ -1,0 +1,36 @@
+{
+  "protocol_revision": "complete-work-model-comparison-20261015",
+  "model_path": ".cache/active-model/Spark-X2.5-4B",
+  "served_model": "coevo-spark-x2.5-4b",
+  "endpoint": "http://127.0.0.2:18000/v1",
+  "max_model_len": 139264,
+  "dtype": "bfloat16",
+  "gpu_memory_utilization": 0.9,
+  "max_num_seqs": 1,
+  "max_num_batched_tokens": 4096,
+  "enable_thinking": true,
+  "tool_call_parser": "spark25",
+  "reasoning_parser": "qwen3",
+  "cold_root": "/mnt/e/CoEvo",
+  "enforce_eager": true,
+  "study_id": "complete-work-model-comparison",
+  "inference_sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": -1,
+    "min_p": 0.0,
+    "presence_penalty": 0.0,
+    "repetition_penalty": 1.0,
+    "seed": 17
+  },
+  "task_budget": {
+    "wall_seconds": 2700,
+    "max_tool_calls": 100,
+    "max_output_tokens": 32768,
+    "bash_seconds": 120,
+    "initial_context_capacity": 139264,
+    "compaction": false
+  },
+  "trust_remote_code": true,
+  "chat_template": ".cache/active-model/Spark-X2.5-4B/chat_template.jinja"
+}

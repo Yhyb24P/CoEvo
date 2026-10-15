@@ -30,6 +30,10 @@ def main():
                json.dumps({'enable_thinking': bool(c.get('enable_thinking', False))}, separators=(',', ':'))]
     if c.get("enforce_eager"):
         command.append("--enforce-eager")
+    if c.get("trust_remote_code"):
+        command.append("--trust-remote-code")
+    if c.get("chat_template"):
+        command.extend(["--chat-template", str(Path(c['chat_template']).resolve())])
     if args.adapter:
         command.extend(["--enable-lora", "--max-lora-rank", "16", "--lora-modules", f"{args.adapter_name}={Path(args.adapter).resolve()}"])
     print("Starting", " ".join(command), flush=True)
