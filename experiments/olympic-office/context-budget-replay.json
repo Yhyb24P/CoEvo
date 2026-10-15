@@ -1,0 +1,46 @@
+{
+  "budget": {
+    "prompt_tokens": 123501,
+    "capacity": 139264,
+    "requested_output_tokens": 26105,
+    "allocated_output_tokens": 15763
+  },
+  "estimate": {
+    "tokens": 109063,
+    "usageTokens": 94408,
+    "trailingTokens": 14655,
+    "lastUsageIndex": 169
+  },
+  "sdk_output_ceiling": 26105,
+  "validation": {
+    "original": {
+      "accepted": false,
+      "error": "This model's maximum context length is 139264 tokens. However, you requested 26105 output tokens and your prompt contains at least 113160 input tokens, for a total of at least 139265 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=113160)"
+    },
+    "bounded": {
+      "accepted": true,
+      "prompt_tokens": 123501
+    }
+  },
+  "server_tokenizer_count": 123501,
+  "original_prompt_lower_bound": 113160,
+  "original_total_exact": 149606,
+  "interpretation": "vLLM early-stop error gives a lower bound, not an exact one-token overflow.",
+  "scope": "CPU replay of actual vLLM tokenization/validation and JS allocation, not a repeated Agent task or task-success claim.",
+  "refs_sha256": {
+    "payloads.jsonl": "c1b270e9337c332b817bc78ceee4e589008fd5977386e51c1a0481e7e957eb5b",
+    "transcript.json": "284ab02ee30329c0f35de3036f6f7d19762ab6d1d65a00c47ecb091c5cb40523",
+    "agent_request.json": "1e3915e41b41e0d7adf4564fe46e236449cb5d4791ba83a8141344b968c6122f"
+  },
+  "date": "2026-10-15",
+  "vllm_version": "0.31.0",
+  "pi_version": "1.2.0",
+  "sdk_estimate_shortfall": 14438,
+  "exact_original_excess": 10342,
+  "tokenizer_sha256": {
+    "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "config.json": "ddc63e1c717afa86c865bb5e01313d89d72bb53b97ad4a8a03ba8510c0621670"
+  }
+}

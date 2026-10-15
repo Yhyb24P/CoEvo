@@ -100,6 +100,7 @@ def run(out):
         messages = transcript['messages'][transcript.get('continuation_start_message_index', 0):]
         result = {'agent_exit_code': process.returncode, 'termination': termination({**transcript, 'messages': messages}),
                   'pi_sdk_version': transcript.get('sdk_version'),
+                  'context_budget_policy': transcript.get('context_budget_policy', 'sdk-estimate'),
                   'selected_skills': transcript.get('selected_skills', []),
                   'completion': transcript.get('completion'),
                   'resource_stop': transcript.get('resource_stop'), 'wall_seconds': time.monotonic() - started,
@@ -157,6 +158,7 @@ def prepare(args):
                    model=config['served_model'], context_tokens=config['max_model_len'],
                    enable_thinking=config.get('enable_thinking', True),
                    sampling=config['inference_sampling'], prompts=[prompt],
+                   exact_context_budget=True,
                    pi_entry=str(Path(args.pi_entry).resolve()),
                    sandbox_prefix=command(workspace, environment, [], readonly_paths=readonly),
                    readonly_paths=readonly, timeout_ms=budget['wall_seconds'] * 1000,

@@ -106,10 +106,13 @@
       "terminal_api_error": "400: {\"message\":\"This model's maximum context length is 139264 tokens. However, you requested 26105 output tokens and your prompt contains at least 113160 input tokens, for a total of at least 139265 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=113160)\",\"type\":\"BadRequestError\",\"param\":\"input_tokens\",\"code\":400}",
       "context_reservation": {
         "server_capacity": 139264,
-        "reported_input_tokens_at_rejection": 113160,
+        "reported_input_lower_bound_at_rejection": 113160,
         "requested_output_tokens": 26105,
-        "total": 139265,
-        "scope": "API reservation rejection, not evidence that every remaining output token was consumed. No isolated Q1 ability conclusion."
+        "reported_total_lower_bound": 139265,
+        "offline_exact_input_tokens": 123501,
+        "offline_exact_total": 149606,
+        "offline_exact_excess": 10342,
+        "scope": "The API error reports at least, not an exact prompt length. Pinned vLLM CPU tokenization/validation reproduces the lower-bound rejection and the true count. This corrects the earlier one-token interpretation; original run state and task failure remain unchanged."
       }
     }
   },
@@ -147,5 +150,6 @@
   },
   "conclusion": "No complete success in either arm. One valid cleaned table in R0; R1 stopped on context reservation error. One D case does not identify a general memory effect; no evidence to adopt full cross-task history by default.",
   "evidence_root": "Local olympic-office/20261015-context-v1; original outputs, frozen checker, reviewed verdicts and isolated reproductions retained.",
-  "checker_note": "Frozen checker raised on unreadable R0 XLSX; revised checker reports that observed package error as failure, with source hashes retained in local review."
+  "checker_note": "Frozen checker raised on unreadable R0 XLSX; revised checker reports that observed package error as failure, with source hashes retained in local review.",
+  "context_budget_followup": "context-budget-replay.json"
 }

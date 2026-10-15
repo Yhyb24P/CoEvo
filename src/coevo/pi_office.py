@@ -36,6 +36,7 @@ def prepare(out, source, pi_entry, environment, skill_cache):
                    pi_entry=str(pi_entry), required_pi_version='1.2.0', skill_dir='.skills',
                    readonly_paths=['.skills'], endpoint=config['endpoint'], model=config['served_model'],
                    enable_thinking=True, context_tokens=config['max_model_len'], sampling=config['inference_sampling'],
+                   exact_context_budget=True,
                    timeout_ms=1800000, max_tool_calls=100, max_output_tokens=32768,
                    sandbox_prefix=prefix, prompts=[prompt], capture_payload=True,
                    system_prompt='You are CoEvo, an independent local task Agent. Bash runs in /workspace; use workspace-relative paths for task work. Use selected task Skills and actual read/write/bash observations to complete the authorized work. Preserve sources and report outcomes accurately.')

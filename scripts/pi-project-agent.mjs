@@ -5,7 +5,7 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { makeLearningSelectionTool } from './learning-selection.mjs';
-import { classifyPiOutcome, installedPiVersion } from './pi-task-support.mjs';
+import { classifyPiOutcome, installedPiVersion, countAndAllocateContext } from './pi-task-support.mjs';
 
 const request = JSON.parse(readFileSync(process.env.COEVO_REQUEST_FILE, 'utf8'));
 const { createAgentSession, createExtensionRuntime, ModelRuntime, SessionManager, SettingsManager,
@@ -187,7 +187,7 @@ if (checkpointProvenance) {
   writeFileSync(resolve(runDir, 'checkpoint-provenance.json'), JSON.stringify(checkpointProvenance, null, 2) + '\n');
   if (!checkpointProvenance.native_prefix_equal || !checkpointProvenance.source_unchanged) throw new Error('Native checkpoint provenance mismatch');
 }
-if (request.sampling || request.capture_payload || request.preview_only || request.repeat_failure_limit) {
+if (request.sampling || request.capture_payload || request.preview_only || request.repeat_failure_limit || request.exact_context_budget) {
   const previousPayloadHook = session.agent.onPayload;
   session.agent.onPayload = async (payload, model) => {
     if (resourceStop) throw new Error(`COEVO_RESOURCE_STOP: ${resourceStop.reason}; no further inference`);
@@ -197,8 +197,27 @@ if (request.sampling || request.capture_payload || request.preview_only || reque
       throw new Error('COEVO_WALL_TIMEOUT_STOP: task deadline exceeded before request');
     }
     const prepared = previousPayloadHook ? (await previousPayloadHook(payload, model)) ?? payload : payload;
-    const controlled = request.sampling ? { ...prepared, ...request.sampling } : prepared;
+    let controlled = request.sampling ? { ...prepared, ...request.sampling } : prepared;
     if (request.sampling) appendFileSync(resolve(runDir, 'sampling.jsonl'), JSON.stringify(Object.fromEntries(Object.keys(request.sampling).map(k => [k, controlled[k]]))) + '\n');
+    if (request.exact_context_budget && !request.preview_only) {
+      const started = performance.now();
+      try {
+        const elapsed = Math.max(started - executionMonotonicStart, Date.now() - executionWallStart);
+        const timeoutMs = Math.max(1, Math.min(10000, Math.floor(request.timeout_ms - elapsed)));
+        const result = await countAndAllocateContext(controlled, request.endpoint, request.context_tokens, { timeoutMs });
+        controlled = result.payload;
+        appendFileSync(resolve(runDir, 'context-budget.jsonl'), JSON.stringify({ ...result.budget,
+          count_ms: performance.now() - started, status: 'allocated' }) + '\n');
+      } catch (error) {
+        resourceStop ??= { reason: error.code === 'COEVO_CONTEXT_CAPACITY_EXHAUSTED'
+          ? 'context_capacity_exhausted' : 'context_count_unavailable', ...(error.budget ?? {}) };
+        aborted = true;
+        appendFileSync(resolve(runDir, 'context-budget.jsonl'), JSON.stringify({ ...(error.budget ?? {}),
+          count_ms: performance.now() - started, status: resourceStop.reason }) + '\n');
+        throw error;
+      }
+      if (resourceStop || aborted) throw new Error('COEVO_RESOURCE_STOP: stopped during token counting');
+    }
     if (request.capture_payload || request.preview_only) appendFileSync(resolve(runDir, 'payloads.jsonl'), JSON.stringify(controlled) + '\n');
     if (request.preview_only) throw new Error('COEVO_PAYLOAD_PREVIEW_ONLY: no inference requested');
     return controlled;
@@ -225,6 +244,8 @@ try {
     tools: tools.map(t => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.parameters } })),
     session_file: session.sessionFile, tool_calls: calls, aborted, resource_stop: resourceStop, continuation_start_message_index: continuationStart,
     sdk_version: sdkVersion, required_pi_version: request.required_pi_version ?? null,
+    context_budget_policy: request.exact_context_budget
+      ? (request.preview_only ? 'preview-not-counted' : 'server-tokenize') : 'sdk-estimate',
     selected_skills: taskSkills.skills.map(s => ({ name: s.name, path: s.filePath })), completion,
     final_text: session.getLastAssistantText(),
     execution_wall_seconds: (Date.now() - executionWallStart) / 1000,

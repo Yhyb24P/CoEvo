@@ -12,6 +12,55 @@ from tests.test_project_tools import PI_ENTRY
 
 @unittest.skipUnless(PI_ENTRY.exists(),'Pinned Pi required')
 class SamplingTests(unittest.TestCase):
+    def test_authoritative_count_bounds_output_and_stops_without_generation_on_failure(self):
+        for count in (123501,139264,None):
+            with self.subTest(count=count):
+                captured=[]
+                class Handler(BaseHTTPRequestHandler):
+                    def log_message(self,*args):pass
+                    def do_POST(self):
+                        body=json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+                        captured.append((self.path,body))
+                        if self.path=='/tokenize':
+                            self.send_response(503 if count is None else 200)
+                            self.send_header('Content-Type','application/json');self.end_headers()
+                            self.wfile.write(json.dumps({'count':count,'max_model_len':139264}).encode())
+                            return
+                        self.send_response(200);self.send_header('Content-Type','text/event-stream');self.end_headers()
+                        for delta,stop in [({'role':'assistant','content':'fixture'},None),({},'stop')]:
+                            chunk={'id':'count-fixture','object':'chat.completion.chunk','created':0,'model':'fixture',
+                                   'choices':[{'index':0,'delta':delta,'finish_reason':stop}]}
+                            self.wfile.write(('data: '+json.dumps(chunk)+'\n\n').encode())
+                        self.wfile.write(b'data: [DONE]\n\n');self.wfile.flush()
+                server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
+                threading.Thread(target=server.serve_forever,daemon=True).start()
+                try:
+                    with tempfile.TemporaryDirectory() as tmp:
+                        root=Path(tmp);(root/'workspace').mkdir()
+                        request={'workspace':str(root/'workspace'),'run_dir':str(root/'run'),'pi_entry':str(PI_ENTRY.resolve()),
+                            'endpoint':f'http://127.0.0.1:{server.server_port}/v1','model':'fixture','context_tokens':139264,
+                            'prompts':['Actual transport fixture.'],'system_prompt':'Fixture.','timeout_ms':15000,
+                            'max_tool_calls':1,'max_output_tokens':32768,'sandbox_prefix':['unused'],
+                            'capture_payload':True,'exact_context_budget':True}
+                        p=root/'request.json';p.write_text(json.dumps(request))
+                        process=subprocess.run(['node','scripts/pi-project-agent.mjs'],env={**os.environ,'COEVO_REQUEST_FILE':str(p)},
+                                               capture_output=True,text=True,timeout=25)
+                        trace=json.loads((root/'run/transcript.json').read_text())
+                        self.assertEqual(captured[0][0],'/tokenize')
+                        if count==123501:
+                            self.assertEqual(process.returncode,0,process.stderr)
+                            self.assertEqual(captured[1][0],'/v1/chat/completions')
+                            self.assertEqual(captured[1][1]['max_completion_tokens'],15763)
+                            self.assertEqual(captured[0][1]['messages'],captured[1][1]['messages'])
+                            self.assertEqual(captured[0][1]['tools'],captured[1][1]['tools'])
+                        else:
+                            self.assertNotEqual(process.returncode,0)
+                            self.assertEqual(len(captured),1)
+                            self.assertEqual(trace['resource_stop']['reason'],
+                                'context_count_unavailable' if count is None else 'context_capacity_exhausted')
+                        self.assertEqual(trace['context_budget_policy'],'server-tokenize')
+                finally:server.shutdown();server.server_close()
+
     def test_exhausted_wall_quota_stops_before_actual_http(self):
         captured=[]
         class Handler(BaseHTTPRequestHandler):
@@ -86,7 +135,8 @@ class SamplingTests(unittest.TestCase):
                 request={'workspace':str(root/'workspace'),'run_dir':str(root/'run'),'pi_entry':str(PI_ENTRY.resolve()),
                     'endpoint':f'http://127.0.0.1:{server.server_port}/v1','model':'fixture','context_tokens':4096,
                     'prompts':['Preview only.'],'system_prompt':'Transport fixture.', 'timeout_ms':15000,
-                    'max_tool_calls':1,'sandbox_prefix':['unused'],'preview_only':True,'sampling':{'temperature':0,'seed':17}}
+                    'max_tool_calls':1,'sandbox_prefix':['unused'],'preview_only':True,'exact_context_budget':True,
+                    'sampling':{'temperature':0,'seed':17}}
                 p=root/'request.json';p.write_text(json.dumps(request))
                 proc=subprocess.run(['node','scripts/pi-project-agent.mjs'],env={**os.environ,'COEVO_REQUEST_FILE':str(p)},capture_output=True,text=True,timeout=25)
                 self.assertNotEqual(proc.returncode,0)

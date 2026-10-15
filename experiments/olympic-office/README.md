@@ -39,8 +39,21 @@ PYTHONPATH=src .cache/pilotdeck-office-env/bin/python experiments/olympic-office
 
 R0 的 clean_medals.csv 全部 1435 条记录与独立清理参考多重集一致，是实际可用部分。提交 XLSX 样式表的字体引用越界导致 openpyxl 读取报 IndexError；根目录缺少脚本，源码保存在 .work/。报告将项目表各行全加，得到 761/738，而原表 Total events 是 339/329。独立执行最后保存的源码可以生成可读工作簿，但仍缺比较/质量表且汇总不正确，不能追认模型交付成功。
 
-R1 使用 Latin-1 解读 UTF-8 奖牌文本，72 条 NOC 出现多余 Â；保存脚本复跑在列名处理中失败。末次服务错误明确为 113160 输入 + 26105 请求输出 = 139265，超过配置容量 139264 一个 token。它是请求配额拒绝，不是输出额度已经耗尽；与单纯模型不会做任务分别记录。本轮不重跑修复后的同题来替代旧结果。
+R1 使用 Latin-1 解读 UTF-8 奖牌文本，72 条 NOC 出现多余 Â；保存脚本复跑在列名处理中失败。末次错误的“至少 113160 输入 / 至少 139265 总量”是服务提前停止计数返回的下界，先前“只超一个 token”的解读已更正。真实请求分词为 123501 输入，加上 26105 请求输出后超过容量 10342；详见下节。它是请求配额拒绝，不是输出额度已经耗尽；与模型工作错误分别记录。本轮不重跑修复后的同题来替代旧结果。
 
 这项开发比较没有经验复用的正向交付证据，且 R1 的技术中止限制因果解读；不能推出原生历史普遍有害。它提示整段跨任务历史不能因“原生”或曾成功使用就默认采用，后续经验选择必须看内容关联、实际质量与成本。
 
 冻结检查器最初对不可读 XLSX 抛异常，原件保留在本地；修订仅将已观察到的包读取错误报告为检查失败，另存 reviewed verdict，不改变模型成果或既有评分要求。准备器旧例输入字段也已更正；原运行 initial_files 和实际沙箱输入一直正确，旧 task.json 不改写，解释修正在本地 sidecar。此后正常工程回归复用现有 CI，真实质量仍以上述工件与复跑为准。
+
+
+## 上下文配额解释更正与技术修复
+
+[CPU 重放证据](context-budget-replay.json)使用同一保存请求、Pi 1.2.0 估算器、vLLM 0.31.0 的 ServingTokenization 和 ChatCompletion 请求校验路径。Pi 估算 109063 个上下文 token，并预留 4096，得出 26105 输出额度；实际输入 123501，估算少了 14438。vLLM 的错误文本因提前截断计数只给下界，不能当作完整输入长度。
+
+原配额在真实校验路径复现拒绝；保留完整 123501 输入，输出额度改为 15763 后校验接受。它证明请求预算修复有效，不证明模型能完成余下工作。原任务、原始输出与失败记录保持历史身份。
+
+```bash
+PYTHONPATH=src .venv/bin/python experiments/olympic-office/replay-context-budget.py --run R1_RUN_DIR --out NEW_REPLAY_DIR
+```
+
+新 Office/complete_work 准备入口设置 exact_context_budget；Pi 在发送请求前调用同一 vLLM 服务的 /tokenize，带上实际消息、工具、模板参数和生成提示，只缩减输出上限以适配配置/服务容量，不裁剪原生历史。没有输出空间或计数失败时如实记录资源/接口停止；没有估算回退。计数耗时纳入任务期限，context-budget.jsonl 记录前后额度，transcript/execution 标明 server-tokenize 策略。preview_only 保持离线预览，标为 preview-not-counted。旧请求按原 SDK 估算策略复现，不用于声称新策略的学习收益。
