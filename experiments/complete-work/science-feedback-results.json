@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-15",
+  "run": "20261015-science-feedback-v1",
+  "split": "D",
+  "source_cluster": "palmerpenguins",
+  "source_revision": "8957207b78d6ccd1b4654a9dd9c9041b657478ab",
+  "model": "Qwen3.5-4B W0",
+  "pi_sdk_version": "1.2.0",
+  "wall_seconds": 800.5354802240035,
+  "tool_calls": 19,
+  "usage_new_messages": {
+    "input": 2282954,
+    "output": 27952,
+    "cacheRead": 0,
+    "cacheWrite": 0
+  },
+  "completion": {
+    "complete": true,
+    "stop_reason": "stop",
+    "incomplete_reason": null
+  },
+  "feedback_assisted": true,
+  "feedback_origin": "researcher-independent-scientific-review",
+  "condition_changes": [
+    "Pi SDK 1.1.0 to 1.2.0",
+    "explicit sandbox cwd /workspace",
+    "external scientific feedback"
+  ],
+  "native_continuation": {
+    "retained_messages": 141,
+    "prefix_equal": true,
+    "parent_transcript_sha256": "96ab03d1d27f60d2e2546c1c934051d3fc7a8db1b6a44cdc74c083876aa8a474",
+    "child_transcript_sha256": "e35d48556fd94810deed93b760535e5238ca745e45f202c454bd04ecf6fc2208"
+  },
+  "independent_review": {
+    "task_success": false,
+    "reproduction_passed": true,
+    "byte_identical_results": true,
+    "data_unchanged": true,
+    "verified_partial": [
+      "Mean intervals now use mean +/- 1.96 standard errors; report values independently matched under the iid normal approximation, not a sampling-design guarantee.",
+      "Added island-adjusted mass and nitrogen isotope OLS coefficients and R-squared independently matched (n=324).",
+      "Added species/island cross-tabulation and overlapping isotope missingness counts."
+    ],
+    "remaining_errors": [
+      "Group-specific averages of fitted values remain mislabeled adjusted means; they equal observed group means, not common-reference standardization.",
+      "Report section 11 has 13 both-missing plus 1 nitrogen-only, while limitations still claims 27 isotope-missing individuals; actual union is 14.",
+      "Counts all 190 ID groups as multi-year and asserts repeated animals; only 114 IDs appear in multiple years, 76 occur once, and global ID collisions do not establish animal identity.",
+      "Claims species and island effects cannot separately be identified; additive model design is rank 9/9. Limited support and extrapolation remain important, but differ from rank nonidentifiability.",
+      "Confidence interval DataFrame has swapped Species column labels for Chinstrap/Gentoo despite correct numerical row index and report.",
+      "Original quantile-based error bars remain unchanged in plot, despite corrected textual mean intervals.",
+      "No substantive sampling sensitivity, carbon-isotope adjusted model or verified cross-table linkage; numerical results mostly printed rather than saved as auditable tables.",
+      "Report overstates missingness bias evidence and contains unsupported isotope-direction interpretations."
+    ],
+    "reference_estimates": {
+      "n": 324,
+      "isotope_missing_union": 14,
+      "global_ids": 190,
+      "ids_observed_multiple_years": 114,
+      "ids_appearing_once": 76,
+      "unique_id_counts": {
+        "1": 76,
+        "2": 74,
+        "3": 40
+      },
+      "mean_ci_normal_approximation": {
+        "Adelie": [
+          3626.1972246646314,
+          3779.198458788606
+        ],
+        "Chinstrap": [
+          3637.3502973518434,
+          3822.35119518547
+        ],
+        "Gentoo": [
+          5000.271521976146,
+          5181.931867854363
+        ]
+      },
+      "models": {
+        "mass": {
+          "params": {
+            "Intercept": -1587.2297893707878,
+            "C(species)[T.Chinstrap]": -257.46119896689595,
+            "C(species)[T.Gentoo]": 981.2805626892451,
+            "C(sex)[T.male]": 386.60402536575657,
+            "C(island)[T.Dream]": -17.193592621359763,
+            "C(island)[T.Torgersen]": -48.027526562749024,
+            "flipper": 16.530503714316072,
+            "length": 18.519139590644258,
+            "depth": 68.63844529933064
+          },
+          "design_columns": 9,
+          "design_rank": 9,
+          "r_squared": 0.8783996919032954,
+          "group_average_fitted_minus_observed": {
+            "Adelie": 8.640199666842818e-12,
+            "Chinstrap": 5.002220859751105e-12,
+            "Gentoo": -1.000444171950221e-11
+          }
+        },
+        "n15": {
+          "params": {
+            "Intercept": 8.714326911712376,
+            "C(species)[T.Chinstrap]": 0.4036785812217747,
+            "C(species)[T.Gentoo]": -0.654073282191814,
+            "C(sex)[T.male]": 0.15229001293474687,
+            "C(island)[T.Dream]": 0.12360603638126752,
+            "C(island)[T.Torgersen]": -0.037454819466157335,
+            "flipper": 0.00141510544456723,
+            "length": -0.0002960540685585378,
+            "depth": -0.012112126940192147
+          },
+          "design_columns": 9,
+          "design_rank": 9,
+          "r_squared": 0.5912103797773679,
+          "group_average_fitted_minus_observed": {
+            "Adelie": 1.5987211554602254e-14,
+            "Chinstrap": 1.0658141036401503e-14,
+            "Gentoo": 2.842170943040401e-14
+          }
+        }
+      }
+    }
+  },
+  "raw_evidence_root": "Local complete-work/20261015-science-feedback-v1",
+  "scientific_scope": "Single development-task feedback adaptation; neither independent transfer nor parameter benefit."
+}
