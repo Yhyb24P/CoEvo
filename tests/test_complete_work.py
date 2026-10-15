@@ -2,15 +2,36 @@
 import json
 import tempfile
 import unittest
+from types import SimpleNamespace
 from pathlib import Path
 from unittest.mock import patch
 
-from coevo.complete_work import verify, SOURCES
+from coevo.complete_work import verify, run, SOURCES
 from coevo.project import hashes
 from coevo.runtime import write_json
 
 
 class CompleteWorkChecks(unittest.TestCase):
+    def test_continuation_cost_and_assistance_are_scoped_to_new_messages(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'workspace').mkdir()
+            write_json(root / 'task.json', {'initial_files': {}, 'feedback_assisted': True})
+            write_json(root / 'agent_request.json', {'timeout_ms': 1000})
+            transcript = {
+                'messages': [{'role': 'assistant', 'usage': {'input': 100}, 'stopReason': 'stop'},
+                             {'role': 'assistant', 'usage': {'input': 5, 'output': 2}, 'stopReason': 'stop'}],
+                'continuation_start_message_index': 1, 'aborted': False,
+                'final_text': 'done', 'tool_calls': 1, 'session_file': 'native-session'}
+            def execute(*args, **kwargs):
+                write_json(root / 'transcript.json', transcript)
+                return SimpleNamespace(returncode=0)
+            with patch('coevo.complete_work.subprocess.run', side_effect=execute):
+                result = run(root)
+            self.assertEqual(result['usage']['input'], 5)
+            self.assertEqual(result['usage']['output'], 2)
+            self.assertTrue(result['feedback_assisted'])
+
     def test_successful_science_process_leaves_scientific_review_pending(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-15",
+  "model": "Qwen3.5-4B W0",
+  "pi_sdk_version": "1.2.0",
+  "skill_source_revision": "783499ffdb2d501bf590b2e035acd027a882df10",
+  "split": "D",
+  "source_cluster_id": "coevo-research-workbook",
+  "runs": [
+    {
+      "run": "20261015-W0-workbook-v1",
+      "wall_seconds": 951.2523234350374,
+      "tool_calls": 26,
+      "completion": {
+        "complete": false,
+        "stop_reason": "length",
+        "incomplete_reason": "length"
+      },
+      "feedback_assisted": false,
+      "usage_new_messages": {
+        "input": 186877,
+        "output": 42090,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      }
+    },
+    {
+      "run": "20261015-W0-workbook-feedback-v1",
+      "wall_seconds": 82.44739554700209,
+      "tool_calls": 8,
+      "completion": {
+        "complete": true,
+        "stop_reason": "stop",
+        "incomplete_reason": null
+      },
+      "feedback_assisted": true,
+      "usage_new_messages": {
+        "input": 153124,
+        "output": 3152,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      }
+    },
+    {
+      "run": "20261015-W0-experience-proposal-v1",
+      "wall_seconds": 27.960564423992764,
+      "tool_calls": 3,
+      "completion": {
+        "complete": true,
+        "stop_reason": "stop",
+        "incomplete_reason": null
+      },
+      "feedback_assisted": true,
+      "usage_new_messages": {
+        "input": 81255,
+        "output": 977,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      }
+    }
+  ],
+  "workbook_review": {
+    "initial_task_success": false,
+    "feedback_assisted_task_success": true,
+    "checks": "Independent cell, formula, style, comment and structure preservation checks; semantic labels and notes reviewed. Formula retained; no GUI/recalculation claim.",
+    "repair_conditions_changed": [
+      "researcher corrective feedback",
+      "explicit /workspace model cwd and shell path clarification"
+    ],
+    "causal_scope": "One native continuation; cannot isolate feedback, Skill body reading and path clarification effects."
+  },
+  "experience_candidate": {
+    "activation": "rejected_pending_revision",
+    "checks": {
+      "original_B2_value": 770.5,
+      "original_B2_python_type": "float",
+      "iter_rows_returns_cells_with_coordinates": true,
+      "original_has_comments": true,
+      "original_has_styles": true,
+      "proposal_preserved_repaired_workbook": true
+    },
+    "unsupported_claims": [
+      "iter_rows tuples cannot identify columns: default elements are Cell objects with coordinates",
+      "original Wall seconds 770.5 was a string: fixture stores a numeric value",
+      "styles/comments were absent from task: fixture includes both and preservation was required"
+    ],
+    "scope": "Researcher-elicited D experience candidate; successful artifact does not certify model reflection."
+  },
+  "evidence_root": "Local private runs/pi-office; raw sessions and payloads retained",
+  "scientific_scope": "Execution and assisted recovery evidence, not independent transfer or recursive improvement evidence."
+}

@@ -81,7 +81,8 @@ def run(out):
     if (out / 'manifest.json').exists() or (out / 'transcript.json').exists():
         raise ValueError('Run evidence already exists; prepare a fresh run')
     before = hashes(out / 'workspace')
-    expected = json.loads((out / 'task.json').read_text())['initial_files']
+    task = json.loads((out / 'task.json').read_text())
+    expected = task['initial_files']
     if before != expected:
         raise ValueError('Initial workspace has changed since preparation')
     manifest = {'status': 'running', 'started_at': time.time(), 'source_snapshot': source_snapshot(),
@@ -96,15 +97,15 @@ def run(out):
                                      timeout=request['timeout_ms'] / 1000 + 60)
         transcript = json.loads((out / 'transcript.json').read_text())
         from .mcm_run import termination
-        messages = transcript['messages']
-        result = {'agent_exit_code': process.returncode, 'termination': termination(transcript),
+        messages = transcript['messages'][transcript.get('continuation_start_message_index', 0):]
+        result = {'agent_exit_code': process.returncode, 'termination': termination({**transcript, 'messages': messages}),
                   'pi_sdk_version': transcript.get('sdk_version'),
                   'selected_skills': transcript.get('selected_skills', []),
                   'completion': transcript.get('completion'),
                   'resource_stop': transcript.get('resource_stop'), 'wall_seconds': time.monotonic() - started,
                   'tool_calls': transcript['tool_calls'], 'session_file': transcript['session_file'],
                   'usage': {k: sum(m.get('usage', {}).get(k, 0) for m in messages if m['role'] == 'assistant') for k in ('input', 'output', 'cacheRead', 'cacheWrite')},
-                  'final_files': hashes(out / 'workspace'), 'feedback_assisted': False,
+                  'final_files': hashes(out / 'workspace'), 'feedback_assisted': bool(task.get('feedback_assisted', False)),
                   'scope': 'D complete-work execution; deliverables require independent review'}
         write_json(out / 'execution.json', result)
         manifest['status'] = 'completed'

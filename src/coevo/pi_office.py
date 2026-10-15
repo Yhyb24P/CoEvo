@@ -32,13 +32,13 @@ def prepare(out, source, pi_entry, environment, skill_cache):
     config = read_config('configs/complete-work-qwen.json')
     prefix = command(workspace, environment, [], readonly_paths=['.skills'])[:-1]
     prefix += ['--ro-bind', str(skill_cache), '/opt/skill-cache', '--setenv', 'SPREADSHEET_SKILL_CACHE', '/opt/skill-cache', '--']
-    request = dict(workspace=str(workspace), run_dir=str(out), task_environment=str(environment),
+    request = dict(workspace=str(workspace), model_cwd='/workspace', run_dir=str(out), task_environment=str(environment),
                    pi_entry=str(pi_entry), required_pi_version='1.2.0', skill_dir='.skills',
                    readonly_paths=['.skills'], endpoint=config['endpoint'], model=config['served_model'],
                    enable_thinking=True, context_tokens=config['max_model_len'], sampling=config['inference_sampling'],
                    timeout_ms=1800000, max_tool_calls=100, max_output_tokens=32768,
                    sandbox_prefix=prefix, prompts=[prompt], capture_payload=True,
-                   system_prompt='You are CoEvo, an independent local task Agent. Use selected task Skills and actual read/write/bash observations to complete the authorized work. Preserve sources and report outcomes accurately.')
+                   system_prompt='You are CoEvo, an independent local task Agent. Bash runs in /workspace; use workspace-relative paths for task work. Use selected task Skills and actual read/write/bash observations to complete the authorized work. Preserve sources and report outcomes accurately.')
     write_json(out / 'agent_request.json', request)
     write_json(out / 'task.json', dict(source_cluster='coevo-research-workbook', split='D',
                actor='student', prompt_actor='researcher', feedback_assisted=False,
