@@ -2,9 +2,13 @@
 import argparse
 import hashlib
 import json
+import os
+import signal
+import subprocess
+import time
 from pathlib import Path
 
-from .runtime import write_json
+from .runtime import write_json, source_snapshot
 from .sandbox import command as sandbox_command
 
 PILOTDECK_REVISION = '783499ffdb2d501bf590b2e035acd027a882df10'
@@ -18,17 +22,20 @@ def cli_command(workspace, environment, pilot_home, application, node_root, prom
     for path in (application, node_root):
         args += ['--ro-bind', str(path), str(path)]
     args += ['--bind', str(pilot_home), str(pilot_home)]
+    bootstrap = Path(__file__).resolve().parents[2] / 'scripts/pilotdeck-task.mjs'
+    args += ['--ro-bind', str(bootstrap), str(bootstrap)]
     for name in ('passwd', 'group', 'nsswitch.conf'):
         path = Path('/etc') / name
         if path.exists():
             args += ['--ro-bind', str(path), str(path)]
     args += ['--setenv', 'PILOT_HOME', str(pilot_home),
+             '--setenv', 'COEVO_PILOTDECK_ROOT', str(application),
              '--setenv', 'PILOTDECK_GATEWAY_PORT', '18879',
              '--setenv', 'PILOTDECK_WORK_DIR', '/workspace/.work',
              '--setenv', 'PATH', f'{node_root}/bin:/opt/task-env/bin:/usr/bin:/bin',
              '--', str(node_root / 'bin/node'), '--import',
              str(application / 'node_modules/tsx/dist/loader.mjs'),
-             str(application / 'src/cli/pilotdeck.ts'), prompt]
+             str(bootstrap), prompt]
     return args
 
 
@@ -76,14 +83,94 @@ def extract(transcript, out, source_cluster, split='D'):
     return summary
 
 
+def run(out, application, node_root, environment, model_config, start_server=False, timeout=1800):
+    """Own a bounded upstream task process and export its native transcript."""
+    out = Path(out).resolve()
+    if (out / 'manifest.json').exists():
+        raise ValueError('Use a new prepared run; evidence must not be overwritten')
+    workspace, home = out / 'workspace', out / 'pilot-home'
+    args = cli_command(workspace, environment, home, application, node_root,
+                       (out / 'prompt.txt').read_text())
+    record = dict(status='starting', started_at=time.time(), source_snapshot=source_snapshot(),
+                  code_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+                  bootstrap_sha256=hashlib.sha256(Path('scripts/pilotdeck-task.mjs').read_bytes()).hexdigest(),
+                  pilotdeck_revision=PILOTDECK_REVISION, command=args, budget_seconds=timeout,
+                  source_cluster='coevo-research-workbook', split='D', task_success=None)
+    write_json(out / 'manifest.json', record)
+    server = child = telemetry = None
+    try:
+        gpu = (out / 'gpu-samples.csv').open('w')
+        telemetry = subprocess.Popen(['nvidia-smi', '--query-gpu=timestamp,memory.used,utilization.gpu',
+                                      '--format=csv,noheader,nounits', '-l', '5'], stdout=gpu, stderr=subprocess.STDOUT)
+        if start_server:
+            from .rsi import Server
+            server = Server(model_config, out / 'server.log')
+        record.update(status='running', agent_started_at=time.time())
+        write_json(out / 'manifest.json', record)
+        print('PILOTDECK_TASK_STARTED', flush=True)
+        started = time.monotonic()
+        with (out / 'agent.log').open('w') as log:
+            child = subprocess.Popen(args, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            try:
+                record['exit_code'] = child.wait(timeout=timeout)
+                record['timeout'] = False
+            except subprocess.TimeoutExpired:
+                record['timeout'] = True
+                os.killpg(child.pid, signal.SIGTERM)
+                record['exit_code'] = child.wait(timeout=15)
+        record['agent_wall_seconds'] = time.monotonic() - started
+        record['transcript_exports'], record['extraction_errors'] = [], []
+        for index, path in enumerate(sorted(home.glob('projects/*/chats/*.jsonl'))):
+            try:
+                summary = extract(path, out / f'evidence-{index}', record['source_cluster'])
+                record['transcript_exports'].append(summary)
+            except Exception as error:
+                record['extraction_errors'].append({'path': str(path), 'error': str(error)})
+        record['outputs'] = {str(p.relative_to(workspace)): hashlib.sha256(p.read_bytes()).hexdigest()
+                             for p in workspace.glob('*') if p.is_file()}
+        record['status'] = 'execution_terminal'
+    except BaseException as error:
+        record.update(status='failed', error=str(error))
+        raise
+    finally:
+        if child and child.poll() is None:
+            os.killpg(child.pid, signal.SIGKILL)
+            child.wait(timeout=15)
+        if server:
+            server.stop()
+        if telemetry:
+            telemetry.terminate()
+            telemetry.wait(timeout=10)
+            gpu.close()
+        record['ended_at'] = time.time()
+        write_json(out / 'manifest.json', record)
+    return record
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--transcript', required=True)
+    parser.add_argument('--transcript')
     parser.add_argument('--out', required=True)
-    parser.add_argument('--source-cluster', required=True)
+    parser.add_argument('--source-cluster')
     parser.add_argument('--split', choices=['L', 'D', 'V', 'G'], default='D')
+    parser.add_argument('--run', action='store_true')
+    parser.add_argument('--application', default='.cache/pilotdeck')
+    parser.add_argument('--node-root')
+    parser.add_argument('--environment', default='.cache/pilotdeck-office-env')
+    parser.add_argument('--model-config', default='configs/complete-work-qwen.json')
+    parser.add_argument('--start-server', action='store_true')
+    parser.add_argument('--timeout', type=int, default=1800)
     args = parser.parse_args()
-    print(json.dumps(extract(args.transcript, args.out, args.source_cluster, args.split)))
+    if args.run:
+        if not args.node_root or not 0 < args.timeout <= 7200:
+            parser.error('run requires --node-root and a positive timeout <= 7200 seconds')
+        result = run(args.out, args.application, args.node_root, args.environment,
+                     args.model_config, args.start_server, args.timeout)
+    else:
+        if not args.transcript or not args.source_cluster:
+            parser.error('export requires --transcript and --source-cluster')
+        result = extract(args.transcript, args.out, args.source_cluster, args.split)
+    print(json.dumps(result))
 
 
 if __name__ == '__main__':

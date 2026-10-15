@@ -16,6 +16,22 @@
 
 原始输入、独立 PilotHome 和运行产物放在忽略目录 `/mnt/e/CoEvo/runs/pilotdeck/20261015-research-workbook-v1/`。Python 文件环境为 `.cache/pilotdeck-office-env`，实际安装 openpyxl 3.1.5、et-xmlfile 2.0.0。成果应由工作簿内容、公式与未请求修改部分的保留检查确认，不能由 CLI 退出状态代替。
 
+初次 CLI 启动暴露项目未登记与退出句柄未释放的问题，尚未进入模型工具工作；原始日志保留在 v1。薄封装 scripts/pilotdeck-task.mjs 使用原生路径函数建立本轮项目登记，调用原生 CliChannel，并在结束时调用原生 dispose；没有新增 Agent Loop 或修改模型/记忆路由。修正后的实际工作在 `20261015-research-workbook-v2`，保留相同输入重新执行。原生 thinking 流已实际出现，任务成果仍待结束后核实。
+
+可复用输入为 [fixtures/research-ledger.xlsx](fixtures/research-ledger.xlsx)、[任务要求](workbook-task.txt)及 [公开结果 JSON](../complete-work/first-W0-results.json)。将它们复制到独立 RUN_DIR 的 workspace/，将本地配置及仅授权本轮工具的 permissions.json 放入独立 pilot-home/，prompt.txt 保存任务要求。运行入口：
+
+```bash
+PYTHONPATH=src .venv/bin/python -m coevo.pilotdeck --run --out RUN_DIR --application .cache/pilotdeck --node-root NODE22_ROOT --environment .cache/pilotdeck-office-env --start-server --timeout 1800
+```
+
+该入口管理本轮进程和可选的本地 vLLM 服务，保存实际资源、原生 Transcript 和待复核片段。它不启动服务器 UI、桌面和后台自动任务。工作簿独立检查器在 Agent 工作区外：
+
+```bash
+.cache/pilotdeck-office-env/bin/python experiments/pilotdeck/check-workbook.py --original experiments/pilotdeck/fixtures/research-ledger.xlsx --submitted RUN_DIR/workspace/updated-research-ledger.xlsx --results experiments/complete-work/first-W0-results.json
+```
+
+检查数值、公式和未授权区域保留，输出实际状态与待审阅的语义要求；图形界面、Excel 实际重算和最终任务语义不由此自动确认。
+
 ## 接入 CoEvo 学习材料
 
 ```bash
