@@ -8,7 +8,7 @@
 
 最新[奥运表格原生经历比较](experiments/olympic-office/README.md)中，两组均未完整交付；无历史组获得逐条核实的 1435 条清理表，跨任务原生经历收益仍未确认。
 
-最新 [Spark/Qwen 完整办公对照](experiments/spark-readiness/README.md)已完成：Spark 接入后未生成要求的交付，Qwen 取得正确清理表但完整任务仍失败；当前继续保留 Qwen W0，Spark 的训练/回载兼容性尚待验证。
+最新 [Spark/Qwen 完整办公对照](experiments/spark-readiness/README.md)已完成：Spark 接入后未生成要求的交付，Qwen 取得正确清理表但完整任务仍失败；当前继续保留 Qwen W0，Spark 的训练/回载兼容性尚待验证。[原生轨迹分析](experiments/spark-readiness/README.md#原生轨迹复核执行为何未收敛2026-10-15)进一步识别了持续探索与全量改写的行为瓶颈；下一项[不同来源完整工作](experiments/bike-sharing/README.md)已完成数据与任务准备。
 
 当前研究关注：实际办公与科研交付、反馈后自主修订、条件化经验迁移、模型权重更新，以及 Agent 是否通过过去的修改结果逐渐提高未来自主改进的有效性。复用上游 Skills、更新 Pi 或调整执行器的 Harness 收益，须与 CoEvo 的 RSI 学习收益分别判断。
 
