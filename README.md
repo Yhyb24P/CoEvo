@@ -6,6 +6,8 @@
 
 现役接受模型为 Qwen3.5-4B W0，Spark-X2.5-4B 仅为候选，无已晋升的学习权重；Pi thinking、工具执行与 BF16 LoRA 已实际运行。早期微型任务有局部收益但无长期 RSI 确认。[MCM](experiments/mcm-2025-c/README.md) 未完成有效科学预测；最近[跨领域完整工作](experiments/complete-work/README.md)中软件维护未解决核心冲突，科研分析可复现、部分数值正确但科学解释仍有实质错误。它们是应被保留并用于反馈学习的 D 证据。
 
+最新[奥运表格原生经历比较](experiments/olympic-office/README.md)中，两组均未完整交付；无历史组获得逐条核实的 1435 条清理表，跨任务原生经历收益仍未确认。
+
 当前研究关注：实际办公与科研交付、反馈后自主修订、条件化经验迁移、模型权重更新，以及 Agent 是否通过过去的修改结果逐渐提高未来自主改进的有效性。复用上游 Skills、更新 Pi 或调整执行器的 Harness 收益，须与 CoEvo 的 RSI 学习收益分别判断。
 
 权威文档：[研究方案](docs/研究方案.md)（Q1/Q2/Q3、文献与路线）、[评价与统计](docs/评估与统计.md)（实际成果和 RSI 证据）、[实施与复现](docs/实施与复现.md)（上游能力、集成接口和权限）、[AGENTS.md](AGENTS.md)（科研开发约定）。实测在 [experiments/](experiments/) 保存，历史版本由 Git 追溯，不并行维护过时方案。

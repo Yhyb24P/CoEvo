@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-15",
+  "split": "D",
+  "source_cluster": "mcm-2025-c",
+  "model": "Qwen3.5-4B W0",
+  "pi_sdk_version": "1.2.0",
+  "same_initial_files": true,
+  "same_current_task_prompt": true,
+  "same_sampling_tools_skill_and_budget": true,
+  "budget_per_arm": {
+    "wall_seconds": 1500,
+    "max_tool_calls": 80,
+    "max_output_tokens_per_turn": 32768
+  },
+  "order": [
+    "R0",
+    "R1-native"
+  ],
+  "parent_messages": 73,
+  "parent_evidence_unchanged": true,
+  "raw_history_policy": "Native Pi fork, no researcher summary or saved note. Qwen native template omits historical thinking before the latest user query; stored messages alone do not prove every reasoning span is visible.",
+  "arms": {
+    "R0": {
+      "wall_seconds": 1451.4807696479838,
+      "tool_calls": 63,
+      "usage_new_messages": {
+        "input": 2267028,
+        "output": 70048,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "completion": {
+        "complete": false,
+        "stop_reason": "error",
+        "incomplete_reason": "wall_timeout"
+      },
+      "current_task_feedback_assisted": false,
+      "prior_experience_feedback_assisted": false,
+      "retained_parent_messages": 0,
+      "new_tool_errors": 16,
+      "first_request_input_tokens": 1548,
+      "original_inputs_unchanged": true,
+      "task_success": false,
+      "file_problems": [
+        "Submitted workbook cannot be read: IndexError: list index out of range",
+        "prepare_audit.py missing/empty"
+      ],
+      "independent_reproduction": {
+        "exit_code": 0,
+        "script_path": ".work/prepare_audit.py",
+        "rebuilt_file_checks_passed": false,
+        "scope": "Researcher execution of saved source after termination; submitted state unchanged"
+      },
+      "transcript_sha256": "052fed9275fc4a1451ce12175c95ee7ee6572ae36ba859afa293b27098f39dad",
+      "task_sha256": "ffb28fb1b1e58bbac7dbf75ef735a6e4b3e225358e8c08e69e34e896f5cfc487",
+      "verified_partial": [
+        "All 1435 clean medal records exactly match normalized source multiset, including NOC, Year, Rank and medal counts."
+      ],
+      "remaining": [
+        "Submitted XLSX cannot be read by openpyxl: invalid style font reference raises IndexError.",
+        "prepare_audit.py exists under .work, not the requested root path.",
+        "Report event totals 761/738 incorrectly aggregate program summary rows; source Total events values are 339/329.",
+        "Independent source execution creates a readable workbook but fails summary/comparison/quality requirements."
+      ]
+    },
+    "R1-native": {
+      "wall_seconds": 619.2136363629834,
+      "tool_calls": 48,
+      "usage_new_messages": {
+        "input": 2079284,
+        "output": 28555,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "completion": {
+        "complete": false,
+        "stop_reason": "error",
+        "incomplete_reason": "error"
+      },
+      "current_task_feedback_assisted": false,
+      "prior_experience_feedback_assisted": true,
+      "retained_parent_messages": 73,
+      "new_tool_errors": 11,
+      "first_request_input_tokens": 20243,
+      "original_inputs_unchanged": true,
+      "task_success": false,
+      "file_problems": [
+        "Clean medal records differ from source facts or normalization",
+        "updated-olympic-audit.xlsx missing",
+        "audit.md missing/empty"
+      ],
+      "independent_reproduction": {
+        "exit_code": 1,
+        "script_path": "prepare_audit.py",
+        "rebuilt_file_checks_passed": false,
+        "scope": "Researcher execution of saved source after termination; submitted state unchanged"
+      },
+      "transcript_sha256": "284ab02ee30329c0f35de3036f6f7d19762ab6d1d65a00c47ecb091c5cb40523",
+      "task_sha256": "98b69f4624a306c2c92d763d075ae0462f69f85f50e178281ea148c51a8218e9",
+      "verified_partial": [],
+      "remaining": [
+        "Clean CSV has 72 corrupted NOC labels after UTF-8 bytes are decoded as Latin-1 (for example trailing Â).",
+        "Saved script fails with ValueError: Year is not in list.",
+        "No updated workbook or audit report submitted."
+      ],
+      "terminal_api_error": "400: {\"message\":\"This model's maximum context length is 139264 tokens. However, you requested 26105 output tokens and your prompt contains at least 113160 input tokens, for a total of at least 139265 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=113160)\",\"type\":\"BadRequestError\",\"param\":\"input_tokens\",\"code\":400}",
+      "context_reservation": {
+        "server_capacity": 139264,
+        "reported_input_tokens_at_rejection": 113160,
+        "requested_output_tokens": 26105,
+        "total": 139265,
+        "scope": "API reservation rejection, not evidence that every remaining output token was consumed. No isolated Q1 ability conclusion."
+      }
+    }
+  },
+  "reference_summary": {
+    "2016": [
+      2016,
+      86,
+      306,
+      307,
+      359,
+      972,
+      306,
+      "Rio de Janeiro, Brazil"
+    ],
+    "2020": [
+      2020,
+      93,
+      340,
+      338,
+      402,
+      1080,
+      339,
+      "Tokyo, Japan (postponed to 2021 due to the coronavirus pandemic)"
+    ],
+    "2024": [
+      2024,
+      91,
+      328,
+      327,
+      384,
+      1039,
+      329,
+      "Paris, France"
+    ]
+  },
+  "conclusion": "No complete success in either arm. One valid cleaned table in R0; R1 stopped on context reservation error. One D case does not identify a general memory effect; no evidence to adopt full cross-task history by default.",
+  "evidence_root": "Local olympic-office/20261015-context-v1; original outputs, frozen checker, reviewed verdicts and isolated reproductions retained.",
+  "checker_note": "Frozen checker raised on unreadable R0 XLSX; revised checker reports that observed package error as failure, with source hashes retained in local review."
+}

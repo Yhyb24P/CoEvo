@@ -2,7 +2,7 @@
 
 CoEvo 研究真实日常/科研 Agent 如何从长期经历中提升工作效果并递归改进自身策略。Q1 外部经历与指令生命周期、Q2 模型参数学习、Q3 学会如何改进 Harness/经验选择/学习策略；必须从实际成果与未来任务辨认收益，不以训练运行、CI、工具保护、文件数量和 Agent 自述冒充 RSI。
 
-**现状（2026-10-15）**：只在 main 开发；Qwen3.5-4B W0 仍是接受版，Spark 尚未实测，无已晋升 W1。Pi 工具、thinking、BF16 LoRA 曾实测；完整工作中软件维护需求未完成、科研分析虽可复现仍有统计错误。**CoEvo 保持独立的 RSI 执行体系**：PilotDeck 原生 CLI 运行准备与 Transcript 提取是独立参考实验，不是主框架迁移。Pi 1.2.0 与任务级 spreadsheets Skill 已实测：工作簿首轮失败、原生反馈续接修复通过，模型经验总结含错误且未生效，见 [Office 任务记录](experiments/pi-office/README.md)。
+**现状（2026-10-15）**：只在 main 开发；Qwen3.5-4B W0 仍是接受版，Spark 尚未实测，无已晋升 W1。Pi 工具、thinking、BF16 LoRA 曾实测；完整工作中软件维护需求未完成、科研分析虽可复现仍有统计错误。**CoEvo 保持独立的 RSI 执行体系**：PilotDeck 原生 CLI 运行准备与 Transcript 提取是独立参考实验，不是主框架迁移。Pi 1.2.0 与任务级 spreadsheets Skill 已实测：工作簿首轮失败、原生反馈续接修复通过，模型经验总结含错误且未生效，见 [Office 任务记录](experiments/pi-office/README.md)。 后续[奥运 Office 对照](experiments/olympic-office/README.md)两组均未完整成功，保留正确清理表；原生经历组还受上下文请求配额错误限制，不能概括为经验有害。
 
 执行规则：
 

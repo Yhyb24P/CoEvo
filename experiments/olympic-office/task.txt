@@ -1,0 +1,11 @@
+请完成一次建模前的奥运数据整理与工作簿核对，交付可继续使用的文件，而不是只给方案。
+
+当前工作区包含 data/ 下的 2025 MCM C 原始奖牌、主办地、项目表，以及 olympic-audit.xlsx。资料属于已经公开的开发数据。以文件实际内容为依据，不凭印象补写“官方正确答案”。以前其他任务的文件不属于当前工作区；历史经历若存在，只可作为方法参考，当前要求以本条为准。
+
+1. 读取可用 spreadsheets Skill，检查各 CSV 的实际编码、列名、数值与空缺。整理全部奖牌记录到 clean_medals.csv，保留 Year、NOC、Rank、Gold、Silver、Bronze、Total。只清理 BOM 和首尾/异常空白等表示问题，保留原始国家/地区实体，不自行合并改名或删除异常记录。NOC 内部连续空白统一为普通单空格。说明关键字重复、数值/缺失与 Gold+Silver+Bronze=Total 检查。
+2. 在原工作簿副本 Summary 的第 4、5 行分别补入 2020、2024 的数据：Year、奖牌表中 NOC 数、Gold、Silver、Bronze、Total 合计、项目表的 Total events、主办地。主办地清理异常空白，保留推迟举办等原有说明。第 3 行 2016 历史、其他现有内容、公式、样式、批注、结构及原文件保持不变；公式应引用新数据，不能改成常数。
+3. 在副本新增 Comparison 工作表，至少包含 NOC、Total2020、Total2024、Change 四列，逐项比较两届奖牌表中出现的全部 NOC；用 0 表示该届奖牌表无记录，并说明这种约定不代表确认零奖牌或未参赛。不自行认定两届名称不同的实体等同。Change=Total2024-Total2020。
+4. 新增 Quality 工作表记录完整性核对与需要谨慎解释的差异，例如项目数与奖牌合计关系。区分文件内部事实、可能的解释与需要外部核实的问题，不擅自修正源数据或编造差异原因。
+5. 交付 updated-olympic-audit.xlsx、clean_medals.csv、audit.md 和 prepare_audit.py。audit.md 简明说明来源、处理方法、关键数值、质量问题与未解决限制；prepare_audit.py 应能从原始输入离线重新生成交付工作簿和清理表。实际执行与检查，不将文件存在当作内容正确。
+
+可使用 read/write/bash 与 openpyxl、Python 标准库。Bash 工作目录为 /workspace，输入 data/、原工作簿与 .skills 只读；不要联网或安装依赖。最多 25 分钟、80 次工具调用。简明交付说明应准确反映实际完成情况。
