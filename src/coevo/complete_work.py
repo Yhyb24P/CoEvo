@@ -98,6 +98,9 @@ def run(out):
         from .mcm_run import termination
         messages = transcript['messages']
         result = {'agent_exit_code': process.returncode, 'termination': termination(transcript),
+                  'pi_sdk_version': transcript.get('sdk_version'),
+                  'selected_skills': transcript.get('selected_skills', []),
+                  'completion': transcript.get('completion'),
                   'resource_stop': transcript.get('resource_stop'), 'wall_seconds': time.monotonic() - started,
                   'tool_calls': transcript['tool_calls'], 'session_file': transcript['session_file'],
                   'usage': {k: sum(m.get('usage', {}).get(k, 0) for m in messages if m['role'] == 'assistant') for k in ('input', 'output', 'cacheRead', 'cacheWrite')},

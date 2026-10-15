@@ -16,7 +16,11 @@
 
 原始输入、独立 PilotHome 和运行产物放在忽略目录 `/mnt/e/CoEvo/runs/pilotdeck/20261015-research-workbook-v1/`。Python 文件环境为 `.cache/pilotdeck-office-env`，实际安装 openpyxl 3.1.5、et-xmlfile 2.0.0。成果应由工作簿内容、公式与未请求修改部分的保留检查确认，不能由 CLI 退出状态代替。
 
-初次 CLI 启动暴露项目未登记与退出句柄未释放的问题，尚未进入模型工具工作；原始日志保留在 v1。薄封装 scripts/pilotdeck-task.mjs 使用原生路径函数建立本轮项目登记，调用原生 CliChannel，并在结束时调用原生 dispose；没有新增 Agent Loop 或修改模型/记忆路由。修正后的实际工作在 `20261015-research-workbook-v2`，保留相同输入重新执行。原生 thinking 流已实际出现，任务成果仍待结束后核实。
+初次 CLI 启动暴露项目未登记与退出句柄未释放的问题，尚未进入模型工具工作；原始日志保留在 v1。薄封装 scripts/pilotdeck-task.mjs 使用原生路径函数建立本轮项目登记，调用原生 CliChannel，并在结束时调用原生 dispose；没有新增 Agent Loop 或修改模型/记忆路由。修正后的实际工作在 `20261015-research-workbook-v2`，保留相同输入重新执行，原生 thinking 流和工具执行随后实际成立。
+
+实际参考结果见 [reference-results.json](reference-results.json)：首次工作 97.5 秒、11 次工具调用，数值与保留项通过检查，但结果标签及预算备注不完整。第一次原生反馈续接修正标签，仍遗漏一条备注；第二次补充反馈后备注正确，却清空原本正确的秒数、工具计数和停止字段。因此三次均不计完整任务成功。原始来源文件保持未变。首轮与续接的原生历史前缀一致，没有用研究者摘要替换会话。
+
+这段经历保留作独立 RSI 系统的参考材料：有效部分、外部反馈后的修订、局部修订损坏已正确内容，以及研究者要求后产生的核对方法建议。方法建议尚未验证，不计自主提出或跨任务经验收益。后续不再围绕这套完整运行器增加生产功能；主要执行回到 CoEvo/Pi，选择性吸收独立 Office Skill。
 
 可复用输入为 [fixtures/research-ledger.xlsx](fixtures/research-ledger.xlsx)、[任务要求](workbook-task.txt)及 [公开结果 JSON](../complete-work/first-W0-results.json)。将它们复制到独立 RUN_DIR 的 workspace/，将本地配置及仅授权本轮工具的 permissions.json 放入独立 pilot-home/，prompt.txt 保存任务要求。运行入口：
 

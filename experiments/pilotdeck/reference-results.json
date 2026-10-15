@@ -1,0 +1,85 @@
+{
+  "role": "reference implementation experiment; not CoEvo primary Harness",
+  "split": "D",
+  "source_cluster": "coevo-research-workbook",
+  "pilotdeck_revision": "783499ffdb2d501bf590b2e035acd027a882df10",
+  "model": "Qwen3.5-4B W0",
+  "episodes": [
+    {
+      "run": "20261015-research-workbook-v2",
+      "agent_wall_seconds": 97.51769039098872,
+      "new_tool_calls": 11,
+      "normal_native_turns": true,
+      "native_main_turn_usage": [
+        {
+          "inputTokens": 114908,
+          "outputTokens": 2635,
+          "totalTokens": 117543
+        }
+      ],
+      "usage_scope": "native task turns; auxiliary title calls not included",
+      "feedback_assisted": false,
+      "mechanical_checks_passed": true,
+      "task_success": false,
+      "findings": [
+        "numeric entries, formula/styles/history preserved",
+        "software remained pending; science mislabeled requirement pass",
+        "counter note omitted and error text truncated"
+      ]
+    },
+    {
+      "run": "20261015-research-workbook-feedback-v1",
+      "agent_wall_seconds": 141.4446437979932,
+      "new_tool_calls": 11,
+      "normal_native_turns": true,
+      "native_main_turn_usage": [
+        {
+          "inputTokens": 251926,
+          "outputTokens": 4310,
+          "totalTokens": 256236
+        }
+      ],
+      "usage_scope": "native task turns; auxiliary title calls not included",
+      "feedback_assisted": true,
+      "mechanical_checks_passed": true,
+      "task_success": false,
+      "findings": [
+        "result labels corrected",
+        "counter note still omitted"
+      ]
+    },
+    {
+      "run": "20261015-research-workbook-feedback-v2",
+      "agent_wall_seconds": 96.11484169895994,
+      "new_tool_calls": 10,
+      "normal_native_turns": true,
+      "native_main_turn_usage": [
+        {
+          "inputTokens": 296940,
+          "outputTokens": 2493,
+          "totalTokens": 299433
+        }
+      ],
+      "usage_scope": "native task turns; auxiliary title calls not included",
+      "feedback_assisted": true,
+      "mechanical_checks_passed": false,
+      "task_success": false,
+      "findings": [
+        "counter note corrected",
+        "previously correct time/counter/stop cells cleared"
+      ]
+    }
+  ],
+  "scope": "feedback-assisted within-source task work; not experience transfer, weight learning or RSI gain",
+  "native_context": {
+    "original_prefix_retained": true,
+    "resume": "upstream resumeAgentSession; copied native history and corresponding workspace in separate run",
+    "manual_summary_reconstruction": false
+  },
+  "agent_method_proposal": {
+    "elicited_by_researcher": true,
+    "description": "compare source result fields with workbook labels and report differences",
+    "status": "unverified candidate, not activated",
+    "future_task_benefit": "not measured"
+  }
+}
